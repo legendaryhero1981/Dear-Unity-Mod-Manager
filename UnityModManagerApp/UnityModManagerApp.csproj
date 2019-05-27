@@ -137,7 +137,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>file -c!+ "(?i)(\.xml|version.+\.dll|\.ssk)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
