@@ -12,4 +12,4 @@ Unity引擎类游戏MOD管理器，主要功能是能够让原本不支持或未
 
 
 # 特别感谢：
-- [newman55](https://www.newtonsoft.com/json) 开发了UMM原始版本！
+- [newman55](https://github.com/newman55) 开发了UMM原始版本！
