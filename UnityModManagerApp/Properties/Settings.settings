@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UnityModManagerNet.Installer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TitleFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">微软雅黑, 9.75pt, style=Bold</Value>
+    </Setting>
+    <Setting Name="MenuFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">微软雅黑, 14.25pt</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
