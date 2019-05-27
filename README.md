@@ -1,9 +1,7 @@
 # unity-mod-manager
-This mod adds modding support for games created on Unity engine.
+Unity引擎类游戏MOD管理器，主要功能是能够让原本不支持或未开放MOD功能的Unity游戏支持MOD。
 
-[**Home page**](https://www.nexusmods.com/site/mods/21)
-
-### Libraries used in the project.
+# 此项目使用到的第三方类库有：
 - [Harmony](https://github.com/pardeike/Harmony/wiki/Utilities)
 - [UnityDoorstop](https://github.com/NeighTools/UnityDoorstop)
 - [dnlib](https://github.com/0xd4d/dnlib)
