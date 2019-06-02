@@ -465,10 +465,7 @@ namespace UnityModManagerNet
                             var amountWidth = mColumns.Where(x => !x.skip).Sum(x => x.width);
                             var expandWidth = mColumns.Where(x => x.expand && !x.skip).Sum(x => x.width);
                             var mods = modEntries;
-                            var colWidth = mColumns.Select(x =>
-                                x.expand
-                                    ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x - 40 + expandWidth - amountWidth))
-                                    : GUILayout.Width(x.width)).ToArray();
+                            var colWidth = mColumns.Select(x => x.expand ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x - 40 + expandWidth - amountWidth)) : GUILayout.Width(x.width)).ToArray();
                             GUILayout.BeginVertical("box");
                             GUILayout.BeginHorizontal("box");
                             for (int i = 0; i < mColumns.Count; i++)
