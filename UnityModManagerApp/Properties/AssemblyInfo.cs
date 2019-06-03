@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Unity游戏MOD管理器")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Legend")]
-[assembly: AssemblyProduct("UnityModManagerUI")]
+[assembly: AssemblyProduct("UnityModManagerApp")]
 [assembly: AssemblyCopyright("Copyright © Legend 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using HarmonyLib;
+using Harmony12;
 
 namespace UnityModManagerNet
 {
@@ -68,7 +68,7 @@ namespace UnityModManagerNet
                 mUIScale = Mathf.Clamp(Params.UIScale, UI_SCALE_MIN, UI_SCALE_MAX);
                 mExpectedUIScale = mUIScale;
                 Textures.Init();
-                var harmony = new Harmony("UnityModManager.UI");
+                var harmony = HarmonyInstance.Create("UnityModManager.UI");
                 var original = typeof(Screen).GetMethod("set_lockCursor");
                 var prefix = typeof(Screen_lockCursor_Patch).GetMethod("Prefix", BindingFlags.Static | BindingFlags.NonPublic);
                 harmony.Patch(original, new HarmonyMethod(prefix));

@@ -29,13 +29,13 @@ namespace UnityModManagerNet.Installer
 
         static readonly string[] libraryFiles = new string[]
         {
-            //"0Harmony12.dll",
-            //"0Harmony-1.2.dll",
-            "0Harmony.dll",
+            "0Harmony12.dll",
+            "0Harmony-1.2.dll",
+            //"0Harmony.dll",
             "dnlib.dll",
             "System.Xml.dll",
-            "UnityModManagerCore.dll",
-            //"UnityModManagerCore.xml"
+            "UnityModManager.dll",
+            //"UnityModManager.xml"
         };
 
         public static UnityModManagerForm instance = null;

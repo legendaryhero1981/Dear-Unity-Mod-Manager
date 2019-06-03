@@ -8,7 +8,7 @@
     <ProjectGuid>{6E8F8B45-2A2D-4E5A-8573-3559337E68F3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>UnityModManagerNet.Installer</RootNamespace>
-    <AssemblyName>UnityModManager</AssemblyName>
+    <AssemblyName>UnityModManagerApp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -43,8 +43,11 @@
     <StartupObject>UnityModManagerNet.Installer.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\lib\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony-1.2">
+      <HintPath>..\lib\0Harmony-1.2.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony12">
+      <HintPath>..\lib\0Harmony12.dll</HintPath>
     </Reference>
     <Reference Include="dnlib">
       <HintPath>..\lib\dnlib.dll</HintPath>
@@ -137,6 +140,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>file -c!+ "(?i)(\.xml|version.+\.dll|\.ssk)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>file -c!~ "(?i)(\.xml|version.+\.dll|\.ssk)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using HarmonyLib;
+using Harmony12;
 
 namespace UnityModManagerNet
 {
@@ -46,7 +46,7 @@ namespace UnityModManagerNet
                     if (TryGetEntryPoint(UnityModManager.Config.StartingPoint, out var @class, out var method, out var place))
                     {
                         usePrefix = (place == "before");
-                        var harmony = new Harmony(nameof(UnityModManager));
+                        var harmony = HarmonyInstance.Create(nameof(UnityModManager));
                         var prefix = typeof(Injector).GetMethod(nameof(Prefix_Start), BindingFlags.Static | BindingFlags.NonPublic);
                         var postfix = typeof(Injector).GetMethod(nameof(Postfix_Start), BindingFlags.Static | BindingFlags.NonPublic);
                         harmony.Patch(method, new HarmonyMethod(prefix), new HarmonyMethod(postfix));
@@ -70,7 +70,7 @@ namespace UnityModManagerNet
                 if (TryGetEntryPoint(UnityModManager.Config.UIStartingPoint, out var @class, out var method, out var place))
                 {
                     usePrefix = (place == "before");
-                    var harmony = new Harmony(nameof(UnityModManager));
+                    var harmony = HarmonyInstance.Create(nameof(UnityModManager));
                     var prefix = typeof(Injector).GetMethod(nameof(Prefix_Show), BindingFlags.Static | BindingFlags.NonPublic);
                     var postfix = typeof(Injector).GetMethod(nameof(Postfix_Show), BindingFlags.Static | BindingFlags.NonPublic);
                     harmony.Patch(method, new HarmonyMethod(prefix), new HarmonyMethod(postfix));

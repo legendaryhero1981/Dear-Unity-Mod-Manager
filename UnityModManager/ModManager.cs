@@ -593,8 +593,8 @@ namespace UnityModManagerNet
                     if (!Active && (OnUnload == null || OnUnload.Invoke(this)))
                     {
                         mCache.Clear();
-                        //typeof(Harmony12.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Harmony12.AccessCache());
-                        //typeof(Harmony.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Harmony.AccessCache());
+                        typeof(Harmony12.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Harmony12.AccessCache());
+                        typeof(Harmony.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Harmony.AccessCache());
                         var oldAssembly = Assembly;
                         mAssembly = null;
                         mStarted = false;
