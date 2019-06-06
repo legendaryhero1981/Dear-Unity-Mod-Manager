@@ -1,5 +1,5 @@
-# Unity Mod Manager
-Unity引擎类游戏MOD管理器，主要功能是能够让原本不支持或未开放MOD功能的Unity游戏支持MOD。
+# Dear Unity Mod Manager
+亲爱的Unity引擎类游戏MOD管理器，主要功能是能够让原本不支持或未开放MOD功能的Unity游戏支持MOD。
 
 
 # 此项目使用到的第三方类库有：
