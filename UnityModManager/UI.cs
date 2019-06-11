@@ -42,6 +42,7 @@ namespace UnityModManagerNet
             private static GUIStyle status = null;
             private static GUIStyle www = null;
             private static GUIStyle updates = null;
+            private static GUIStyle toggle = null;
             private bool mFirstLaunched = false;
             private bool mInit = false;
             public bool Opened { get; private set; } = false;
@@ -214,7 +215,7 @@ namespace UnityModManagerNet
                 bold.name = "umm bold";
                 bold.normal.textColor = Color.white;
                 bold.fontStyle = FontStyle.Bold;
-                bold.alignment = TextAnchor.MiddleCenter;
+                bold.alignment = TextAnchor.UpperLeft;
                 button = new GUIStyle(GUI.skin.button);
                 button.name = "umm button";
                 button.normal.textColor = Color.white;
@@ -232,11 +233,14 @@ namespace UnityModManagerNet
                 updates = new GUIStyle();
                 updates.alignment = TextAnchor.MiddleCenter;
                 updates.stretchHeight = true;
+                toggle = new GUIStyle(GUI.skin.toggle);
+                toggle.alignment = TextAnchor.MiddleCenter;
             }
 
             private void ScaleGUI()
             {
                 GUI.skin.font = Font.CreateDynamicFontFromOSFont(GLOBAL_FONT_NAME, Scale(GLOBAL_FONT_SIZE));
+                GUI.skin.toggle = toggle;
                 GUI.skin.button.padding = new RectOffset(Scale(10), Scale(10), Scale(3), Scale(3));
                 GUI.skin.horizontalSlider.fixedHeight = Scale(12);
                 GUI.skin.horizontalSlider.border = RectOffset(3, 0);
@@ -246,7 +250,7 @@ namespace UnityModManagerNet
                 GUI.skin.horizontalSliderThumb.border = RectOffset(4, 0);
                 GUI.skin.horizontalSliderThumb.padding = RectOffset(Scale(7), 0);
                 GUI.skin.horizontalSliderThumb.margin = RectOffset(0);
-                GUI.skin.toggle.margin.left = Scale(10);
+                toggle.margin.left = Scale(10);
                 window.padding = RectOffset(Scale(5));
                 h1.fontSize = Scale(26);
                 h1.margin = RectOffset(Scale(0), Scale(5));
@@ -254,14 +258,14 @@ namespace UnityModManagerNet
                 h2.margin = RectOffset(Scale(0), Scale(3));
                 button.fontSize = Scale(20);
                 button.padding = RectOffset(Scale(30), Scale(5));
-                int iconHeight = 28;
-                settings.fixedWidth = Scale(24);
+                const int iconWidth = 24, iconHeight = 28;
+                settings.fixedWidth = Scale(iconWidth);
                 settings.fixedHeight = Scale(iconHeight);
-                status.fixedWidth = Scale(12);
+                status.fixedWidth = Scale(iconWidth);
                 status.fixedHeight = Scale(iconHeight);
-                www.fixedWidth = Scale(24);
+                www.fixedWidth = Scale(iconWidth);
                 www.fixedHeight = Scale(iconHeight);
-                updates.fixedWidth = Scale(26);
+                updates.fixedWidth = Scale(iconWidth);
                 updates.fixedHeight = Scale(iconHeight);
                 mColumns.Clear();
                 foreach (var column in mOriginColumns)
@@ -333,9 +337,9 @@ namespace UnityModManagerNet
 
             private readonly List<Column> mOriginColumns = new List<Column>
             {
-                new Column {name = "名称", width = 250, expand = true},
+                new Column {name = "名称", width = 400, expand = true},
                 new Column {name = "版本", width = 100},
-                new Column {name = "依赖MOD", width = 250, expand = true},
+                new Column {name = "依赖MOD", width = 100, expand = true},
                 new Column {name = "开/关", width = 100},
                 new Column {name = "状态", width = 100}
             };
@@ -427,7 +431,7 @@ namespace UnityModManagerNet
                 if (Input.GetKey(KeyCode.LeftControl))
                     GUI.DragWindow(mWindowRect);
                 UnityAction buttons = () => { };
-                GUILayout.Label($"Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", h1);
+                GUILayout.Label($"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", h1);
                 GUILayout.Space(3);
                 int tab = tabId;
                 tab = GUILayout.Toolbar(tab, tabs, button, GUILayout.ExpandWidth(false));
@@ -456,7 +460,7 @@ namespace UnityModManagerNet
 
             private void DrawTab(int tabId, ref UnityAction buttons)
             {
-                var minWidth = GUILayout.MinWidth(mWindowSize.x);
+                var minWidth = GUILayout.MinWidth(mWindowSize.x - 20);
                 switch (tabs[tabId])
                 {
                     case "Mods":
@@ -465,7 +469,7 @@ namespace UnityModManagerNet
                             var amountWidth = mColumns.Where(x => !x.skip).Sum(x => x.width);
                             var expandWidth = mColumns.Where(x => x.expand && !x.skip).Sum(x => x.width);
                             var mods = modEntries;
-                            var colWidth = mColumns.Select(x => x.expand ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x - 40 + expandWidth - amountWidth)) : GUILayout.Width(x.width)).ToArray();
+                            var colWidth = mColumns.Select(x => x.expand ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x + expandWidth - amountWidth - 100)) : GUILayout.Width(x.width)).ToArray();
                             GUILayout.BeginVertical("box");
                             GUILayout.BeginHorizontal("box");
                             for (int i = 0; i < mColumns.Count; i++)
@@ -475,12 +479,11 @@ namespace UnityModManagerNet
                                 GUILayout.Label(mColumns[i].name, bold, colWidth[i]);
                             }
                             GUILayout.EndHorizontal();
-                            for (int i = 0, c = mods.Count; i < c; i++)
+                            for (int i = 0, j = 0, c = mods.Count; i < c; i++, j = 0)
                             {
-                                int col = -1;
                                 GUILayout.BeginVertical("box");
                                 GUILayout.BeginHorizontal();
-                                GUILayout.BeginHorizontal(colWidth[++col]);
+                                GUILayout.BeginHorizontal(colWidth[j++]);
                                 if (mods[i].OnGUI != null || mods[i].CanReload)
                                 {
                                     if (GUILayout.Button(mods[i].Info.DisplayName, GUI.skin.label, GUILayout.ExpandWidth(true)))
@@ -511,16 +514,16 @@ namespace UnityModManagerNet
                                 }
                                 GUILayout.Space(20);
                                 GUILayout.EndHorizontal();
-                                GUILayout.BeginHorizontal(colWidth[++col]);
+                                GUILayout.BeginHorizontal(colWidth[j++]);
                                 GUILayout.Label(mods[i].Info.Version, GUILayout.ExpandWidth(false));
                                 GUILayout.EndHorizontal();
                                 if (mods[i].ManagerVersion > GetVersion())
                                 {
-                                    GUILayout.Label("<color=\"#CD5C5C\">管理器v" + mods[i].Info.ManagerVersion + "</color>", colWidth[++col]);
+                                    GUILayout.Label("<color=\"#CD5C5C\">管理器v" + mods[i].Info.ManagerVersion + "</color>", colWidth[j++]);
                                 }
                                 else if (gameVersion != VER_0 && mods[i].GameVersion > gameVersion)
                                 {
-                                    GUILayout.Label("<color=\"#CD5C5C\">游戏v" + mods[i].Info.GameVersion + "</color>", colWidth[++col]);
+                                    GUILayout.Label("<color=\"#CD5C5C\">游戏v" + mods[i].Info.GameVersion + "</color>", colWidth[j++]);
                                 }
                                 else if (mods[i].Requirements.Count > 0)
                                 {
@@ -528,21 +531,22 @@ namespace UnityModManagerNet
                                     {
                                         var id = item.Key;
                                         var mod = FindMod(id);
-                                        GUILayout.Label(((mod == null || item.Value != null && item.Value > mod.Version || !mod.Active) && mods[i].Active) ? "<color=\"#CD5C5C\">" + id + "</color>" : id, colWidth[++col]);
+                                        GUILayout.Label(((mod == null || item.Value != null && item.Value > mod.Version || !mod.Active) && mods[i].Active) ? "<color=\"#CD5C5C\">" + id + "</color>" : id, colWidth[j]);
                                     }
+                                    j++;
                                 }
                                 else if (!string.IsNullOrEmpty(mods[i].CustomRequirements))
                                 {
-                                    GUILayout.Label(mods[i].CustomRequirements, colWidth[++col]);
+                                    GUILayout.Label(mods[i].CustomRequirements, colWidth[j++]);
                                 }
                                 else
                                 {
-                                    GUILayout.Label("-", colWidth[++col]);
+                                    GUILayout.Label("-", colWidth[j++]);
                                 }
                                 if (!forbidDisableMods)
                                 {
                                     var action = mods[i].Enabled;
-                                    action = GUILayout.Toggle(action, "", colWidth[++col]);
+                                    action = GUILayout.Toggle(action, "", colWidth[j++]);
                                     if (action != mods[i].Enabled)
                                     {
                                         mods[i].Enabled = action;
@@ -554,7 +558,7 @@ namespace UnityModManagerNet
                                 }
                                 else
                                 {
-                                    GUILayout.Label("", colWidth[++col]);
+                                    GUILayout.Label("", colWidth[j++]);
                                 }
                                 if (mods[i].Active)
                                 {
@@ -565,7 +569,7 @@ namespace UnityModManagerNet
                                     GUILayout.Box(!mods[i].Enabled ? Textures.StatusInactive : Textures.StatusNeedRestart, status);
                                 }
                                 if (mods[i].ErrorOnLoading)
-                                    GUILayout.Label("！！");
+                                    GUILayout.Box(Textures.Errors, status);
                                 GUILayout.EndHorizontal();
                                 if (ShowModSettings == i)
                                 {
@@ -612,6 +616,10 @@ namespace UnityModManagerNet
                             GUILayout.Space(3);
                             GUILayout.Label("可更新", bold, GUILayout.ExpandWidth(false));
                             GUILayout.Space(15);
+                            GUILayout.Box(Textures.Errors, status);
+                            GUILayout.Space(3);
+                            GUILayout.Label("有错误", bold, GUILayout.ExpandWidth(false));
+                            GUILayout.Space(10);
                             GUILayout.Box(Textures.StatusActive, status);
                             GUILayout.Space(3);
                             GUILayout.Label("已启用", bold, GUILayout.ExpandWidth(false));

@@ -167,7 +167,7 @@ namespace UnityModManagerNet.Installer
         }
         #endregion
 
-        #region 自定义皮肤改变      
+        #region 自定义更换皮肤      
         private void UnityModLoaderForm_SkinChanged(object sender, EventArgs e)
         {
             string skin = skinSetBox.SelectedValue.ToString();

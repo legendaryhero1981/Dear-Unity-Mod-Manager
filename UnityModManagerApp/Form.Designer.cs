@@ -658,7 +658,7 @@ namespace UnityModManagerNet.Installer
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "UnityModManagerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Unity游戏MOD管理器（允哥修正&汉化&美化特别版）";
+            this.Text = "亲爱的Unity游戏MOD管理器（允哥修正&汉化&美化特别版）";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UnityModLoaderForm_FormClosing);
             this.SizeChanged += new System.EventHandler(this.UnityModLoaderForm_SizeChanged);
             this.splitContainerMods.Panel1.ResumeLayout(false);

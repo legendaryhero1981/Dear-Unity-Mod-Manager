@@ -11,7 +11,7 @@ namespace UnityModManagerNet
         public static void OpenUnityFileLog()
         {
             var folders = new string[] { Application.persistentDataPath, Application.dataPath };
-            foreach(var folder in folders)
+            foreach (var folder in folders)
             {
                 var filepath = Path.Combine(folder, "output_log.txt");
                 if (File.Exists(filepath))
@@ -64,10 +64,7 @@ namespace UnityModManagerNet
         {
             float target = size;
             var t = Mathf.Max(tex.width / target, tex.height / target);
-            if (t < 1f)
-            {
-                TextureScale.Bilinear(tex, (int)(tex.width / t), (int)(tex.height / t));
-            }
+            TextureScale.Bilinear(tex, (int)(tex.width / t), (int)(tex.height / t));
         }
     }
 
