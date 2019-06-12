@@ -241,7 +241,9 @@ namespace UnityModManagerNet
             {
                 GUI.skin.font = Font.CreateDynamicFontFromOSFont(GLOBAL_FONT_NAME, Scale(GLOBAL_FONT_SIZE));
                 GUI.skin.toggle = toggle;
-                GUI.skin.button.padding = new RectOffset(Scale(10), Scale(10), Scale(3), Scale(3));
+                toggle.margin.left = Scale(10);
+                GUI.skin.button = button;
+                button.padding = new RectOffset(Scale(10), Scale(10), Scale(3), Scale(3));
                 GUI.skin.horizontalSlider.fixedHeight = Scale(12);
                 GUI.skin.horizontalSlider.border = RectOffset(3, 0);
                 GUI.skin.horizontalSlider.padding = RectOffset(Scale(-1), 0);
@@ -250,7 +252,6 @@ namespace UnityModManagerNet
                 GUI.skin.horizontalSliderThumb.border = RectOffset(4, 0);
                 GUI.skin.horizontalSliderThumb.padding = RectOffset(Scale(7), 0);
                 GUI.skin.horizontalSliderThumb.margin = RectOffset(0);
-                toggle.margin.left = Scale(10);
                 window.padding = RectOffset(Scale(5));
                 h1.fontSize = Scale(26);
                 h1.margin = RectOffset(Scale(0), Scale(5));
@@ -432,13 +433,8 @@ namespace UnityModManagerNet
                     GUI.DragWindow(mWindowRect);
                 UnityAction buttons = () => { };
                 GUILayout.Label($"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", h1);
-                GUILayout.Space(3);
-                int tab = tabId;
-                tab = GUILayout.Toolbar(tab, tabs, button, GUILayout.ExpandWidth(false));
-                if (tab != tabId)
-                {
-                    tabId = tab;
-                }
+                GUILayout.Space(5);
+                tabId = GUILayout.Toolbar(tabId, tabs, button, GUILayout.ExpandWidth(false));
                 GUILayout.Space(5);
                 if (mScrollPosition.Length != tabs.Length)
                     mScrollPosition = new Vector2[tabs.Length];
@@ -460,7 +456,7 @@ namespace UnityModManagerNet
 
             private void DrawTab(int tabId, ref UnityAction buttons)
             {
-                var minWidth = GUILayout.MinWidth(mWindowSize.x - 20);
+                var minWidth = GUILayout.MinWidth(mWindowSize.x - 10);
                 switch (tabs[tabId])
                 {
                     case "Mods":
@@ -745,16 +741,15 @@ namespace UnityModManagerNet
                 if (open == Opened)
                     return;
                 if (open)
+                {
                     mFirstLaunched = true;
-                if (!open)
+                    ShowModSettings = mShowModSettings;
+                }
+                else
                 {
                     var i = ShowModSettings;
                     ShowModSettings = -1;
                     mShowModSettings = i;
-                }
-                else
-                {
-                    ShowModSettings = mShowModSettings;
                 }
                 try
                 {

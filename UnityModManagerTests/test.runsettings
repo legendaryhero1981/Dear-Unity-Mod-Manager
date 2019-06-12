@@ -47,7 +47,7 @@
 
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
-    <Parameter name="IMGUIUtilTests.imgFilePath" value="" />
+    <Parameter name="ImguiUtilTests.imgFilePath" value="" />
   </TestRunParameters>
 
   <!-- MSTest adapter -->

@@ -67,7 +67,7 @@ namespace UnityModManagerNet
                 WWW.ResizeToIfLess(resize);
                 Updates.ResizeToIfLess(resize);
                 Errors.ResizeToIfLess(resize);
-                //Errors = IMGUIUtil.Base64StringToTexture2D(IMGUIUtil.FileToBase64String(@"G:\cache\截图\imageres\imageres.dll(98).png"));
+                //Errors = ImguiUtil.Base64StringToTexture2D(ImguiUtil.FileToBase64String(@"G:\cache\截图\imageres\imageres.dll(98).png"));
             }
         }
     }

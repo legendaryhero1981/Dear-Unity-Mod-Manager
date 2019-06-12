@@ -323,7 +323,7 @@
     <Compile Include="Textures.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="UI\Utils\AutoSizeFormControlUtil.cs" />
-    <Compile Include="UI\Utils\IMGUIUtil.cs" />
+    <Compile Include="UI\Utils\ImguiUtil.cs" />
     <Compile Include="Updates.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

@@ -882,9 +882,9 @@ namespace UnityModManagerNet
                             {
                                 gameVersion = ParseVersion(foundField.GetValue(null).ToString());
                                 Logger.Log($"已检测游戏版本“{gameVersion}”！");
-                                goto Next;
                             }
-                            UnityModManager.Logger.Error($"找不到方法名称“{methodName}”！");
+                            else
+                                UnityModManager.Logger.Error($"找不到方法名称“{methodName}”！");
                             goto Next;
                         }
                         gameVersion = ParseVersion(foundMethod.Invoke(null, null).ToString());

@@ -10,7 +10,8 @@ namespace UnityModManagerNet.Installer
 {
     public partial class UnityModManagerForm : Form
     {
-        readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> repositories = new Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>>();
+        private readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> repositories = new Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>>();
+        private static readonly string _repositoryUrl = "raw.githubusercontent.com";
 
         private void CheckModUpdates()
         {
@@ -165,7 +166,8 @@ namespace UnityModManagerNet.Installer
             {
                 using (var ping = new Ping())
                 {
-                    return ping.Send("raw.githubusercontent.com", 3000).Status == IPStatus.Success;
+                    var reply = ping.Send(_repositoryUrl, 1000);
+                    return reply?.Status == IPStatus.Success;
                 }
             }
             catch (Exception e)

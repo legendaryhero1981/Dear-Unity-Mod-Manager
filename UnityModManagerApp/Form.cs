@@ -16,7 +16,7 @@ namespace UnityModManagerNet.Installer
     [Serializable]
     public partial class UnityModManagerForm : Form
     {
-        const string REG_PATH = @"HKEY_CURRENT_USER\Software\UnityModManager";
+        const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil autoSizeFormControlUtil;
 
@@ -29,13 +29,13 @@ namespace UnityModManagerNet.Installer
 
         static readonly string[] libraryFiles = new string[]
         {
+            //"UnityModManager.xml",
+            //"0Harmony.dll",
             "0Harmony12.dll",
             "0Harmony-1.2.dll",
-            //"0Harmony.dll",
             "dnlib.dll",
             "System.Xml.dll",
-            "UnityModManager.dll",
-            //"UnityModManager.xml"
+            "UnityModManager.dll"
         };
 
         public static UnityModManagerForm instance = null;
@@ -104,7 +104,7 @@ namespace UnityModManagerNet.Installer
                                 var setValue = registry.GetMethod("SetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
                                 if (setValue != null)
                                 {
-                                    setValue.Invoke(null, new object[] { REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "UnityModManager.exe") });
+                                    setValue.Invoke(null, new object[] { REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "DearUnityModManager.exe") });
                                     setValue.Invoke(null, new object[] { REG_PATH, "Path", Application.StartupPath });
                                 }
                             }
@@ -723,8 +723,7 @@ namespace UnityModManagerNet.Installer
                         Log.Print($"  '{filename}'");
                         File.Copy(filename, doorstopPath, true);
                         Log.Print($"  '{doorstopConfigFilename}'");
-                        File.WriteAllText(doorstopConfigPath, "[UnityDoorstop]" + Environment.NewLine + "enabled = true" + Environment.NewLine + "targetAssembly = " + managerAssemblyPath);
-
+                        File.WriteAllText(doorstopConfigPath, $@"[UnityDoorstop]{Environment.NewLine}enabled = true{Environment.NewLine}targetAssembly = {managerAssemblyPath}");
                         DoactionLibraries(Actions.Install);
                         DoactionGameConfig(Actions.Install);
                         Log.Print("安装管理器模块到游戏成功！");
@@ -753,7 +752,6 @@ namespace UnityModManagerNet.Installer
                         Utils.MakeBackup(gameConfigPath);
                         if (write)
                         {
-
                             Utils.MakeBackup(doorstopPath);
                             Utils.MakeBackup(doorstopConfigPath);
                             Utils.MakeBackup(libraryPaths);
@@ -790,7 +788,6 @@ namespace UnityModManagerNet.Installer
             }
 
         EXIT:
-
             if (write)
             {
                 try
@@ -1117,7 +1114,7 @@ namespace UnityModManagerNet.Installer
                 case 1: // Mods
                     ReloadMods();
                     RefreshModList();
-                    if (selectedGame != null && !repositories.ContainsKey(selectedGame))
+                    if (!repositories.ContainsKey(selectedGame))
                         CheckModUpdates();
                     break;
             }
