@@ -13,10 +13,9 @@ namespace UnityModManagerNet
 
             public static void Init()
             {
-                var currentGame = Config.Name.Replace(" ", "").Replace(":", "");
                 foreach (var t in typeof(GameScripts).GetNestedTypes(BindingFlags.NonPublic))
                 {
-                    if (t.IsClass && t.IsSubclassOf(typeof(GameScript)) && t.Name == currentGame)
+                    if (t.IsClass && t.IsSubclassOf(typeof(GameScript)) && t.Name.Equals(Config.GameScriptName?.Trim()))
                     {
                         var script = (GameScript)Activator.CreateInstance(t);
                         scripts.Add(script);
@@ -117,7 +116,7 @@ namespace UnityModManagerNet
 
             public static void OnModToggle(ModEntry modEntry, bool value)
             {
-                foreach(var o in scripts)
+                foreach (var o in scripts)
                 {
                     try
                     {

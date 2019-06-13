@@ -350,55 +350,51 @@ namespace UnityModManagerNet
             private int mShowModSettings = -1;
             private int ShowModSettings
             {
-                get { return mShowModSettings; }
+                get => mShowModSettings;
                 set
                 {
-                    Action<ModEntry> Hide = (mod) =>
+                    void Hide(ModEntry mod)
                     {
-                        if (mod.Active && mod.OnHideGUI != null && mod.OnGUI != null)
+                        if (!mod.Active || mod.OnHideGUI == null || mod.OnGUI == null) return;
+                        try
                         {
-                            try
-                            {
-                                mod.OnHideGUI(mod);
-                            }
-                            catch (Exception ex)
-                            {
-                                mod.Logger.LogException("OnHideGUI", ex);
-                            }
+                            mod.OnHideGUI(mod);
                         }
-                    };
-                    Action<ModEntry> Show = (mod) =>
-                    {
-                        if (mod.Active && mod.OnShowGUI != null && mod.OnGUI != null)
+                        catch (Exception ex)
                         {
-                            try
-                            {
-                                mod.OnShowGUI(mod);
-                            }
-                            catch (Exception ex)
-                            {
-                                mod.Logger.LogException("OnShowGUI", ex);
-                            }
+                            mod.Logger.LogException("OnHideGUI", ex);
                         }
-                    };
-                    mShowModSettings = value;
-                    if (mShowModSettings != mPreviousShowModSettings)
-                    {
-                        if (mShowModSettings == -1)
-                        {
-                            Hide(modEntries[mPreviousShowModSettings]);
-                        }
-                        else if (mPreviousShowModSettings == -1)
-                        {
-                            Show(modEntries[mShowModSettings]);
-                        }
-                        else
-                        {
-                            Hide(modEntries[mPreviousShowModSettings]);
-                            Show(modEntries[mShowModSettings]);
-                        }
-                        mPreviousShowModSettings = mShowModSettings;
                     }
+
+                    void Show(ModEntry mod)
+                    {
+                        if (!mod.Active || mod.OnShowGUI == null || mod.OnGUI == null) return;
+                        try
+                        {
+                            mod.OnShowGUI(mod);
+                        }
+                        catch (Exception ex)
+                        {
+                            mod.Logger.LogException("OnShowGUI", ex);
+                        }
+                    }
+
+                    mShowModSettings = value;
+                    if (mShowModSettings == mPreviousShowModSettings) return;
+                    if (mShowModSettings == -1)
+                    {
+                        Hide(modEntries[mPreviousShowModSettings]);
+                    }
+                    else if (mPreviousShowModSettings == -1)
+                    {
+                        Show(modEntries[mShowModSettings]);
+                    }
+                    else
+                    {
+                        Hide(modEntries[mPreviousShowModSettings]);
+                        Show(modEntries[mShowModSettings]);
+                    }
+                    mPreviousShowModSettings = mShowModSettings;
                 }
             }
 
@@ -747,9 +743,8 @@ namespace UnityModManagerNet
                 }
                 else
                 {
-                    var i = ShowModSettings;
+                    mShowModSettings = ShowModSettings;
                     ShowModSettings = -1;
-                    mShowModSettings = i;
                 }
                 try
                 {
@@ -758,19 +753,15 @@ namespace UnityModManagerNet
                     if (open)
                     {
                         GameCursorLocked = Cursor.lockState == CursorLockMode.Locked || !Cursor.visible;
-                        if (GameCursorLocked)
-                        {
-                            Cursor.visible = true;
-                            Cursor.lockState = CursorLockMode.None;
-                        }
+                        if (!GameCursorLocked) return;
+                        Cursor.visible = true;
+                        Cursor.lockState = CursorLockMode.None;
                     }
                     else
                     {
-                        if (GameCursorLocked)
-                        {
-                            Cursor.visible = false;
-                            Cursor.lockState = CursorLockMode.Locked;
-                        }
+                        if (!GameCursorLocked) return;
+                        Cursor.visible = false;
+                        Cursor.lockState = CursorLockMode.Locked;
                     }
                 }
                 catch (Exception e)
@@ -785,11 +776,11 @@ namespace UnityModManagerNet
             {
                 if (value)
                 {
-                    mCanvas = new GameObject("canvas", typeof(Canvas), typeof(GraphicRaycaster));
+                    mCanvas = new GameObject("", typeof(Canvas), typeof(GraphicRaycaster));
                     mCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
                     mCanvas.GetComponent<Canvas>().sortingOrder = Int16.MaxValue;
                     DontDestroyOnLoad(mCanvas);
-                    var panel = new GameObject("panel", typeof(Image));
+                    var panel = new GameObject("", typeof(Image));
                     panel.transform.SetParent(mCanvas.transform);
                     panel.GetComponent<RectTransform>().anchorMin = new Vector2(1, 0);
                     panel.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);

@@ -59,5 +59,14 @@ namespace UnityModManagerNet.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似 下载最新的英文版本 的本地化字符串。
+        /// </summary>
+        internal static string btnDownloadUpdate_Text {
+            get {
+                return ResourceManager.GetString("btnDownloadUpdate.Text", resourceCulture);
+            }
+        }
     }
 }

@@ -34,32 +34,33 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 55);
+            this.progressBar1.Location = new System.Drawing.Point(12, 64);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(306, 23);
+            this.progressBar1.Size = new System.Drawing.Size(306, 21);
             this.progressBar1.TabIndex = 0;
             // 
             // status
             // 
-            this.status.Location = new System.Drawing.Point(12, 9);
+            this.status.Location = new System.Drawing.Point(12, 14);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(306, 43);
+            this.status.Size = new System.Drawing.Size(306, 40);
             this.status.TabIndex = 1;
-            this.status.Text = "Downloading...";
+            this.status.Text = "下载中……";
             this.status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DownloaderForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 94);
+            this.ClientSize = new System.Drawing.Size(334, 111);
             this.Controls.Add(this.status);
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DownloaderForm";
-            this.Text = "Downloader";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "亲爱的Unity游戏MOD管理器更新程序";
             this.ResumeLayout(false);
 
         }

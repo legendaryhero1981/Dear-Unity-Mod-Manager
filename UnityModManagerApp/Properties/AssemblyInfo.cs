@@ -3,8 +3,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Unity游戏MOD管理器")]
-[assembly: AssemblyDescription("Unity游戏MOD管理器")]
+[assembly: AssemblyTitle("亲爱的Unity游戏MOD管理器")]
+[assembly: AssemblyDescription("亲爱的Unity游戏MOD管理器")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Legend")]
 [assembly: AssemblyProduct("UnityModManagerApp")]

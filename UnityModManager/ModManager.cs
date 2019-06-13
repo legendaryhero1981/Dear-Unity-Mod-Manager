@@ -454,7 +454,7 @@ namespace UnityModManagerNet
                         {
                             var fi = new FileInfo(assemblyPath);
                             var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + version.GetHashCode() + ManagerVersion.GetHashCode()).GetHashCode();
-                            assemblyCachePath = assemblyPath + $".{hash}.cache";
+                            assemblyCachePath = $"{assemblyPath}.{hash}.cache";
                             cacheExists = File.Exists(assemblyCachePath);
                             if (!cacheExists)
                             {
@@ -530,7 +530,7 @@ namespace UnityModManagerNet
                         if (!Invoke(Info.EntryMethod, out var result, param, types) || result != null && (bool)result == false)
                         {
                             mErrorOnLoading = true;
-                            this.Logger.Log($"加加载口方法“{Info.EntryMethod}”失败！");
+                            this.Logger.Log($"加载入口方法“{Info.EntryMethod}”失败！");
                         }
                     }
                     catch (Exception e)
@@ -747,7 +747,7 @@ namespace UnityModManagerNet
                             UnityModManager.Logger.Error($"不能找到方法“{namespaceClassnameMethodname}”，MOD“{Info.Id}”未加载！");
                     }
 
-                Exit:
+                    Exit:
                     mCache[key] = methodInfo;
                 }
                 return methodInfo;
@@ -756,8 +756,8 @@ namespace UnityModManagerNet
 
         public static readonly List<ModEntry> modEntries = new List<ModEntry>();
         public static string modsPath { get; private set; }
-        internal static Param Params { get; set; } = new Param();
-        internal static GameInfo Config { get; set; } = new GameInfo();
+        internal static Param Params { get; set; }
+        internal static GameInfo Config { get; set; }
         internal static bool started;
         internal static bool initialized;
 
@@ -961,9 +961,7 @@ namespace UnityModManagerNet
                         }
                     }
                 }
-                Logger.Log($"Mods解析完成！成功加载了{modEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！");
-                Console.WriteLine();
-                Console.WriteLine();
+                Logger.Log($"Mods解析完成！成功加载了{modEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
             }
             GameScripts.OnAfterLoadMods();
             if (!UI.Load())

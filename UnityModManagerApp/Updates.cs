@@ -96,7 +96,7 @@ namespace UnityModManagerNet.Installer
             if (string.IsNullOrEmpty(config.Repository))
                 return;
 
-            Log.Print("正在检查MOD新版本……");
+            Log.Print("正在检查MOD管理器的新版本……");
 
             if (!HasNetworkConnection())
             {
@@ -142,7 +142,6 @@ namespace UnityModManagerNet.Installer
                         var ver = Utils.ParseVersion(release.Version);
                         if (version < ver)
                         {
-                            //btnDownloadUpdate.Visible = true;
                             btnDownloadUpdate.Text = $"下载v{release.Version}";
                             Log.Print($"有可用的新版本。");
                         }

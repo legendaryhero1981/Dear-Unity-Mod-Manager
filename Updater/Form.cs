@@ -15,12 +15,12 @@ namespace UnityModManagerNet.Downloader
 {
     public partial class DownloaderForm : Form
     {
-        const string updateFile = "update.zip";
+        const string updateFile = "DearUnityModManager.zip";
         const string configFile = "UnityModManagerConfig.xml";
         const string managerName = "UnityModManager";
         const string managerFile = "UnityModManager.dll";
-        const string managerAppName = "UnityModManager";
-        const string managerAppFile = "UnityModManager.exe";
+        const string managerAppName = "DearUnityModManager";
+        const string managerAppFile = "DearUnityModManager.exe";
 
         public DownloaderForm()
         {
@@ -30,10 +30,6 @@ namespace UnityModManagerNet.Downloader
 
         public void Start()
         {
-            //string[] args = Environment.GetCommandLineArgs();
-            //if (args.Length <= 1 || string.IsNullOrEmpty(args[1]))
-            //    return;
-
             if (!Utils.HasNetworkConnection())
             {
                 status.Text = $"无网络连接！";

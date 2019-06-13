@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Unity游戏MOD管理器MOD更新插件")]
-[assembly: AssemblyDescription("Unity游戏MOD管理器MOD更新插件")]
+[assembly: AssemblyTitle("亲爱的Unity游戏MOD管理器更新程序")]
+[assembly: AssemblyDescription("亲爱的Unity游戏MOD管理器更新程序")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Legend")]
-[assembly: AssemblyProduct("Downloader")]
+[assembly: AssemblyProduct("UnityModManagerUpdater")]
 [assembly: AssemblyCopyright("Copyright © Legend 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

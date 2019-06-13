@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace UnityModManagerNet.Installer
 {
     public enum ModStatus { NotInstalled, Installed }
-    public enum InstallType { Assembly, DoorstopProxy, /*Config,*/ Count }
+    public enum InstallType { DoorstopProxy, Assembly, /*Config,*/ Count }
 
     public class ModInfo : UnityModManager.ModInfo
     {
@@ -57,11 +57,14 @@ namespace UnityModManagerNet.Installer
         public string Folder;
         public string ModsDirectory;
         public string ModInfo;
-        public string GameExe;
         public string EntryPoint;
         public string StartingPoint;
         public string UIStartingPoint;
+        public string GameExe;
+        public string GameName;
         public string GameVersionPoint;
+        public string GameScriptName;
+
         public string OldPatchTarget;
         public string Additionally;
         //public string MachineConfig;

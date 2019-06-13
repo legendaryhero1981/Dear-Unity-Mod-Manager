@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using UnityModManagerNet.UI.Utils;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using UnityModManagerNet.Installer.Properties;
 
 namespace UnityModManagerNet.Installer
 {
@@ -76,9 +77,8 @@ namespace UnityModManagerNet.Installer
             Dictionary<string, string> skins = new Dictionary<string, string>();
             skins["默认皮肤"] = "";
             skins = Utils.GetMatchedFiles(SKINS_PATH, "*.ssk", skins);
-            BindingSource bindingSource = new BindingSource();
-            bindingSource.DataSource = skins;
-            skinSetBox.DataSource = bindingSource;
+            var skinSet = new BindingSource { DataSource = skins };
+            skinSetBox.DataSource = skinSet;
             skinSetBox.DisplayMember = "Key";
             skinSetBox.ValueMember = "Value";
             autoSizeFormControlUtil = new AutoSizeFormControlUtil(this);
@@ -137,7 +137,7 @@ namespace UnityModManagerNet.Installer
 
             if (config != null && config.GameInfo != null && config.GameInfo.Length > 0)
             {
-                config.GameInfo = config.GameInfo.OrderBy(x => x.Name).ToArray();
+                config.GameInfo = config.GameInfo.OrderBy(x => x.GameName).ToArray();
                 gameList.Items.AddRange(config.GameInfo);
 
                 GameInfo selected = null;
@@ -230,10 +230,12 @@ namespace UnityModManagerNet.Installer
             var ignoreFields = new List<string>
             {
                 nameof(GameInfo.GameExe),
+                nameof(GameInfo.GameName),
+                nameof(GameInfo.GameVersionPoint),
+                nameof(GameInfo.GameScriptName),
                 nameof(GameInfo.StartingPoint),
                 nameof(GameInfo.UIStartingPoint),
                 nameof(GameInfo.OldPatchTarget),
-                nameof(GameInfo.GameVersionPoint),
                 nameof(GameInfo.Additionally)
             };
 
@@ -645,14 +647,14 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                if (btnDownloadUpdate.Text == "下载最新的英文版本")
+                if (btnDownloadUpdate.Text == Resources.btnDownloadUpdate)
                 {
                     if (!string.IsNullOrEmpty(config.HomePage))
                         Process.Start(config.HomePage);
                 }
                 else
                 {
-                    Process.Start("Downloader.exe");
+                    Process.Start("UnityModManagerUpdater.exe");
                 }
             }
             catch (Exception ex)

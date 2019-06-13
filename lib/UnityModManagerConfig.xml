@@ -1,106 +1,119 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<Repository>https://raw.githubusercontent.com/newman55/unity-mod-manager/master/Repository_beta_13.json</Repository>
-	<HomePage>https://www.nexusmods.com/site/mods/21/</HomePage>
-	<GameInfo Name="Oxygen Not Included（缺氧）">
-		<Folder>OxygenNotIncluded</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>OxygenNotIncluded.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp-firstpass.dll]App.Awake:After</StartingPoint>
-		<OldPatchTarget>[Assembly-CSharp-firstpass.dll]App.Awake:After</OldPatchTarget>
-		<GameVersionPoint>[Assembly-CSharp.dll]KleiVersion.ChangeList</GameVersionPoint>
-	</GameInfo>
-	<GameInfo Name="Two Point Hospital（双点医院）">
-		<Folder>TPH</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>TPH.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</StartingPoint>
-		<OldPatchTarget>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</OldPatchTarget>
-	</GameInfo>
-	<GameInfo Name="Pathfinder: Kingmaker（开拓者：拥王者）">
-		<Folder>Pathfinder Kingmaker</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Kingmaker.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
-		<OldPatchTarget>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</OldPatchTarget>
-		<GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
-	</GameInfo>
-	<GameInfo Name="Car Mechanic Simulator 2018（汽车修理工模拟2018）">
-		<Folder>Car Mechanic Simulator 2018</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>cms2018.exe</GameExe>
-		<EntryPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</EntryPoint>
-		<StartingPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</StartingPoint>
-	</GameInfo>
-	<GameInfo Name="Garden Paws（花园瓜子）">
-		<Folder>Garden Paws</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<EntryPoint>[Assembly-CSharp.dll]GPLauncher.Awake:After</EntryPoint>
-	</GameInfo>
-	<GameInfo Name="Farm Together（一起玩农场）">
-		<Folder>Farm Together</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<EntryPoint>[Assembly-CSharp.dll]BaseGameInit.Awake:After</EntryPoint>
-	</GameInfo>
-	<GameInfo Name="Skater XL（滑板XL）">
-		<Folder>Skater XL</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<EntryPoint>[Assembly-CSharp.dll]TitleScreen.Start:After</EntryPoint>
-	</GameInfo>
-	<GameInfo Name="My Time At Portia（波西亚时光）">
-		<Folder>Portia</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Portia.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</StartingPoint>
-		<OldPatchTarget>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</OldPatchTarget>
-		<GameVersionPoint>[Assembly-CSharp.dll]Pathea.Version.GetString</GameVersionPoint>
-	</GameInfo>
-	<GameInfo Name="Dawn of Man（人类的黎明）">
-		<Folder>DawnOfMan</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>DawnOfMan.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]DawnOfMan.TitleStateMain.init:After</StartingPoint>
-	</GameInfo>
-	<GameInfo Name="Derail Valley（脱轨的山谷）">
-		<Folder>Derail Valley</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>DerailValley.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]Bootstrap.StartGame:After</StartingPoint>
-	</GameInfo>
-	<GameInfo Name="Eastshade（东方之茵）">
-		<Folder>Eastshade</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Eastshade.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]GameManager.Awake:After</StartingPoint>
-	</GameInfo>
-	<GameInfo Name="Risk of Rain 2（雨中冒险2）">
-		<Folder>Risk of Rain 2</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Risk of Rain 2.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]RoR2.RoR2Application.Awake:After</StartingPoint>
-		<Additionally>You need to download mscorlib.dll file and copy it to the "Risk of Rain 2_Data\Managed" folder. 
+  <Repository>https://raw.githubusercontent.com/legendaryhero1981/Dear-Unity-Mod-Manager/master/Repository.json</Repository>
+  <HomePage>https://www.nexusmods.com/site/mods/21/</HomePage>
+  <GameInfo Name="开拓者：拥王者">
+    <GameName>Pathfinder: Kingmaker</GameName>
+    <Folder>Pathfinder Kingmaker</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Kingmaker.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
+    <OldPatchTarget>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</OldPatchTarget>
+    <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
+  </GameInfo>
+  <GameInfo Name="缺氧">
+    <GameName>Oxygen Not Included</GameName>
+    <Folder>OxygenNotIncluded</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>OxygenNotIncluded.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp-firstpass.dll]App.Awake:After</StartingPoint>
+    <OldPatchTarget>[Assembly-CSharp-firstpass.dll]App.Awake:After</OldPatchTarget>
+    <GameVersionPoint>[Assembly-CSharp.dll]KleiVersion.ChangeList</GameVersionPoint>
+  </GameInfo>
+  <GameInfo Name="双点医院">
+    <GameName>Two Point Hospital</GameName>
+    <Folder>TPH</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>TPH.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</StartingPoint>
+    <OldPatchTarget>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</OldPatchTarget>
+  </GameInfo>
+  <GameInfo Name="汽车修理工模拟2018">
+    <GameName>Car Mechanic Simulator 2018</GameName>
+    <Folder>Car Mechanic Simulator 2018</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>cms2018.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</StartingPoint>
+  </GameInfo>
+  <GameInfo Name="花园瓜子">
+    <GameName>Garden Paws</GameName>
+    <Folder>Garden Paws</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <EntryPoint>[Assembly-CSharp.dll]GPLauncher.Awake:After</EntryPoint>
+  </GameInfo>
+  <GameInfo Name="一起玩农场">
+    <GameName>Farm Together</GameName>
+    <Folder>Farm Together</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <EntryPoint>[Assembly-CSharp.dll]BaseGameInit.Awake:After</EntryPoint>
+  </GameInfo>
+  <GameInfo Name="滑板XL">
+    <GameName>Skater XL</GameName>
+    <Folder>Skater XL</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <EntryPoint>[Assembly-CSharp.dll]TitleScreen.Start:After</EntryPoint>
+  </GameInfo>
+  <GameInfo Name="波西亚时光">
+    <GameName>My Time At Portia</GameName>
+    <Folder>Portia</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Portia.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</StartingPoint>
+    <OldPatchTarget>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</OldPatchTarget>
+    <GameVersionPoint>[Assembly-CSharp.dll]Pathea.Version.GetString</GameVersionPoint>
+  </GameInfo>
+  <GameInfo Name="人类的黎明">
+    <GameName>Dawn of Man</GameName>
+    <Folder>DawnOfMan</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>DawnOfMan.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]DawnOfMan.TitleStateMain.init:After</StartingPoint>
+  </GameInfo>
+  <GameInfo Name="脱轨的山谷">
+    <GameName>Derail Valley</GameName>
+    <Folder>Derail Valley</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>DerailValley.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Bootstrap.StartGame:After</StartingPoint>
+  </GameInfo>
+  <GameInfo Name="东方之茵">
+    <GameName>Eastshade</GameName>
+    <Folder>Eastshade</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Eastshade.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]GameManager.Awake:After</StartingPoint>
+  </GameInfo>
+  <GameInfo Name="雨中冒险2">
+    <GameName>Risk of Rain 2</GameName>
+    <GameScriptName>RiskofRain2</GameScriptName>
+    <Folder>Risk of Rain 2</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Risk of Rain 2.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]RoR2.RoR2Application.Awake:After</StartingPoint>
+    <Additionally>You need to download mscorlib.dll file and copy it to the "Risk of Rain 2_Data\Managed" folder. 
 Save the old file if you want to delete the UMM.
 4.4.2019 - https://bit.ly/2IpuREb</Additionally>
-	</GameInfo>
+  </GameInfo>
 </Config>

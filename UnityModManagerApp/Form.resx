@@ -117,22 +117,1134 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainerMods.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainerMods.IsSplitterFixed" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="splitContainerMods.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainerMods.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="splitContainerMods.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="columnHeader1.Text" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="columnHeader1.Width" type="System.Int32, mscorlib">
+    <value>282</value>
+  </data>
+  <data name="columnHeader2.Text" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="columnHeader2.Width" type="System.Int32, mscorlib">
+    <value>107</value>
+  </data>
+  <data name="columnHeader3.Text" xml:space="preserve">
+    <value>MOD管理器版本</value>
+  </data>
+  <data name="columnHeader3.Width" type="System.Int32, mscorlib">
+    <value>213</value>
+  </data>
+  <data name="columnHeader4.Text" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="columnHeader4.Width" type="System.Int32, mscorlib">
+    <value>170</value>
+  </data>
   <metadata name="ModcontextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>329, 11</value>
   </metadata>
+  <data name="ModcontextMenuStrip1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 14.25pt</value>
+  </data>
+  <data name="installToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="installToolStripMenuItem.Text" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="updateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="updateToolStripMenuItem.Text" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="revertToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="revertToolStripMenuItem.Text" xml:space="preserve">
+    <value>还原</value>
+  </data>
+  <data name="uninstallToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="uninstallToolStripMenuItem.Text" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+  <data name="wwwToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="wwwToolStripMenuItem1.Text" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="ModcontextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 154</value>
+  </data>
+  <data name="ModcontextMenuStrip1.Text" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="&gt;&gt;ModcontextMenuStrip1.Name" xml:space="preserve">
+    <value>ModcontextMenuStrip1</value>
+  </data>
+  <data name="&gt;&gt;ModcontextMenuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="listMods.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="listMods.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 12pt, style=Bold</value>
+  </data>
+  <data name="listMods.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="listMods.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="listMods.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 551</value>
+  </data>
+  <data name="listMods.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;listMods.Name" xml:space="preserve">
+    <value>listMods</value>
+  </data>
+  <data name="&gt;&gt;listMods.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;listMods.Parent" xml:space="preserve">
+    <value>splitContainerMods.Panel1</value>
+  </data>
+  <data name="&gt;&gt;listMods.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel1.Name" xml:space="preserve">
+    <value>splitContainerMods.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel1.Parent" xml:space="preserve">
+    <value>splitContainerMods</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainerMods.Panel2.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="splitContainerModsInstall.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainerModsInstall.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainerModsInstall.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="splitContainerModsInstall.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="btnModInstall.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="btnModInstall.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="btnModInstall.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="btnModInstall.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="btnModInstall.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 43</value>
+  </data>
+  <data name="btnModInstall.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="btnModInstall.Text" xml:space="preserve">
+    <value>安装MOD</value>
+  </data>
+  <data name="&gt;&gt;btnModInstall.Name" xml:space="preserve">
+    <value>btnModInstall</value>
+  </data>
+  <data name="&gt;&gt;btnModInstall.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnModInstall.Parent" xml:space="preserve">
+    <value>splitContainerModsInstall.Panel1</value>
+  </data>
+  <data name="&gt;&gt;btnModInstall.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel1.Name" xml:space="preserve">
+    <value>splitContainerModsInstall.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel1.Parent" xml:space="preserve">
+    <value>splitContainerModsInstall</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainerModsInstall.Panel2.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel2.Name" xml:space="preserve">
+    <value>splitContainerModsInstall.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel2.Parent" xml:space="preserve">
+    <value>splitContainerModsInstall</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainerModsInstall.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 135</value>
+  </data>
+  <data name="splitContainerModsInstall.SplitterDistance" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="splitContainerModsInstall.SplitterWidth" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="splitContainerModsInstall.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Name" xml:space="preserve">
+    <value>splitContainerModsInstall</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.Parent" xml:space="preserve">
+    <value>splitContainerMods.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainerModsInstall.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel2.Name" xml:space="preserve">
+    <value>splitContainerMods.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel2.Parent" xml:space="preserve">
+    <value>splitContainerMods</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainerMods.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="splitContainerMods.SplitterDistance" type="System.Int32, mscorlib">
+    <value>551</value>
+  </data>
+  <data name="splitContainerMods.SplitterWidth" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="splitContainerMods.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Name" xml:space="preserve">
+    <value>splitContainerMods</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.Parent" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMods.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainerMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainerMain.IsSplitterFixed" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="splitContainerMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="splitContainerMain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="splitContainerMain.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="installedVersion.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="installedVersion.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 20.25pt</value>
+  </data>
+  <data name="installedVersion.Location" type="System.Drawing.Point, System.Drawing">
+    <value>585, 643</value>
+  </data>
+  <data name="installedVersion.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="installedVersion.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 35</value>
+  </data>
+  <data name="installedVersion.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="installedVersion.Text" xml:space="preserve">
+    <value>1.0.0.0</value>
+  </data>
+  <data name="&gt;&gt;installedVersion.Name" xml:space="preserve">
+    <value>installedVersion</value>
+  </data>
+  <data name="&gt;&gt;installedVersion.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;installedVersion.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;installedVersion.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="gameList.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="gameList.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 21.75pt</value>
+  </data>
+  <data name="gameList.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="gameList.IntegralHeight" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="gameList.ItemHeight" type="System.Int32, mscorlib">
+    <value>38</value>
+  </data>
+  <data name="gameList.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 159</value>
+  </data>
+  <data name="gameList.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="gameList.MaxDropDownItems" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="gameList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 46</value>
+  </data>
+  <data name="gameList.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;gameList.Name" xml:space="preserve">
+    <value>gameList</value>
+  </data>
+  <data name="&gt;&gt;gameList.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gameList.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;gameList.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="currentVersion.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="currentVersion.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 20.25pt</value>
+  </data>
+  <data name="currentVersion.Location" type="System.Drawing.Point, System.Drawing">
+    <value>154, 643</value>
+  </data>
+  <data name="currentVersion.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="currentVersion.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 35</value>
+  </data>
+  <data name="currentVersion.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="currentVersion.Text" xml:space="preserve">
+    <value>1.0.0.0</value>
+  </data>
+  <data name="&gt;&gt;currentVersion.Name" xml:space="preserve">
+    <value>currentVersion</value>
+  </data>
+  <data name="&gt;&gt;currentVersion.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;currentVersion.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;currentVersion.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 20.25pt</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 643</value>
+  </data>
+  <data name="label2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>150, 35</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>当前版本：</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="additionallyGroupBox.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="notesTextBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="notesTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 28</value>
+  </data>
+  <data name="notesTextBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="notesTextBox.ScrollBars" type="System.Windows.Forms.RichTextBoxScrollBars, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="notesTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>760, 130</value>
+  </data>
+  <data name="notesTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="notesTextBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;notesTextBox.Name" xml:space="preserve">
+    <value>notesTextBox</value>
+  </data>
+  <data name="&gt;&gt;notesTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;notesTextBox.Parent" xml:space="preserve">
+    <value>additionallyGroupBox</value>
+  </data>
+  <data name="&gt;&gt;notesTextBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="additionallyGroupBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="additionallyGroupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 392</value>
+  </data>
+  <data name="additionallyGroupBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="additionallyGroupBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="additionallyGroupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 186</value>
+  </data>
+  <data name="additionallyGroupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="additionallyGroupBox.Text" xml:space="preserve">
+    <value>需要进行额外的安装操作</value>
+  </data>
+  <data name="&gt;&gt;additionallyGroupBox.Name" xml:space="preserve">
+    <value>additionallyGroupBox</value>
+  </data>
+  <data name="&gt;&gt;additionallyGroupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;additionallyGroupBox.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;additionallyGroupBox.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 20.25pt</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>400, 643</value>
+  </data>
+  <data name="label3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 35</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>已安装版本：</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="installTypeGroup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="installTypeGroup.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="installTypeGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 266</value>
+  </data>
+  <data name="installTypeGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="installTypeGroup.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="installTypeGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 120</value>
+  </data>
+  <data name="installTypeGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="installTypeGroup.Text" xml:space="preserve">
+    <value>请选择安装方式</value>
+  </data>
+  <data name="&gt;&gt;installTypeGroup.Name" xml:space="preserve">
+    <value>installTypeGroup</value>
+  </data>
+  <data name="&gt;&gt;installTypeGroup.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;installTypeGroup.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;installTypeGroup.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnRestore.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnRestore.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="btnRestore.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="btnRestore.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 106</value>
+  </data>
+  <data name="btnRestore.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="btnRestore.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 45</value>
+  </data>
+  <data name="btnRestore.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btnRestore.Text" xml:space="preserve">
+    <value>还原所有已备份的游戏原始文件</value>
+  </data>
+  <data name="&gt;&gt;btnRestore.Name" xml:space="preserve">
+    <value>btnRestore</value>
+  </data>
+  <data name="&gt;&gt;btnRestore.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnRestore.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;btnRestore.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="btnDownloadUpdate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnDownloadUpdate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="btnDownloadUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 588</value>
+  </data>
+  <data name="btnDownloadUpdate.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="btnDownloadUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 45</value>
+  </data>
+  <data name="btnDownloadUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="btnDownloadUpdate.Text" xml:space="preserve">
+    <value>下载最新的英文版本</value>
+  </data>
+  <data name="&gt;&gt;btnDownloadUpdate.Name" xml:space="preserve">
+    <value>btnDownloadUpdate</value>
+  </data>
+  <data name="&gt;&gt;btnDownloadUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDownloadUpdate.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;btnDownloadUpdate.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="btnRemove.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnRemove.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="btnRemove.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 53</value>
+  </data>
+  <data name="btnRemove.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="btnRemove.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 45</value>
+  </data>
+  <data name="btnRemove.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="btnRemove.Text" xml:space="preserve">
+    <value>从游戏卸载MOD管理器模块</value>
+  </data>
+  <data name="&gt;&gt;btnRemove.Name" xml:space="preserve">
+    <value>btnRemove</value>
+  </data>
+  <data name="&gt;&gt;btnRemove.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnRemove.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;btnRemove.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="btnOpenFolder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnOpenFolder.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="btnOpenFolder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 213</value>
+  </data>
+  <data name="btnOpenFolder.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="btnOpenFolder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 45</value>
+  </data>
+  <data name="btnOpenFolder.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnOpenFolder.Text" xml:space="preserve">
+    <value>请选择游戏主目录</value>
+  </data>
+  <data name="&gt;&gt;btnOpenFolder.Name" xml:space="preserve">
+    <value>btnOpenFolder</value>
+  </data>
+  <data name="&gt;&gt;btnOpenFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnOpenFolder.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;btnOpenFolder.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="btnInstall.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btnInstall.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="btnInstall.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="btnInstall.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="btnInstall.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 45</value>
+  </data>
+  <data name="btnInstall.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="btnInstall.Text" xml:space="preserve">
+    <value>安装MOD管理器模块到游戏</value>
+  </data>
+  <data name="&gt;&gt;btnInstall.Name" xml:space="preserve">
+    <value>btnInstall</value>
+  </data>
+  <data name="&gt;&gt;btnInstall.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInstall.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;btnInstall.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 39</value>
+  </data>
+  <data name="tabPage1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
+    <value>tabControl</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 39</value>
+  </data>
+  <data name="tabPage2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Mods</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
+    <value>tabControl</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="inputLog.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 12pt</value>
+  </data>
+  <data name="inputLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="inputLog.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="inputLog.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="inputLog.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="inputLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="inputLog.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;inputLog.Name" xml:space="preserve">
+    <value>inputLog</value>
+  </data>
+  <data name="&gt;&gt;inputLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;inputLog.Parent" xml:space="preserve">
+    <value>tabPage3</value>
+  </data>
+  <data name="&gt;&gt;inputLog.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tabPage3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 39</value>
+  </data>
+  <data name="tabPage3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabPage3.Text" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.Name" xml:space="preserve">
+    <value>tabPage3</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.Parent" xml:space="preserve">
+    <value>tabControl</value>
+  </data>
+  <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="skinSetGroup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="skinSetBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="skinSetBox.IntegralHeight" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="skinSetBox.ItemHeight" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="skinSetBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 32</value>
+  </data>
+  <data name="skinSetBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="skinSetBox.MaxDropDownItems" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="skinSetBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 36</value>
+  </data>
+  <data name="skinSetBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Name" xml:space="preserve">
+    <value>skinSetBox</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Parent" xml:space="preserve">
+    <value>skinSetGroup</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="skinSetGroup.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="skinSetGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="skinSetGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="skinSetGroup.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="skinSetGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 100</value>
+  </data>
+  <data name="skinSetGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="skinSetGroup.Text" xml:space="preserve">
+    <value>个性化皮肤设置</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.Name" xml:space="preserve">
+    <value>skinSetGroup</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.Parent" xml:space="preserve">
+    <value>tabPage4</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tabPage4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 39</value>
+  </data>
+  <data name="tabPage4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabPage4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="tabPage4.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tabPage4.Text" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.Name" xml:space="preserve">
+    <value>tabPage4</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.Parent" xml:space="preserve">
+    <value>tabControl</value>
+  </data>
+  <data name="&gt;&gt;tabPage4.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tabControl.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tabControl.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="tabControl.ItemSize" type="System.Drawing.Size, System.Drawing">
+    <value>150, 35</value>
+  </data>
+  <data name="tabControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tabControl.Padding" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>784, 730</value>
+  </data>
+  <data name="tabControl.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;tabControl.Name" xml:space="preserve">
+    <value>tabControl</value>
+  </data>
+  <data name="&gt;&gt;tabControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabControl.Parent" xml:space="preserve">
+    <value>splitContainerMain.Panel1</value>
+  </data>
+  <data name="&gt;&gt;tabControl.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.Name" xml:space="preserve">
+    <value>splitContainerMain.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.Parent" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>213, 11</value>
   </metadata>
+  <data name="statusStrip1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="statusStrip1.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt</value>
+  </data>
+  <data name="statusLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 14.25pt, style=Bold, Italic</value>
+  </data>
+  <data name="statusLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 26</value>
+  </data>
+  <data name="statusLabel.Text" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="statusLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="statusStrip1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 0, 22, 0</value>
+  </data>
+  <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>784, 30</value>
+  </data>
+  <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="statusStrip1.Text" xml:space="preserve">
+    <value>statusStrip1</value>
+  </data>
+  <data name="&gt;&gt;statusStrip1.Name" xml:space="preserve">
+    <value>statusStrip1</value>
+  </data>
+  <data name="&gt;&gt;statusStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.StatusStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;statusStrip1.Parent" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
+  </data>
+  <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Name" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Parent" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainerMain.Panel2MinSize" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>784, 761</value>
+  </data>
+  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
+    <value>730</value>
+  </data>
+  <data name="splitContainerMain.SplitterWidth" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="splitContainerMain.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Name" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Parent" xml:space="preserve">
+    <value>panelMain</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="panelMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="panelMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="panelMain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="panelMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>784, 761</value>
+  </data>
+  <data name="panelMain.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;panelMain.Name" xml:space="preserve">
+    <value>panelMain</value>
+  </data>
+  <data name="&gt;&gt;panelMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panelMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panelMain.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="folderBrowserDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>50, 11</value>
   </metadata>
   <metadata name="modInstallFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>510, 11</value>
   </metadata>
+  <data name="modInstallFileDialog.Filter" xml:space="preserve">
+    <value>ZIP|*.zip</value>
+  </data>
   <metadata name="skinEngine.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>56, 44</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>zh-CN</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 19</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>784, 761</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAgIAAAAAAIAAoCAEAFgAAACgAAACAAAAAAAEAAAEAIAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA
@@ -1264,5 +2376,95 @@
         8AwP//////////////////B+D//////////////////wfx//////////////////8H//////////////
         //////7///////////////////////////8=
 </value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>亲爱的Unity游戏MOD管理器（允哥修正&amp;汉化&amp;美化特别版）</value>
+  </data>
+  <data name="&gt;&gt;columnHeader1.Name" xml:space="preserve">
+    <value>columnHeader1</value>
+  </data>
+  <data name="&gt;&gt;columnHeader1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;columnHeader2.Name" xml:space="preserve">
+    <value>columnHeader2</value>
+  </data>
+  <data name="&gt;&gt;columnHeader2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;columnHeader3.Name" xml:space="preserve">
+    <value>columnHeader3</value>
+  </data>
+  <data name="&gt;&gt;columnHeader3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;columnHeader4.Name" xml:space="preserve">
+    <value>columnHeader4</value>
+  </data>
+  <data name="&gt;&gt;columnHeader4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;installToolStripMenuItem.Name" xml:space="preserve">
+    <value>installToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;installToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;updateToolStripMenuItem.Name" xml:space="preserve">
+    <value>updateToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;updateToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;revertToolStripMenuItem.Name" xml:space="preserve">
+    <value>revertToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;revertToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;uninstallToolStripMenuItem.Name" xml:space="preserve">
+    <value>uninstallToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;uninstallToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;wwwToolStripMenuItem1.Name" xml:space="preserve">
+    <value>wwwToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;wwwToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;statusLabel.Name" xml:space="preserve">
+    <value>statusLabel</value>
+  </data>
+  <data name="&gt;&gt;statusLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;folderBrowserDialog.Name" xml:space="preserve">
+    <value>folderBrowserDialog</value>
+  </data>
+  <data name="&gt;&gt;folderBrowserDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;modInstallFileDialog.Name" xml:space="preserve">
+    <value>modInstallFileDialog</value>
+  </data>
+  <data name="&gt;&gt;modInstallFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinEngine.Name" xml:space="preserve">
+    <value>skinEngine</value>
+  </data>
+  <data name="&gt;&gt;skinEngine.Type" xml:space="preserve">
+    <value>Sunisoft.IrisSkin.SkinEngine, IrisSkin4, Version=2006.3.22.45, Culture=neutral, PublicKeyToken=127be25a6db25e07</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>UnityModManagerForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
