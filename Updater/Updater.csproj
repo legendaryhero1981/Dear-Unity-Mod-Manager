@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0EEC949D-BF5C-4F12-9743-0A635ABC8DE4}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>UnityModManagerNet.Downloader</RootNamespace>
+    <RootNamespace>UnityModManagerNet.Updater</RootNamespace>
     <AssemblyName>DUMMUpdater</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -36,10 +36,16 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>UnityModManagerNet.Downloader.Program</StartupObject>
+    <StartupObject>UnityModManagerNet.Updater.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>DUMM.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip">
@@ -90,6 +96,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DUMM.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

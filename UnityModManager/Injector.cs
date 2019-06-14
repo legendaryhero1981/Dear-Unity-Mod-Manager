@@ -117,21 +117,18 @@ namespace UnityModManagerNet
             foundMethod = null;
             insertionPlace = null;
 
-            if (TryParseEntryPoint(str, out string assemblyName, out _, out _, out _))
+            if (!TryParseEntryPoint(str, out string assemblyName, out _, out _, out _)) return false;
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                if (assembly.ManifestModule.Name == assemblyName)
                 {
-                    if (assembly.ManifestModule.Name == assemblyName)
-                    {
-                        return TryGetEntryPoint(assembly, str, out foundClass, out foundMethod, out insertionPlace);
-                    }
+                    return TryGetEntryPoint(assembly, str, out foundClass, out foundMethod, out insertionPlace);
                 }
-                UnityModManager.Logger.Error($"找不到Assembly文件“{assemblyName}”！");
-
-                return false;
             }
+            UnityModManager.Logger.Error($"找不到Assembly文件“{assemblyName}”！");
 
             return false;
+
         }
 
         internal static bool TryGetEntryPoint(Assembly assembly, string str, out Type foundClass, out MethodInfo foundMethod, out string insertionPlace)
@@ -152,13 +149,10 @@ namespace UnityModManagerNet
             }
 
             foundMethod = foundClass.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            if (foundMethod == null)
-            {
-                UnityModManager.Logger.Error($"找不到方法名称“{methodName}”！");
-                return false;
-            }
+            if (foundMethod != null) return true;
+            UnityModManager.Logger.Error($"找不到方法名称“{methodName}”！");
+            return false;
 
-            return true;
         }
 
         internal static bool TryParseEntryPoint(string str, out string assembly, out string @class, out string method, out string insertionPlace)
@@ -178,27 +172,25 @@ namespace UnityModManagerNet
                 {
                     foreach (var group in groupNames)
                     {
-                        if (match.Groups[group].Success)
+                        if (!match.Groups[@group].Success) continue;
+                        switch (@group)
                         {
-                            switch (group)
-                            {
-                                case "assembly":
-                                    assembly = match.Groups[group].Value;
-                                    break;
-                                case "class":
-                                    @class = match.Groups[group].Value;
-                                    break;
-                                case "func":
-                                    method = match.Groups[group].Value;
-                                    if (method == "ctor")
-                                        method = ".ctor";
-                                    else if (method == "cctor")
-                                        method = ".cctor";
-                                    break;
-                                case "mod":
-                                    insertionPlace = match.Groups[group].Value.ToLower();
-                                    break;
-                            }
+                            case "assembly":
+                                assembly = match.Groups[@group].Value;
+                                break;
+                            case "class":
+                                @class = match.Groups[@group].Value;
+                                break;
+                            case "func":
+                                method = match.Groups[@group].Value;
+                                if (method == "ctor")
+                                    method = ".ctor";
+                                else if (method == "cctor")
+                                    method = ".cctor";
+                                break;
+                            case "mod":
+                                insertionPlace = match.Groups[@group].Value.ToLower();
+                                break;
                         }
                     }
                 }

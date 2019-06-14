@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UnityModManagerNet.Downloader.Properties {
+namespace UnityModManagerNet.Updater.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

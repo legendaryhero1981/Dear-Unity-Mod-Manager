@@ -104,19 +104,17 @@ namespace UnityModManagerNet
                 var deltaTime = Time.deltaTime;
                 foreach (var mod in modEntries)
                 {
-                    if (mod.Active && mod.OnUpdate != null)
+                    if (!mod.Active || mod.OnUpdate == null) continue;
+                    try
                     {
-                        try
-                        {
-                            mod.OnUpdate.Invoke(mod, deltaTime);
-                        }
-                        catch (Exception e)
-                        {
-                            mod.Logger.LogException("OnUpdate", e);
-                        }
+                        mod.OnUpdate.Invoke(mod, deltaTime);
+                    }
+                    catch (Exception e)
+                    {
+                        mod.Logger.LogException("OnUpdate", e);
                     }
                 }
-                bool toggle = false;
+                var toggle = false;
                 switch (Params.ShortcutKeyId)
                 {
                     default:
@@ -145,12 +143,7 @@ namespace UnityModManagerNet
                         break;
                 }
 
-                if (toggle)
-                {
-                    ToggleWindow();
-                }
-
-                if (Opened && Input.GetKey(KeyCode.Escape))
+                if (toggle || Opened && Input.GetKey(KeyCode.Escape))
                 {
                     ToggleWindow();
                 }
@@ -677,7 +670,6 @@ namespace UnityModManagerNet
                             GUILayout.Label("高度", GUILayout.ExpandWidth(false));
                             mExpectedWindowSize.y = GUILayout.HorizontalSlider(mExpectedWindowSize.y, Mathf.Min(Screen.height, WINDOW_HEIGHT_MIN), Screen.height, GUILayout.Width(200));
                             GUILayout.Label(" " + mExpectedWindowSize.y.ToString("f0") + " px ", GUILayout.ExpandWidth(false));
-                            GUILayout.EndHorizontal();
                             if (GUILayout.Button("确定", button, GUILayout.ExpandWidth(false)))
                             {
                                 mWindowSize.x = Mathf.Floor(mExpectedWindowSize.x) % 2 > 0 ? Mathf.Ceil(mExpectedWindowSize.x) : Mathf.Floor(mExpectedWindowSize.x);
@@ -686,6 +678,7 @@ namespace UnityModManagerNet
                                 Params.WindowWidth = mWindowSize.x;
                                 Params.WindowHeight = mWindowSize.y;
                             }
+                            GUILayout.EndHorizontal();
                             GUILayout.EndVertical();
                             GUILayout.Space(5);
                             GUILayout.BeginVertical("box");
@@ -694,7 +687,6 @@ namespace UnityModManagerNet
                             GUILayout.Label("缩放", GUILayout.ExpandWidth(false), GUILayout.ExpandWidth(false));
                             mExpectedUIScale = GUILayout.HorizontalSlider(mExpectedUIScale, UI_SCALE_MIN, UI_SCALE_MAX, GUILayout.Width(200));
                             GUILayout.Label(" " + mExpectedUIScale.ToString("f2"), GUILayout.ExpandWidth(false));
-                            GUILayout.EndHorizontal();
                             if (GUILayout.Button("确定", button, GUILayout.ExpandWidth(false)))
                             {
                                 if (mUIScale != mExpectedUIScale)
@@ -704,6 +696,7 @@ namespace UnityModManagerNet
                                     Params.UIScale = mUIScale;
                                 }
                             }
+                            GUILayout.EndHorizontal();
                             GUILayout.EndVertical();
                             GUILayout.EndVertical();
                             GUILayout.EndScrollView();
@@ -748,8 +741,7 @@ namespace UnityModManagerNet
                 }
                 try
                 {
-                    Opened = open;
-                    BlockGameUI(open);
+                    BlockGameUI(Opened = open);
                     if (open)
                     {
                         GameCursorLocked = Cursor.lockState == CursorLockMode.Locked || !Cursor.visible;

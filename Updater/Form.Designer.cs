@@ -1,6 +1,6 @@
-﻿namespace UnityModManagerNet.Downloader
+﻿namespace UnityModManagerNet.Updater
 {
-    partial class DownloaderForm
+    partial class UpdaterForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -20,14 +20,10 @@
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором форм Windows
-
-        /// <summary>
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
-        /// </summary>
+        #region Form初始化
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdaterForm));
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.status = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -48,7 +44,7 @@
             this.status.Text = "下载中……";
             this.status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // DownloaderForm
+            // UpdaterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -56,9 +52,10 @@
             this.Controls.Add(this.status);
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DownloaderForm";
+            this.Name = "UpdaterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "亲爱的Unity游戏MOD管理器更新程序";
             this.ResumeLayout(false);

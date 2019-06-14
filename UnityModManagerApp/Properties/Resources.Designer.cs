@@ -61,7 +61,16 @@ namespace UnityModManagerNet.Installer.Properties {
         }
         
         /// <summary>
-        ///   查找类似 下载最新的英文版本 的本地化字符串。
+        ///   查找类似 DUMMUpdater.exe 的本地化字符串。
+        /// </summary>
+        internal static string appUpdater {
+            get {
+                return ResourceManager.GetString("appUpdater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 去GitHub网站下载亲爱的Unity游戏MOD管理器源代码 的本地化字符串。
         /// </summary>
         internal static string btnDownloadUpdate {
             get {

@@ -337,15 +337,11 @@ namespace UnityModManagerNet
                         }
                         else if (!forbidDisableMods)
                         {
-                            if (!mActive)
+                            if (!mActive || OnToggle == null || !OnToggle(this, false))
                                 return;
-
-                            if (OnToggle != null && OnToggle(this, false))
-                            {
-                                mActive = false;
-                                this.Logger.Log($"已禁用MOD！");
-                                GameScripts.OnModToggle(this, false);
-                            }
+                            mActive = false;
+                            this.Logger.Log($"已禁用MOD！");
+                            GameScripts.OnModToggle(this, false);
                         }
                     }
                     catch (Exception e)
@@ -364,20 +360,18 @@ namespace UnityModManagerNet
                 ManagerVersion = !string.IsNullOrEmpty(info.ManagerVersion) ? ParseVersion(info.ManagerVersion) : new Version();
                 GameVersion = !string.IsNullOrEmpty(info.GameVersion) ? ParseVersion(info.GameVersion) : new Version();
 
-                if (info.Requirements != null && info.Requirements.Length > 0)
+                if (info.Requirements == null || info.Requirements.Length <= 0) return;
+                var regex = new Regex(@"(.*)-(\d\.\d\.\d).*");
+                foreach (var id in info.Requirements)
                 {
-                    var regex = new Regex(@"(.*)-(\d\.\d\.\d).*");
-                    foreach (var id in info.Requirements)
+                    var match = regex.Match(id);
+                    if (match.Success)
                     {
-                        var match = regex.Match(id);
-                        if (match.Success)
-                        {
-                            Requirements.Add(match.Groups[1].Value, ParseVersion(match.Groups[2].Value));
-                            continue;
-                        }
-                        if (!Requirements.ContainsKey(id))
-                            Requirements.Add(id, null);
+                        Requirements.Add(match.Groups[1].Value, ParseVersion(match.Groups[2].Value));
+                        continue;
                     }
+                    if (!Requirements.ContainsKey(id))
+                        Requirements.Add(id, null);
                 }
             }
 
@@ -385,7 +379,6 @@ namespace UnityModManagerNet
             {
                 if (Loaded)
                     return !mErrorOnLoading;
-
                 mErrorOnLoading = false;
                 this.Logger.Log($"MOD版本“{Info.Version}”已加载！");
                 if (string.IsNullOrEmpty(Info.AssemblyName))
@@ -432,18 +425,16 @@ namespace UnityModManagerNet
                             this.Logger.Error($"依赖的MOD“{id}”版本必须不低于“{item.Value}”！");
                             continue;
                         }
+                        if (mod.Active) continue;
+                        mod.Enabled = true;
+                        mod.Active = true;
                         if (!mod.Active)
-                        {
-                            mod.Enabled = true;
-                            mod.Active = true;
-                            if (!mod.Active)
-                                this.Logger.Log($"依赖的MOD“{id}”已被禁用！");
-                        }
+                            this.Logger.Log($"依赖的MOD“{id}”已被禁用！");
                     }
                 }
                 if (mErrorOnLoading)
                     return false;
-                string assemblyPath = System.IO.Path.Combine(Path, Info.AssemblyName);
+                var assemblyPath = System.IO.Path.Combine(Path, Info.AssemblyName);
                 if (File.Exists(assemblyPath))
                 {
                     try
@@ -481,11 +472,10 @@ namespace UnityModManagerNet
                                 mAssembly = Assembly.LoadFile(assemblyCachePath);
                                 foreach (var type in mAssembly.GetTypes())
                                 {
-                                    if (type.GetCustomAttributes(typeof(EnableReloadingAttribute), true).Any())
-                                    {
-                                        CanReload = true;
-                                        break;
-                                    }
+                                    if (!type.GetCustomAttributes(typeof(EnableReloadingAttribute), true).Any())
+                                        continue;
+                                    CanReload = true;
+                                    break;
                                 }
                             }
                             else
@@ -520,8 +510,8 @@ namespace UnityModManagerNet
                     }
                     try
                     {
-                        object[] param = new object[] { this };
-                        Type[] types = new Type[] { typeof(ModEntry) };
+                        var param = new object[] { this };
+                        var types = new Type[] { typeof(ModEntry) };
                         if (FindMethod(Info.EntryMethod, types, false) == null)
                         {
                             param = null;
@@ -540,18 +530,15 @@ namespace UnityModManagerNet
                         return false;
                     }
                     mStarted = true;
-                    if (!mErrorOnLoading)
-                    {
-                        Active = true;
-                        return true;
-                    }
+                    if (mErrorOnLoading) return false;
+                    Active = true;
+                    return true;
                 }
                 else
                 {
                     mErrorOnLoading = true;
                     this.Logger.Error($"找不到文件“{assemblyPath}”！");
                 }
-
                 return false;
             }
 
@@ -747,7 +734,7 @@ namespace UnityModManagerNet
                             UnityModManager.Logger.Error($"不能找到方法“{namespaceClassnameMethodname}”，MOD“{Info.Id}”未加载！");
                     }
 
-                    Exit:
+                Exit:
                     mCache[key] = methodInfo;
                 }
                 return methodInfo;
@@ -904,43 +891,42 @@ namespace UnityModManagerNet
             if (Directory.Exists(modsPath))
             {
                 Logger.Log($"正在解析Mods……");
-                Dictionary<string, ModEntry> mods = new Dictionary<string, ModEntry>();
-                int countMods = 0;
-                foreach (string dir in Directory.GetDirectories(modsPath))
+                var mods = new Dictionary<string, ModEntry>();
+                var countMods = 0;
+                foreach (var dir in Directory.GetDirectories(modsPath))
                 {
-                    string jsonPath = Path.Combine(dir, Config.ModInfo);
+                    var jsonPath = Path.Combine(dir, Config.ModInfo);
                     if (!File.Exists(Path.Combine(dir, Config.ModInfo)))
                     {
                         jsonPath = Path.Combine(dir, Config.ModInfo.ToLower());
                     }
-                    if (File.Exists(jsonPath))
-                    {
-                        countMods++;
-                        Logger.Log($"正在解析文件“{jsonPath}”……");
-                        try
-                        {
-                            ModInfo modInfo = JsonUtility.FromJson<ModInfo>(File.ReadAllText(jsonPath));
-                            if (string.IsNullOrEmpty(modInfo.Id))
-                            {
-                                Logger.Error($"Id为空！");
-                                continue;
-                            }
-                            if (mods.ContainsKey(modInfo.Id))
-                            {
-                                Logger.Error($"Id“{modInfo.Id}”已经被另一个MOD占用！");
-                                continue;
-                            }
-                            if (string.IsNullOrEmpty(modInfo.AssemblyName))
-                                modInfo.AssemblyName = modInfo.Id + ".dll";
 
-                            ModEntry modEntry = new ModEntry(modInfo, dir + Path.DirectorySeparatorChar);
-                            mods.Add(modInfo.Id, modEntry);
-                        }
-                        catch (Exception exception)
+                    if (!File.Exists(jsonPath)) continue;
+                    countMods++;
+                    Logger.Log($"正在解析文件“{jsonPath}”……");
+                    try
+                    {
+                        var modInfo = JsonUtility.FromJson<ModInfo>(File.ReadAllText(jsonPath));
+                        if (string.IsNullOrEmpty(modInfo.Id))
                         {
-                            Logger.Error($"解析文件“{jsonPath}”失败！");
-                            Debug.LogException(exception);
+                            Logger.Error($"Id为空！");
+                            continue;
                         }
+                        if (mods.ContainsKey(modInfo.Id))
+                        {
+                            Logger.Error($"Id“{modInfo.Id}”已经被另一个MOD占用！");
+                            continue;
+                        }
+                        if (string.IsNullOrEmpty(modInfo.AssemblyName))
+                            modInfo.AssemblyName = modInfo.Id + ".dll";
+
+                        var modEntry = new ModEntry(modInfo, dir + Path.DirectorySeparatorChar);
+                        mods.Add(modInfo.Id, modEntry);
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error($"解析文件“{jsonPath}”失败！");
+                        Debug.LogException(exception);
                     }
                 }
                 if (mods.Count > 0)

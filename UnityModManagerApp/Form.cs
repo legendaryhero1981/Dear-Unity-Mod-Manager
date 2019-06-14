@@ -19,7 +19,7 @@ namespace UnityModManagerNet.Installer
     {
         const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
-        private AutoSizeFormControlUtil autoSizeFormControlUtil;
+        private AutoSizeFormControlUtil _autoSizeFormControlUtil;
 
         public UnityModManagerForm()
         {
@@ -74,68 +74,61 @@ namespace UnityModManagerNet.Installer
 
         private void Init()
         {
-            Dictionary<string, string> skins = new Dictionary<string, string>();
-            skins["默认皮肤"] = "";
+            var skins = new Dictionary<string, string> { ["默认皮肤"] = "" };
             skins = Utils.GetMatchedFiles(SKINS_PATH, "*.ssk", skins);
             var skinSet = new BindingSource { DataSource = skins };
             skinSetBox.DataSource = skinSet;
             skinSetBox.DisplayMember = "Key";
             skinSetBox.ValueMember = "Value";
-            autoSizeFormControlUtil = new AutoSizeFormControlUtil(this);
-            autoSizeFormControlUtil.RefreshControlsInfo(this.Controls[0]);
+            _autoSizeFormControlUtil = new AutoSizeFormControlUtil(this);
+            _autoSizeFormControlUtil.RefreshControlsInfo(this.Controls[0]);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             instance = this;
-
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-
             if (!Utils.IsUnixPlatform())
             {
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     var registry = asm.GetType("Microsoft.Win32.Registry");
-                    if (registry != null)
+                    if (registry == null) continue;
+                    var getValue = registry.GetMethod("GetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
+                    if (getValue != null)
                     {
-                        var getValue = registry.GetMethod("GetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
-                        if (getValue != null)
+                        var exePath = getValue.Invoke(null, new object[] { REG_PATH, "ExePath", string.Empty }) as string;
+                        if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
                         {
-                            var exePath = getValue.Invoke(null, new object[] { REG_PATH, "ExePath", string.Empty }) as string;
-                            if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
+                            var setValue = registry.GetMethod("SetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
+                            if (setValue != null)
                             {
-                                var setValue = registry.GetMethod("SetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
-                                if (setValue != null)
-                                {
-                                    setValue.Invoke(null, new object[] { REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "DearUnityModManager.exe") });
-                                    setValue.Invoke(null, new object[] { REG_PATH, "Path", Application.StartupPath });
-                                }
+                                setValue.Invoke(null, new object[] { REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "DearUnityModManager.exe") });
+                                setValue.Invoke(null, new object[] { REG_PATH, "Path", Application.StartupPath });
                             }
                         }
-                        break;
                     }
+                    break;
                 }
             }
-
-            int rbWidth = 0;
+            var rbWidth = 0;
             for (var i = (InstallType)0; i < InstallType.Count; i++)
             {
-                RadioButton rb = new RadioButton();
-                rb.Name = i.ToString();
-                rb.Text = i == InstallType.DoorstopProxy ? $"{i.ToString()}（推荐）" : i.ToString();
-                rb.AutoSize = true;
-                rb.Location = new Point(rbWidth + 8, 50);
-                rb.Margin = new Padding(0);
+                var rb = new RadioButton
+                {
+                    Name = i.ToString(),
+                    Text = i == InstallType.DoorstopProxy ? $"{i.ToString()}（推荐）" : i.ToString(),
+                    AutoSize = true,
+                    Location = new Point(rbWidth + 8, 50),
+                    Margin = new Padding(0)
+                };
                 rb.Click += installType_Click;
                 installTypeGroup.Controls.Add(rb);
-                rbWidth += rb.Width * 2;
+                rbWidth += rb.Width + 12;
             }
-
             version = typeof(UnityModManager).Assembly.GetName().Version;
             currentVersion.Text = version.ToString();
-
             config = Config.Load();
             param = Param.Load();
             skinSetBox.SelectedIndex = param.LastSelectedSkin;
-
-            if (config != null && config.GameInfo != null && config.GameInfo.Length > 0)
+            if (config?.GameInfo != null && config.GameInfo.Length > 0)
             {
                 config.GameInfo = config.GameInfo.OrderBy(x => x.GameName).ToArray();
                 gameList.Items.AddRange(config.GameInfo);
@@ -155,15 +148,14 @@ namespace UnityModManagerNet.Installer
                 Log.Print($"解析配置文件“{Config.filename}”失败！");
                 return;
             }
-
             CheckLastVersion();
         }
 
         #region 窗体缩放      
         private void UnityModLoaderForm_SizeChanged(object sender, EventArgs e)
         {
-            if (autoSizeFormControlUtil != null)
-                autoSizeFormControlUtil.FormSizeChanged();
+            if (_autoSizeFormControlUtil != null)
+                _autoSizeFormControlUtil.FormSizeChanged();
         }
         #endregion
 
@@ -647,14 +639,14 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                if (btnDownloadUpdate.Text == Resources.btnDownloadUpdate)
+                if (Resources.btnDownloadUpdate.Equals( btnDownloadUpdate.Text))
                 {
                     if (!string.IsNullOrEmpty(config.HomePage))
                         Process.Start(config.HomePage);
                 }
                 else
                 {
-                    Process.Start("UnityModManagerUpdater.exe");
+                    Process.Start(Resources.appUpdater);
                 }
             }
             catch (Exception ex)

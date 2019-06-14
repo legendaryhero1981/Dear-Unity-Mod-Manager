@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UnityModManagerNet.Downloader.Properties {
+namespace UnityModManagerNet.Updater.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace UnityModManagerNet.Downloader.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UnityModManagerNet.Downloader.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UnityModManagerNet.Updater.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

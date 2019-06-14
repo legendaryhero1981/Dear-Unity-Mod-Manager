@@ -37,10 +37,13 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>DUMM.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>UnityModManagerNet.Installer.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony-1.2">
@@ -101,9 +104,6 @@
     <EmbeddedResource Include="Form.resx">
       <DependentUpon>Form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form.zh-CN.resx">
-      <DependentUpon>Form.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -129,17 +129,17 @@
     <None Include="images\dragdropfiles.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\UnityModManager\UnityModManager.csproj">
       <Project>{a1fcae3e-523e-4e33-8860-dd39dddf0f62}</Project>
       <Name>UnityModManager</Name>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="DUMM.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>D:\games\exe4j\11\file -c!~ "(?i)(\.xml|version.+\.dll|\.ssk)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\11\file -c!~ "(?i)(\.xml|version.+\.dll|System\.Xml\.dll)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

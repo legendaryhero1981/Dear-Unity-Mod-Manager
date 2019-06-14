@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Repository>https://raw.githubusercontent.com/legendaryhero1981/Dear-Unity-Mod-Manager/master/Repository.json</Repository>
-  <HomePage>https://www.nexusmods.com/site/mods/21/</HomePage>
+  <HomePage>https://github.com/legendaryhero1981/Dear-Unity-Mod-Manager</HomePage>
   <GameInfo Name="开拓者：拥王者">
     <GameName>Pathfinder: Kingmaker</GameName>
     <Folder>Pathfinder Kingmaker</Folder>

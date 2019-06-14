@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace UnityModManagerNet.Downloader
+namespace UnityModManagerNet.Updater
 {
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DownloaderForm());
+            var form = new UpdaterForm();
+            Application.Run(form);
+            //form.DoFormClosed();
         }
     }
 }
