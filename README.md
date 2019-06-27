@@ -8,7 +8,7 @@
 #
 # 此项目使用到的第三方类库有：
 - [unity-mod-manager](https://github.com/newman55/unity-mod-manager)
-- [Harmony](https://github.com/pardeike/Harmony/wiki/Utilities)
+- [Harmony](https://github.com/pardeike/Harmony)
 - [UnityDoorstop](https://github.com/NeighTools/UnityDoorstop)
 - [dnlib](https://github.com/0xd4d/dnlib)
 - [Json.NET](https://github.com/JamesNK/Newtonsoft.Json)
