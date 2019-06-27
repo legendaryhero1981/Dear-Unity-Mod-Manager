@@ -389,6 +389,7 @@
     </Compile>
     <Compile Include="Textures.cs" />
     <Compile Include="UI.cs" />
+    <Compile Include="UIDraw.cs" />
     <Compile Include="UI\Utils\AutoSizeFormControlUtil.cs" />
     <Compile Include="UI\Utils\ImguiUtil.cs" />
     <Compile Include="Updates.cs" />

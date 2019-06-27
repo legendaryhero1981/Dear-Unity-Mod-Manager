@@ -16,23 +16,20 @@ namespace UnityModManagerNet
 
                 private const int MARGIN = 100;
 
-                private int mId;
+                private readonly int mId;
                 private Rect mWindowRect;
                 private Vector2 mScrollPosition;
                 private int mWidth;
                 private int mHeight;
                 private int mRecalculateFrame;
 
-                private bool Recalculating
-                {
-                    get { return mRecalculateFrame == Time.frameCount; }
-                }
+                private bool Recalculating => mRecalculateFrame == Time.frameCount;
 
                 private bool mOpened;
                 public bool Opened
                 {
-                    get { return mOpened; }
-                    set
+                    get => mOpened;
+                    private set
                     {
                         mOpened = value;
                         if (value)
@@ -56,20 +53,18 @@ namespace UnityModManagerNet
                 public void Button(string text = null, GUIStyle style = null, params GUILayoutOption[] option)
                 {
                     mDestroyCounter.Clear();
-                    if (GUILayout.Button(text ?? values[selected], style ?? GUI.skin.button, option))
+                    if (!GUILayout.Button(text ?? values[selected], style ?? GUI.skin.button, option)) return;
+                    if (!Opened)
                     {
-                        if (!Opened)
+                        foreach (var popup in mList)
                         {
-                            foreach (var popup in mList)
-                            {
-                                popup.Opened = false;
-                            }
-                            Opened = true;
-                            return;
+                            popup.Opened = false;
                         }
-
-                        Opened = false;
+                        Opened = true;
+                        return;
                     }
+
+                    Opened = false;
                 }
 
                 public void Render()
@@ -77,17 +72,15 @@ namespace UnityModManagerNet
                     if (Recalculating)
                     {
                         mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", window);
-                        if (mWindowRect.width > 0)
-                        {
-                            mWidth = (int)(Math.Min(Math.Max(mWindowRect.width, 150), Screen.width - MARGIN));
-                            mHeight = (int)(Math.Min(mWindowRect.height, Screen.height - MARGIN));
-                            mWindowRect.x = (int)(Math.Max(Screen.width - mWidth, 0) / 2);
-                            mWindowRect.y = (int)(Math.Max(Screen.height - mHeight, 0) / 2);
-                        }
+                        if (!(mWindowRect.width > 0)) return;
+                        mWidth = (int)(Math.Min(Math.Max(mWindowRect.width, 250), Screen.width - MARGIN));
+                        mHeight = (int)(Math.Min(mWindowRect.height, Screen.height - MARGIN));
+                        mWindowRect.x = (int)(Math.Max(Screen.width - mWidth, 0) / 2);
+                        mWindowRect.y = (int)(Math.Max(Screen.height - mHeight, 0) / 2);
                     }
                     else
                     {
-                        mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", window, GUILayout.Width(mWidth), GUILayout.Height(mHeight + 10));
+                        mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", window, GUILayout.Width(mWidth), GUILayout.Height(mHeight + 20));
                         GUI.BringWindowToFront(mId);
                     }
                 }
@@ -100,7 +93,7 @@ namespace UnityModManagerNet
                         mScrollPosition = GUILayout.BeginScrollView(mScrollPosition);
                     if (values != null)
                     {
-                        int i = 0;
+                        var i = 0;
                         foreach (var option in values)
                         {
                             if (GUILayout.Button(i == selected ? "<b>" + option + "</b>" : option))
@@ -113,11 +106,9 @@ namespace UnityModManagerNet
                     }
                     if (!Recalculating)
                         GUILayout.EndScrollView();
-                    //if (GUILayout.Button("Close", button))
-                    //    Opened = false;
                 }
 
-                internal void Reset()
+                private void Reset()
                 {
                     mRecalculateFrame = Time.frameCount;
                     mWindowRect = new Rect(-9000, 0, 0, 0);
@@ -125,17 +116,47 @@ namespace UnityModManagerNet
             }
 
             /// <summary>
-            /// [0.16.0]
+            /// [0.18.0]
             /// </summary>
-            public static void PopupToggleGroup(int selected, string[] values, Action<int> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            /// <returns>
+            /// Returns true if the value has changed.
+            /// </returns>
+            public static bool PopupToggleGroup(ref int selected, string[] values, GUIStyle style = null, params GUILayoutOption[] buttonOption)
             {
-                PopupToggleGroup(selected, values, onChange, null, style, option);
+                var changed = false;
+                var newSelected = selected;
+                PopupToggleGroup(selected, values, (i) => { changed = true; newSelected = i; }, style, buttonOption);
+                selected = newSelected;
+                return changed;
+            }
+
+            /// <summary>
+            /// [0.18.0]
+            /// </summary>
+            /// <returns>
+            /// Returns true if the value has changed.
+            /// </returns>
+            public static bool PopupToggleGroup(ref int selected, string[] values, string title, GUIStyle style = null, params GUILayoutOption[] buttonOption)
+            {
+                var changed = false;
+                var newSelected = selected;
+                PopupToggleGroup(selected, values, (i) => { changed = true; newSelected = i; }, title, style, buttonOption);
+                selected = newSelected;
+                return changed;
             }
 
             /// <summary>
             /// [0.16.0]
             /// </summary>
-            public static void PopupToggleGroup(int selected, string[] values, Action<int> onChange, string title, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void PopupToggleGroup(int selected, string[] values, Action<int> onChange, GUIStyle style = null, params GUILayoutOption[] buttonOption)
+            {
+                PopupToggleGroup(selected, values, onChange, null, style, buttonOption);
+            }
+
+            /// <summary>
+            /// [0.16.0]
+            /// </summary>
+            public static void PopupToggleGroup(int selected, string[] values, Action<int> onChange, string title, GUIStyle style = null, params GUILayoutOption[] buttonOption)
             {
                 if (values == null)
                 {
@@ -149,7 +170,7 @@ namespace UnityModManagerNet
                 {
                     throw new IndexOutOfRangeException();
                 }
-                bool needInvoke = false;
+                var needInvoke = false;
                 if (selected >= values.Length)
                 {
                     selected = values.Length - 1;
@@ -163,11 +184,9 @@ namespace UnityModManagerNet
                 PopupToggleGroup_GUI obj = null;
                 foreach (var item in PopupToggleGroup_GUI.mList)
                 {
-                    if (item.values.SequenceEqual(values))
-                    {
-                        obj = item;
-                        break;
-                    }
+                    if (!item.values.SequenceEqual(values)) continue;
+                    obj = item;
+                    break;
                 }
                 if (obj == null)
                 {
@@ -181,19 +200,32 @@ namespace UnityModManagerNet
                 obj.selected = selected;
                 obj.newSelected = null;
                 obj.title = title;
-                obj.Button(null, style, option);
-                if (needInvoke)
+                obj.Button(null, style, buttonOption);
+                if (!needInvoke) return;
+                try
                 {
-                    try
-                    {
-                        onChange.Invoke(selected);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error("PopupToggleGroup: " + e.GetType() + " - " + e.Message);
-                        Console.WriteLine(e.ToString());
-                    }
+                    onChange.Invoke(selected);
                 }
+                catch (Exception e)
+                {
+                    Logger.Error("PopupToggleGroup: " + e.GetType() + " - " + e.Message);
+                    Console.WriteLine(e.ToString());
+                }
+            }
+
+            /// <summary>
+            /// [0.18.0]
+            /// </summary>
+            /// <returns>
+            /// Returns true if the value has changed.
+            /// </returns>
+            public static bool ToggleGroup(ref int selected, string[] values, GUIStyle style = null, params GUILayoutOption[] option)
+            {
+                var changed = false;
+                var newSelected = selected;
+                ToggleGroup(selected, values, (i) => { changed = true; newSelected = i; }, style, option);
+                selected = newSelected;
+                return changed;
             }
 
             /// <summary>
@@ -213,7 +245,7 @@ namespace UnityModManagerNet
                 {
                     throw new IndexOutOfRangeException();
                 }
-                bool needInvoke = false;
+                var needInvoke = false;
                 if (selected >= values.Length)
                 {
                     selected = values.Length - 1;
@@ -225,7 +257,7 @@ namespace UnityModManagerNet
                     needInvoke = true;
                 }
 
-                int i = 0;
+                var i = 0;
                 foreach (var str in values)
                 {
                     var prev = selected == i;

@@ -770,7 +770,14 @@ namespace UnityModManagerNet
             Logger.Clear();
             Logger.Log($"正在初始化数据……");
             Logger.Log($"版本：{version}。");
-            Logger.Log($"操作系统：{Environment.OSVersion} {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}。");
+            try
+            {
+                Logger.Log($"操作系统：{Environment.OSVersion} {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}。");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
             unityVersion = ParseVersion(Application.unityVersion);
             Config = GameInfo.Load();
             if (Config == null)
