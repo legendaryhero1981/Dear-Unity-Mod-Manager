@@ -35,24 +35,22 @@ namespace UnityModManagerNet.Installer
                 }
             }
 
-            if (urls.Count > 0)
+            if (urls.Count <= 0) return;
+            foreach (var url in urls)
             {
-                foreach (var url in urls)
+                try
                 {
-                    try
+                    using (var wc = new WebClient())
                     {
-                        using (var wc = new WebClient())
-                        {
-                            wc.Encoding = System.Text.Encoding.UTF8;
-                            wc.DownloadStringCompleted += (sender, e) => { ModUpdates_DownloadStringCompleted(sender, e, selectedGame, url); };
-                            wc.DownloadStringAsync(new Uri(url));
-                        }
+                        wc.Encoding = System.Text.Encoding.UTF8;
+                        wc.DownloadStringCompleted += (sender, e) => { ModUpdates_DownloadStringCompleted(sender, e, selectedGame, url); };
+                        wc.DownloadStringAsync(new Uri(url));
                     }
-                    catch (Exception e)
-                    {
-                        Log.Print(e.Message);
-                        Log.Print($"从网站“{url}”检查MOD新版本失败！");
-                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Print(e.Message);
+                    Log.Print($"从网站“{url}”检查MOD新版本失败！");
                 }
             }
         }
@@ -65,29 +63,27 @@ namespace UnityModManagerNet.Installer
                 return;
             }
 
-            if (!e.Cancelled && !string.IsNullOrEmpty(e.Result) && repositories.ContainsKey(game))
+            if (e.Cancelled || string.IsNullOrEmpty(e.Result) || !repositories.ContainsKey(game)) return;
+            try
             {
-                try
-                {
-                    var repository = JsonConvert.DeserializeObject<UnityModManager.Repository>(e.Result);
-                    if (repository == null || repository.Releases == null || repository.Releases.Length == 0)
-                        return;
+                var repository = JsonConvert.DeserializeObject<UnityModManager.Repository>(e.Result);
+                if (repository == null || repository.Releases == null || repository.Releases.Length == 0)
+                    return;
 
-                    listMods.Invoke((MethodInvoker)delegate
-                    {
-                        foreach (var v in repository.Releases)
-                        {
-                            repositories[game].Add(v);
-                        }
-                        if (selectedGame == game)
-                            RefreshModList();
-                    });
-                }
-                catch (Exception ex)
+                listMods.Invoke((MethodInvoker)delegate
                 {
-                    Log.Print(ex.Message);
-                    Log.Print($"从网站“{url}”检查MOD新版本失败！");
-                }
+                    foreach (var v in repository.Releases)
+                    {
+                        repositories[game].Add(v);
+                    }
+                    if (selectedGame == game)
+                        RefreshModList();
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Print(ex.Message);
+                Log.Print($"从网站“{url}”检查MOD新版本失败！");
             }
         }
 
@@ -128,34 +124,30 @@ namespace UnityModManagerNet.Installer
                 return;
             }
 
-            if (!e.Cancelled && !string.IsNullOrEmpty(e.Result))
+            if (e.Cancelled || string.IsNullOrEmpty(e.Result)) return;
+            try
             {
-                try
-                {
-                    var repository = JsonConvert.DeserializeObject<UnityModManager.Repository>(e.Result);
-                    if (repository == null || repository.Releases == null || repository.Releases.Length == 0)
-                        return;
+                var repository = JsonConvert.DeserializeObject<UnityModManager.Repository>(e.Result);
+                if (repository == null || repository.Releases == null || repository.Releases.Length == 0)
+                    return;
 
-                    var release = repository.Releases.FirstOrDefault(x => x.Id == nameof(UnityModManager));
-                    if (release != null && !string.IsNullOrEmpty(release.Version))
-                    {
-                        var ver = Utils.ParseVersion(release.Version);
-                        if (version < ver)
-                        {
-                            btnDownloadUpdate.Text = $"下载v{release.Version}";
-                            Log.Print($"有可用的新版本。");
-                        }
-                        else
-                        {
-                            Log.Print($"没有可用的新版本。");
-                        }
-                    }
-                }
-                catch (Exception ex)
+                var release = repository.Releases.FirstOrDefault(x => x.Id == nameof(UnityModManager));
+                if (release == null || string.IsNullOrEmpty(release.Version)) return;
+                var ver = Utils.ParseVersion(release.Version);
+                if (version < ver)
                 {
-                    Log.Print(ex.Message);
-                    Log.Print($"检查MOD新版本时出错！");
+                    btnDownloadUpdate.Text = $"下载v{release.Version}";
+                    Log.Print($"有可用的新版本。");
                 }
+                else
+                {
+                    Log.Print($"没有可用的新版本。");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Print(ex.Message);
+                Log.Print($"检查MOD新版本时出错！");
             }
         }
 

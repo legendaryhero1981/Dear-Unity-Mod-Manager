@@ -9,8 +9,8 @@ namespace UnityModManagerNet.Installer
 {
     public partial class DownloadForm : Form
     {
-        public UnityModManager.Repository.Release release;
-        public string tempFilepath { get; private set; }
+        public UnityModManager.Repository.Release Release;
+        public string TempFilepath { get; private set; }
 
         public DownloadForm()
         {
@@ -19,7 +19,7 @@ namespace UnityModManagerNet.Installer
 
         public DownloadForm(UnityModManager.Repository.Release release)
         {
-            this.release = release;
+            this.Release = release;
             InitializeComponent();
             Start();
         }
@@ -28,20 +28,20 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                var dir = Path.Combine(Path.GetTempPath(), "UnityModManager");
+                var dir = Path.Combine(Path.GetTempPath(), "DearUnityModManager");
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                tempFilepath = Path.Combine(dir, $"{release.Id}.zip");
+                TempFilepath = Path.Combine(dir, $"{Release.Id}.zip");
 
-                status.Text = $"正在下载 {release.Id} {release.Version} ……";
+                status.Text = $"正在下载 {Release.Id} {Release.Version} ……";
 
                 using (var wc = new WebClient())
                 {
                     wc.Encoding = Encoding.UTF8;
                     wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
                     wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
-                    wc.DownloadFileAsync(new Uri(release.DownloadUrl), tempFilepath);
+                    wc.DownloadFileAsync(new Uri(Release.DownloadUrl), TempFilepath);
                 }
             }
             catch (Exception e)
@@ -64,11 +64,10 @@ namespace UnityModManagerNet.Installer
                 Log.Print(e.Error.Message);
                 return;
             }
-            if (!e.Cancelled)
-            {
-                DialogResult = DialogResult.OK;
-                Close();
-            }
+
+            if (e.Cancelled) return;
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

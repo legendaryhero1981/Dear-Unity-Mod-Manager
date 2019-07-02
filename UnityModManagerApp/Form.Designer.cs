@@ -62,7 +62,7 @@ namespace UnityModManagerNet.Installer
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.modInstallFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.skinEngine = new Sunisoft.IrisSkin.SkinEngine();
-            btnDownloadUpdate = new System.Windows.Forms.Button();
+            this.btnDownloadUpdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMods)).BeginInit();
             this.splitContainerMods.Panel1.SuspendLayout();
             this.splitContainerMods.Panel2.SuspendLayout();
@@ -111,7 +111,9 @@ namespace UnityModManagerNet.Installer
             this.columnHeader3,
             this.columnHeader4});
             this.listMods.ContextMenuStrip = this.ModcontextMenuStrip1;
+            this.listMods.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "MenuFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             resources.ApplyResources(this.listMods, "listMods");
+            this.listMods.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.MenuFont;
             this.listMods.FullRowSelect = true;
             this.listMods.HideSelection = false;
             this.listMods.MultiSelect = false;
@@ -509,6 +511,7 @@ namespace UnityModManagerNet.Installer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox gameList;
         private System.Windows.Forms.Button btnOpenFolder;
+        private System.Windows.Forms.Button btnDownloadUpdate;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPage1;
@@ -543,7 +546,6 @@ namespace UnityModManagerNet.Installer
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.GroupBox skinSetGroup;
         private System.Windows.Forms.ComboBox skinSetBox;
-        private System.Windows.Forms.Button btnDownloadUpdate;
     }
 }
 
