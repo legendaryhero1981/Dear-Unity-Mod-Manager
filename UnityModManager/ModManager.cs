@@ -773,6 +773,7 @@ namespace UnityModManagerNet
             try
             {
                 Logger.Log($"操作系统：{Environment.OSVersion} {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}。");
+                Logger.Log($".Net框架版本：{Environment.Version}。");
             }
             catch (Exception e)
             {

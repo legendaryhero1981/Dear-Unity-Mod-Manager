@@ -353,9 +353,9 @@ namespace UnityModManagerNet
                         {
                             mod.OnHideGUI(mod);
                         }
-                        catch (Exception ex)
+                        catch (Exception e)
                         {
-                            mod.Logger.LogException("OnHideGUI", ex);
+                            mod.Logger.LogException("OnHideGUI", e);
                         }
                     }
 
@@ -366,9 +366,9 @@ namespace UnityModManagerNet
                         {
                             mod.OnShowGUI(mod);
                         }
-                        catch (Exception ex)
+                        catch (Exception e)
                         {
-                            mod.Logger.LogException("OnShowGUI", ex);
+                            mod.Logger.LogException("OnShowGUI", e);
                         }
                     }
 

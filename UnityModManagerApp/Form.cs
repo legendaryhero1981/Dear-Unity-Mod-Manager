@@ -121,7 +121,7 @@ namespace UnityModManagerNet.Installer
                 };
                 rb.Click += installType_Click;
                 installTypeGroup.Controls.Add(rb);
-                rbWidth += rb.Width + 12;
+                rbWidth += rb.Width + 200;
             }
             version = typeof(UnityModManager).Assembly.GetName().Version;
             currentVersion.Text = version.ToString();
@@ -292,15 +292,22 @@ namespace UnityModManagerNet.Installer
             assemblyDef = null;
             injectedAssemblyDef = null;
             managerDef = null;
-            gameExePath = !string.IsNullOrEmpty(selectedGame.GameExe) ? Path.Combine(gamePath, selectedGame.GameExe) : string.Empty;
             doorstopPath = Path.Combine(gamePath, doorstopFilename);
             doorstopConfigPath = Path.Combine(gamePath, doorstopConfigFilename);
             libraryPaths = new string[libraryFiles.Length];
 
-            for (var i = 0; i < libraryFiles.Length; i++)
+            if (!string.IsNullOrEmpty(selectedGame.GameExe))
             {
-                libraryPaths[i] = Path.Combine(managerPath, libraryFiles[i]);
+                if (selectedGame.GameExe.Contains('*'))
+                    foreach (var file in new DirectoryInfo(gamePath).GetFiles(selectedGame.GameExe, SearchOption.TopDirectoryOnly))
+                        selectedGame.GameExe = file.Name;
+                gameExePath = Path.Combine(gamePath, selectedGame.GameExe);
             }
+            else
+                gameExePath = string.Empty;
+
+            for (var i = 0; i < libraryFiles.Length; i++)
+                libraryPaths[i] = Path.Combine(managerPath, libraryFiles[i]);
 
             var parent = new DirectoryInfo(Application.StartupPath).Parent;
 
@@ -426,9 +433,7 @@ namespace UnityModManagerNet.Installer
             }
 
             if (selectedGameParams.InstallType == InstallType.Assembly)
-            {
                 btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}.original_");
-            }
 
             tabControl.TabPages[1].Enabled = true;
             managerDef = managerDef ?? injectedAssemblyDef;
@@ -447,16 +452,12 @@ namespace UnityModManagerNet.Installer
                     version2 = Utils.ParseVersion(versionString);
                 }
                 else
-                {
                     version2 = managerDef.Assembly.Version;
-                }
 
                 installedVersion.Text = version2.ToString();
 
                 if (version > version2 && v0_12_Installed == null)
-                {
                     btnInstall.Enabled = true;
-                }
             }
             else
             {
