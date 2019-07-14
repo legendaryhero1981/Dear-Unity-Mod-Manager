@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+
+using Ping = System.Net.NetworkInformation.Ping;
 
 namespace UnityModManagerNet
 {
@@ -24,50 +25,34 @@ namespace UnityModManagerNet
             var urls = new HashSet<string>();
 
             foreach (var modEntry in modEntries)
-            {
                 if (!string.IsNullOrEmpty(modEntry.Info.Repository))
-                {
                     urls.Add(modEntry.Info.Repository);
-                }
-            }
 
-            if (urls.Count > 0)
-            {
-                foreach (var url in urls)
-                {
-                    UI.Instance.StartCoroutine(DownloadString(url, ParseRepository));
-                }
-            }
+            if (urls.Count <= 0) return;
+            foreach (var url in urls)
+                UI.Instance.StartCoroutine(unityVersion < new Version(5, 4)
+                    ? DownloadString_5_3(url, ParseRepository)
+                    : DownloadString(url, ParseRepository));
         }
 
         private static void ParseRepository(string json, string url)
         {
-            if (string.IsNullOrEmpty(json))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(json)) return;
 
             try
             {
-                var repository = JsonUtility.FromJson<Repository>(json);
-                if (repository != null && repository.Releases != null && repository.Releases.Length > 0)
-                {
-                    foreach (var release in repository.Releases)
+                var repository = json.FromJson<Repository>();
+                if (repository?.Releases == null || repository.Releases.Length <= 0) return;
+                foreach (var release in repository.Releases)
+                    if (!string.IsNullOrEmpty(release.Id) && !string.IsNullOrEmpty(release.Version))
                     {
-                        if (!string.IsNullOrEmpty(release.Id) && !string.IsNullOrEmpty(release.Version))
-                        {
-                            var modEntry = FindMod(release.Id);
-                            if (modEntry != null)
-                            {
-                                var ver = ParseVersion(release.Version);
-                                if (modEntry.Version < ver && (modEntry.NewestVersion == null || modEntry.NewestVersion < ver))
-                                {
-                                    modEntry.NewestVersion = ver;
-                                }
-                            }
-                        }
+                        var modEntry = FindMod(release.Id);
+                        if (modEntry == null) continue;
+                        var ver = ParseVersion(release.Version);
+                        if (modEntry.Version < ver &&
+                            (modEntry.NewestVersion == null || modEntry.NewestVersion < ver))
+                            modEntry.NewestVersion = ver;
                     }
-                }
             }
             catch (Exception e)
             {
@@ -80,9 +65,9 @@ namespace UnityModManagerNet
         {
             try
             {
-                using (var ping = new System.Net.NetworkInformation.Ping())
+                using (var ping = new Ping())
                 {
-                    return ping.Send("raw.githubusercontent.com", 3000).Status == IPStatus.Success;
+                    return ping.Send("raw.githubusercontent.com", 1000)?.Status == IPStatus.Success;
                 }
             }
             catch (Exception e)
@@ -96,29 +81,33 @@ namespace UnityModManagerNet
         private static IEnumerator DownloadString(string url, UnityAction<string, string> handler)
         {
             var www = UnityWebRequest.Get(url);
-
-            yield return www.SendWebRequest();
-
-            MethodInfo isError;
+            yield return www?.SendWebRequest();
 
             var ver = ParseVersion(Application.unityVersion);
-            if (ver.Major >= 2017)
+            var isError = typeof(UnityWebRequest).GetMethod(ver.Major >= 2017 ? "get_isNetworkError" : "get_isError");
+            if (isError == null || (bool)isError.Invoke(www, null))
             {
-                isError = typeof(UnityWebRequest).GetMethod("get_isNetworkError");
-            }
-            else
-            {
-                isError = typeof(UnityWebRequest).GetMethod("get_isError");
+                Logger.Log(www?.error);
+                Logger.Log($"Error downloading '{url}'.");
+                yield break;
             }
 
-            if (isError == null || (bool)isError.Invoke(www, null))
+            handler(www?.downloadHandler.text, url);
+        }
+
+        private static IEnumerator DownloadString_5_3(string url, UnityAction<string, string> handler)
+        {
+            var www = new WWW(url);
+            yield return www;
+
+            if (!string.IsNullOrEmpty(www.error))
             {
                 Logger.Log(www.error);
                 Logger.Log($"从网站“{url}”检查MOD新版本时发生了错误。");
                 yield break;
             }
 
-            handler(www.downloadHandler.text, url);
+            handler(www.text, url);
         }
     }
 }

@@ -3,36 +3,55 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace UnityModManagerNet
 {
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
-    public enum DrawType { Auto, Ignore, Field, Slider, Toggle, ToggleGroup, /*MultiToggle, */PopupList };
+    public enum DrawType
+    {
+        Auto,
+        Ignore,
+        Field,
+        Slider,
+        Toggle,
+        ToggleGroup, /*MultiToggle, */
+        PopupList,
+        KeyBinding
+    }
 
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
     [Flags]
-    public enum DrawFieldMask { Any = 0, Public = 1, Serialized = 2, SkipNotSerialized = 4, OnlyDrawAttr = 8 };
+    public enum DrawFieldMask
+    {
+        Any = 0,
+        Public = 1,
+        Serialized = 2,
+        SkipNotSerialized = 4,
+        OnlyDrawAttr = 8
+    }
 
     /// <summary>
-    /// Provides the Draw method for rendering fields. [0.18.0]
+    ///     Provides the Draw method for rendering fields. [0.18.0]
     /// </summary>
     public interface IDrawable
     {
         /// <summary>
-        /// Called when values change. For sliders it is called too often.
+        ///     Called when values change. For sliders it is called too often.
         /// </summary>
         void OnChange();
     }
 
     /// <summary>
-    /// Specifies which fields to render. [0.18.0]
+    ///     Specifies which fields to render. [0.18.0]
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field)]
     public class DrawFieldsAttribute : Attribute
     {
         public DrawFieldMask Mask;
@@ -44,40 +63,52 @@ namespace UnityModManagerNet
     }
 
     /// <summary>
-    /// Sets options for rendering. [0.19.0]
+    ///     Sets options for rendering. [0.19.0]
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field)]
     public class DrawAttribute : Attribute
     {
-        public DrawType Type = DrawType.Auto;
-        public string Label;
-        public int Width = 0;
-        public int Height = 0;
-        public double Min = double.MinValue;
-        public double Max = double.MaxValue;
         /// <summary>
-        /// Rounds a double-precision floating-point value to a specified number of fractional digits, and rounds midpoint values to the nearest even number. 
-        /// Default 2
-        /// </summary>
-        public int Precision = 2;
-        /// <summary>
-        /// Maximum text length.
-        /// </summary>
-        public int MaxLength = int.MaxValue;
-        /// <summary>
-        /// Becomes visible if a field value matches. Use format "FieldName,Value". Supports only string, primitive and enum types.
-        /// </summary>
-        public string VisibleOn;
-        /// <summary>
-        /// Becomes invisible if a field value matches. Use format "FieldName,Value". Supports only string, primitive and enum types.
-        /// </summary>
-        public string InvisibleOn;
-        /// <summary>
-        /// Applies box style.
+        ///     Applies box style.
         /// </summary>
         public bool Box;
+
         public bool Collapsible;
+        public int Height;
+
+        /// <summary>
+        ///     Becomes invisible if a field value matches. Use format "FieldName,Value". Supports only string, primitive and enum
+        ///     types.
+        /// </summary>
+        public string InvisibleOn;
+
+        public string Label;
+        public double Max = double.MaxValue;
+
+        /// <summary>
+        ///     Maximum text length.
+        /// </summary>
+        public int MaxLength = int.MaxValue;
+
+        public double Min = double.MinValue;
+
+        /// <summary>
+        ///     Rounds a double-precision floating-point value to a specified number of fractional digits, and rounds midpoint
+        ///     values to the nearest even number.
+        ///     Default 2
+        /// </summary>
+        public int Precision = 2;
+
+        public DrawType Type = DrawType.Auto;
         public bool Vertical;
+
+        /// <summary>
+        ///     Becomes visible if a field value matches. Use format "FieldName,Value". Supports only string, primitive and enum
+        ///     types.
+        /// </summary>
+        public string VisibleOn;
+
+        public int Width;
 
         public DrawAttribute()
         {
@@ -101,29 +132,145 @@ namespace UnityModManagerNet
     }
 
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public class HorizontalAttribute : Attribute
     {
+    }
+
+    /// <summary>
+    ///     [0.20.0]
+    /// </summary>
+    [Serializable]
+    public class KeyBinding
+    {
+        public static readonly string[] KeyCodeNames = Enum.GetNames(typeof(KeyCode));
+        public KeyCode keyCode = KeyCode.None;
+        private int m_Index = -1;
+        public byte modifiers;
+
+        public int Index
+        {
+            get
+            {
+                if (m_Index == -1) m_Index = Array.FindIndex(KeyCodeNames, x => x == keyCode.ToString());
+                return m_Index;
+            }
+        }
+
+        public static bool Ctrl()
+        {
+            return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+        }
+
+        public static bool Shift()
+        {
+            return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        }
+
+        public static bool Alt()
+        {
+            return Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+        }
+
+        public void Change(KeyCode key, bool ctrl, bool shift, bool alt)
+        {
+            Change(key, (byte)((ctrl ? 1 : 0) + (shift ? 2 : 0) + (alt ? 4 : 0)));
+        }
+
+        public void Change(KeyCode key, byte modifier = 0)
+        {
+            keyCode = key;
+            modifiers = modifier;
+            m_Index = -1;
+        }
+
+        public bool Pressed()
+        {
+            return keyCode != KeyCode.None && Input.GetKey(keyCode) && ((modifiers & 1) == 0 || Ctrl()) &&
+                   ((modifiers & 2) == 0 || Shift()) && ((modifiers & 4) == 0 || Alt());
+        }
+
+        public bool Down()
+        {
+            return keyCode != KeyCode.None && Input.GetKeyDown(keyCode) && ((modifiers & 1) == 0 || Ctrl()) &&
+                   ((modifiers & 2) == 0 || Shift()) && ((modifiers & 4) == 0 || Alt());
+        }
+
+        public bool Up()
+        {
+            return keyCode != KeyCode.None && Input.GetKeyUp(keyCode) && ((modifiers & 1) == 0 || Ctrl()) &&
+                   ((modifiers & 2) == 0 || Shift()) && ((modifiers & 4) == 0 || Alt());
+        }
     }
 
     public partial class UnityModManager
     {
         public partial class UI : MonoBehaviour
         {
-            static Type[] fieldTypes = new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(int[]), typeof(long[]), typeof(float[]), typeof(double[]),
-                typeof(Vector2), typeof(Vector3), typeof(Vector4), typeof(Color), typeof(string)};
-            static Type[] sliderTypes = new[] { typeof(int), typeof(long), typeof(float), typeof(double) };
-            static Type[] toggleTypes = new[] { typeof(bool) };
-            static Type[] specialTypes = new[] { typeof(Vector2), typeof(Vector3), typeof(Vector4), typeof(Color) };
-            static float drawHeight = 22;
+            private static readonly Type[] fieldTypes =
+            {
+                typeof(int), typeof(long), typeof(float), typeof(double), typeof(int[]), typeof(long[]),
+                typeof(float[]), typeof(double[]),
+                typeof(Vector2), typeof(Vector3), typeof(Vector4), typeof(Color), typeof(string)
+            };
+
+            private static readonly Type[] sliderTypes = { typeof(int), typeof(long), typeof(float), typeof(double) };
+            private static readonly Type[] toggleTypes = { typeof(bool) };
+
+            private static readonly Type[] specialTypes =
+                {typeof(Vector2), typeof(Vector3), typeof(Vector4), typeof(Color), typeof(KeyBinding)};
+
+            private static readonly float drawHeight = 22;
+
+            private static readonly List<int> collapsibleStates = new List<int>();
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.20.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
+            /// </returns>
+            public static bool DrawKeybinding(ref KeyBinding key, GUIStyle style = null,
+                params GUILayoutOption[] option)
+            {
+                var changed = false;
+                if (key == null)
+                    key = new KeyBinding();
+                GUILayout.BeginHorizontal();
+                var modifiersValue = new byte[] { 1, 2, 4 };
+                var modifiersStr = new[] { "Ctrl", "Shift", "Alt" };
+                var modifiers = key.modifiers;
+                for (var i = 0; i < modifiersValue.Length; i++)
+                    if (GUILayout.Toggle((modifiers & modifiersValue[i]) != 0, modifiersStr[i],
+                        GUILayout.ExpandWidth(false)))
+                        modifiers |= modifiersValue[i];
+                    else if ((modifiers & modifiersValue[i]) != 0) modifiers ^= modifiersValue[i];
+                GUILayout.Label(" + ", GUILayout.ExpandWidth(false));
+                var val = key.Index;
+                if (PopupToggleGroup(ref val, KeyBinding.KeyCodeNames, style, option))
+                {
+                    key.Change((KeyCode)Enum.Parse(typeof(KeyCode), KeyBinding.KeyCodeNames[val]), modifiers);
+                    changed = true;
+                }
+
+                if (key.modifiers != modifiers)
+                {
+                    key.modifiers = modifiers;
+                    changed = true;
+                }
+
+                GUILayout.EndHorizontal();
+
+                return changed;
+            }
+
+            /// <summary>
+            ///     [0.18.0]
+            /// </summary>
+            /// <returns>
+            ///     Returns true if the value has changed.
             /// </returns>
             public static bool DrawVector(ref Vector2 vec, GUIStyle style = null, params GUILayoutOption[] option)
             {
@@ -135,25 +282,20 @@ namespace UnityModManagerNet
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
-            public static void DrawVector(Vector2 vec, Action<Vector2> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void DrawVector(Vector2 vec, Action<Vector2> onChange, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
-                if (onChange == null)
-                {
-                    throw new ArgumentNullException("onChange");
-                }
-                if (DrawVector(ref vec, style, option))
-                {
-                    onChange(vec);
-                }
+                if (onChange == null) throw new ArgumentNullException(nameof(onChange));
+                if (DrawVector(ref vec, style, option)) onChange(vec);
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
             /// </returns>
             public static bool DrawVector(ref Vector3 vec, GUIStyle style = null, params GUILayoutOption[] option)
             {
@@ -165,55 +307,49 @@ namespace UnityModManagerNet
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
-            public static void DrawVector(Vector3 vec, Action<Vector3> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void DrawVector(Vector3 vec, Action<Vector3> onChange, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
-                if (onChange == null)
-                {
-                    throw new ArgumentNullException("onChange");
-                }
-                if (DrawVector(ref vec, style, option))
-                {
-                    onChange(vec);
-                }
+                if (onChange == null) throw new ArgumentNullException(nameof(onChange));
+                if (DrawVector(ref vec, style, option)) onChange(vec);
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
             /// </returns>
             public static bool DrawVector(ref Vector4 vec, GUIStyle style = null, params GUILayoutOption[] option)
             {
                 var values = new float[4] { vec.x, vec.y, vec.z, vec.w };
                 var labels = new string[4] { "x", "y", "z", "w" };
-                if (!DrawFloatMultiField(ref values, labels, style, option)) return false;
-                vec = new Vector4(values[0], values[1], values[2], values[3]);
-                return true;
+                if (DrawFloatMultiField(ref values, labels, style, option))
+                {
+                    vec = new Vector4(values[0], values[1], values[2], values[3]);
+                    return true;
+                }
+
+                return false;
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
-            public static void DrawVector(Vector4 vec, Action<Vector4> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void DrawVector(Vector4 vec, Action<Vector4> onChange, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
-                if (onChange == null)
-                {
-                    throw new ArgumentNullException("onChange");
-                }
-                if (DrawVector(ref vec, style, option))
-                {
-                    onChange(vec);
-                }
+                if (onChange == null) throw new ArgumentNullException(nameof(onChange));
+                if (DrawVector(ref vec, style, option)) onChange(vec);
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
             /// </returns>
             public static bool DrawColor(ref Color vec, GUIStyle style = null, params GUILayoutOption[] option)
             {
@@ -225,27 +361,23 @@ namespace UnityModManagerNet
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
-            public static void DrawColor(Color vec, Action<Color> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void DrawColor(Color vec, Action<Color> onChange, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
-                if (onChange == null)
-                {
-                    throw new ArgumentNullException("onChange");
-                }
-                if (DrawColor(ref vec, style, option))
-                {
-                    onChange(vec);
-                }
+                if (onChange == null) throw new ArgumentNullException(nameof(onChange));
+                if (DrawColor(ref vec, style, option)) onChange(vec);
             }
 
             /// <summary>
-            /// [0.18.0]
+            ///     [0.18.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
             /// </returns>
-            public static bool DrawFloatMultiField(ref float[] values, string[] labels, GUIStyle style = null, params GUILayoutOption[] option)
+            public static bool DrawFloatMultiField(ref float[] values, string[] labels, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
                 if (values == null || values.Length == 0)
                     throw new ArgumentNullException(nameof(values));
@@ -269,19 +401,13 @@ namespace UnityModManagerNet
                     }
                     else
                     {
-                        if (float.TryParse(str, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out var num))
-                        {
+                        if (float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var num))
                             result[i] = num;
-                        }
                         else
-                        {
                             result[i] = 0;
-                        }
                     }
-                    if (result[i] != values[i])
-                    {
-                        changed = true;
-                    }
+
+                    if (!result[i].Equals(values[i])) changed = true;
                 }
 
                 values = result;
@@ -289,12 +415,13 @@ namespace UnityModManagerNet
             }
 
             /// <summary>
-            /// [0.19.0]
+            ///     [0.19.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
             /// </returns>
-            public static bool DrawFloatField(ref float value, string label, GUIStyle style = null, params GUILayoutOption[] option)
+            public static bool DrawFloatField(ref float value, string label, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
                 var old = value;
                 GUILayout.Label(label, GUILayout.ExpandWidth(false));
@@ -305,125 +432,92 @@ namespace UnityModManagerNet
                 }
                 else
                 {
-                    if (float.TryParse(str, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out var num))
-                    {
+                    if (float.TryParse(str, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out var num))
                         value = num;
-                    }
                     else
-                    {
                         value = 0;
-                    }
                 }
-                return value != old;
+
+                return !value.Equals(old);
             }
 
             /// <summary>
-            /// [0.19.0]
+            ///     [0.19.0]
             /// </summary>
-            public static void DrawFloatField(float value, string label, Action<float> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void DrawFloatField(float value, string label, Action<float> onChange, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
-                if (onChange == null)
-                {
-                    throw new ArgumentNullException("onChange");
-                }
-                if (DrawFloatField(ref value, label, style, option))
-                {
-                    onChange(value);
-                }
+                if (onChange == null) throw new ArgumentNullException(nameof(onChange));
+                if (DrawFloatField(ref value, label, style, option)) onChange(value);
             }
 
             /// <summary>
-            /// [0.19.0]
+            ///     [0.19.0]
             /// </summary>
             /// <returns>
-            /// Returns true if the value has changed.
+            ///     Returns true if the value has changed.
             /// </returns>
-            public static bool DrawIntField(ref int value, string label, GUIStyle style = null, params GUILayoutOption[] option)
+            public static bool DrawIntField(ref int value, string label, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
                 var old = value;
                 GUILayout.Label(label, GUILayout.ExpandWidth(false));
                 var str = GUILayout.TextField(value.ToString(), style ?? GUI.skin.textField, option);
                 if (string.IsNullOrEmpty(str))
-                {
                     value = 0;
-                }
                 else
-                {
-                    value = int.TryParse(str, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out var num) ? num : 0;
-                }
+                    value = int.TryParse(str, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out var num)
+                        ? num
+                        : 0;
+
                 return value != old;
             }
 
             /// <summary>
-            /// [0.19.0]
+            ///     [0.19.0]
             /// </summary>
-            public static void DrawIntField(int value, string label, Action<int> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+            public static void DrawIntField(int value, string label, Action<int> onChange, GUIStyle style = null,
+                params GUILayoutOption[] option)
             {
-                if (onChange == null)
-                {
-                    throw new ArgumentNullException("onChange");
-                }
-                if (DrawIntField(ref value, label, style, option))
-                {
-                    onChange(value);
-                }
+                if (onChange == null) throw new ArgumentNullException(nameof(onChange));
+                if (DrawIntField(ref value, label, style, option)) onChange(value);
             }
-
-            private static List<int> collapsibleStates = new List<int>();
 
             private static bool DependsOn(string str, object container, Type type, ModEntry mod)
             {
                 var param = str.Split('|');
                 if (param.Length != 2)
-                {
-                    throw new Exception($"VisibleOn/InvisibleOn({str}) must have 2 params, name and value, e.g (FieldName|True).");
-                }
-                var dependsOnField = type.GetField(param[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (dependsOnField == null)
-                {
-                    throw new Exception($"Field '{param[0]}' not found.");
-                }
+                    throw new Exception(
+                        $"VisibleOn/InvisibleOn({str})必须提供两个参数，字段名称和值, 例如：FieldName|True。");
+                var dependsOnField = type.GetField(param[0],
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (dependsOnField == null) throw new Exception($"找不到字段“{param[0]}”！");
                 if (!dependsOnField.FieldType.IsPrimitive && !dependsOnField.FieldType.IsEnum)
-                {
-                    throw new Exception($"Type '{dependsOnField.FieldType.Name}' is not supported.");
-                }
+                    throw new Exception($"不支持的类型：“{dependsOnField.FieldType.Name}”！");
                 object dependsOnValue = null;
                 if (dependsOnField.FieldType.IsEnum)
-                {
                     try
                     {
                         dependsOnValue = Enum.Parse(dependsOnField.FieldType, param[1]);
-                        if (dependsOnValue == null)
-                        {
-                            throw new Exception($"Value '{param[1]}' cannot be parsed.");
-                        }
                     }
                     catch (Exception e)
                     {
-                        mod.Logger.Log($"Parse value VisibleOn/InvisibleOn({str})");
+                        mod.Logger.Log($"解析值“VisibleOn/InvisibleOn({str})”");
                         throw e;
                     }
-                }
                 else if (dependsOnField.FieldType == typeof(string))
-                {
                     dependsOnValue = param[1];
-                }
                 else
-                {
                     try
                     {
                         dependsOnValue = Convert.ChangeType(param[1], dependsOnField.FieldType);
-                        if (dependsOnValue == null)
-                        {
-                            throw new Exception($"Value '{param[1]}' cannot be parsed.");
-                        }
+                        if (dependsOnValue == null) throw new Exception($"解析值“{param[1]}“失败！");
                     }
                     catch (Exception e)
                     {
-                        mod.Logger.Log($"Parse value VisibleOn/InvisibleOn({str})");
+                        mod.Logger.Log($"解析值“VisibleOn/InvisibleOn({str})”");
                         throw e;
                     }
-                }
 
                 var value = dependsOnField.GetValue(container);
                 return value.GetHashCode() == dependsOnValue.GetHashCode();
@@ -435,10 +529,8 @@ namespace UnityModManagerNet
                 var options = new List<GUILayoutOption>();
                 var mask = defaultMask;
                 foreach (DrawFieldsAttribute attr in type.GetCustomAttributes(typeof(DrawFieldsAttribute), false))
-                {
                     mask = attr.Mask;
-                }
-                var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 foreach (var f in fields)
                 {
                     var a = new DrawAttribute();
@@ -457,26 +549,23 @@ namespace UnityModManagerNet
 
                         if (!string.IsNullOrEmpty(a.VisibleOn))
                         {
-                            if (!DependsOn(a.VisibleOn, container, type, mod))
-                            {
-                                continue;
-                            }
+                            if (!DependsOn(a.VisibleOn, container, type, mod)) continue;
                         }
                         else if (!string.IsNullOrEmpty(a.InvisibleOn))
                         {
-                            if (DependsOn(a.InvisibleOn, container, type, mod))
-                            {
-                                continue;
-                            }
+                            if (DependsOn(a.InvisibleOn, container, type, mod)) continue;
                         }
                     }
                     else
                     {
-                        if ((mask & DrawFieldMask.OnlyDrawAttr) == 0 && ((mask & DrawFieldMask.SkipNotSerialized) == 0 || !f.IsNotSerialized)
-                            && ((mask & DrawFieldMask.Public) > 0 && f.IsPublic
-                            || (mask & DrawFieldMask.Serialized) > 0 && f.GetCustomAttributes(typeof(SerializeField), false).Length > 0
-                            || (mask & DrawFieldMask.Public) == 0 && (mask & DrawFieldMask.Serialized) == 0))
-                        {
+                        if ((mask & DrawFieldMask.OnlyDrawAttr) == 0 && ((mask & DrawFieldMask.SkipNotSerialized) ==
+                                                                         0 || !f.IsNotSerialized)
+                                                                     && ((mask & DrawFieldMask.Public) > 0 && f.IsPublic
+                                                                         || (mask & DrawFieldMask.Serialized) > 0 &&
+                                                                         f.GetCustomAttributes(typeof(SerializeField),
+                                                                             false).Length > 0
+                                                                         || (mask & DrawFieldMask.Public) == 0 &&
+                                                                         (mask & DrawFieldMask.Serialized) == 0))
                             foreach (RangeAttribute a_ in f.GetCustomAttributes(typeof(RangeAttribute), false))
                             {
                                 a.Type = DrawType.Slider;
@@ -484,32 +573,25 @@ namespace UnityModManagerNet
                                 a.Max = a_.max;
                                 break;
                             }
-                            foreach (HeaderAttribute a_ in f.GetCustomAttributes(typeof(HeaderAttribute), false))
-                            {
-                                a.Label = a_.header;
-                                break;
-                            }
-                        }
                         else
-                        {
                             continue;
-                        }
                     }
 
                     foreach (SpaceAttribute a_ in f.GetCustomAttributes(typeof(SpaceAttribute), false))
-                    {
                         GUILayout.Space(Scale((int)a_.height));
-                    }
 
-                    var fieldName = string.IsNullOrEmpty(a.Label) ? f.Name : a.Label;
+                    foreach (HeaderAttribute a_ in f.GetCustomAttributes(typeof(HeaderAttribute), false))
+                        GUILayout.Label(a_.header, bold, GUILayout.ExpandWidth(false));
 
-                    if (f.FieldType.IsClass && !f.FieldType.IsArray || f.FieldType.IsValueType && !f.FieldType.IsPrimitive && !f.FieldType.IsEnum && !Array.Exists(specialTypes, x => x == f.FieldType))
+                    var fieldName = a.Label ?? f.Name;
+
+                    if ((f.FieldType.IsClass && !f.FieldType.IsArray ||
+                         f.FieldType.IsValueType && !f.FieldType.IsPrimitive && !f.FieldType.IsEnum) &&
+                        !Array.Exists(specialTypes, x => x == f.FieldType))
                     {
                         defaultMask = mask;
                         foreach (DrawFieldsAttribute attr in f.GetCustomAttributes(typeof(DrawFieldsAttribute), false))
-                        {
                             defaultMask = attr.Mask;
-                        }
 
                         var box = a.Box || a.Collapsible && collapsibleStates.Exists(x => x == f.MetadataToken);
                         var horizontal = f.GetCustomAttributes(typeof(HorizontalAttribute), false).Length > 0;
@@ -522,24 +604,23 @@ namespace UnityModManagerNet
                         if (a.Collapsible)
                             GUILayout.BeginHorizontal();
 
-                        GUILayout.Label($"{fieldName}", GUILayout.ExpandWidth(false));
+                        if (!string.IsNullOrEmpty(fieldName))
+                            GUILayout.Label($"{fieldName}", GUILayout.ExpandWidth(false));
 
                         var visible = true;
                         if (a.Collapsible)
                         {
-                            GUILayout.Space(5);
+                            if (!string.IsNullOrEmpty(fieldName))
+                                GUILayout.Space(5);
                             visible = collapsibleStates.Exists(x => x == f.MetadataToken);
                             if (GUILayout.Button(visible ? "Hide" : "Show", GUILayout.ExpandWidth(false)))
                             {
                                 if (visible)
-                                {
                                     collapsibleStates.Remove(f.MetadataToken);
-                                }
                                 else
-                                {
                                     collapsibleStates.Add(f.MetadataToken);
-                                }
                             }
+
                             GUILayout.EndHorizontal();
                         }
 
@@ -548,11 +629,19 @@ namespace UnityModManagerNet
                             if (box)
                                 GUILayout.BeginVertical("box");
                             var val = f.GetValue(container);
-                            if (Draw(val, f.FieldType, mod, defaultMask))
+                            if (typeof(Object).IsAssignableFrom(f.FieldType) && val is Object obj)
                             {
-                                changed = true;
-                                f.SetValue(container, val);
+                                GUILayout.Label(obj.name, GUILayout.ExpandWidth(false));
                             }
+                            else
+                            {
+                                if (Draw(val, f.FieldType, mod, defaultMask))
+                                {
+                                    changed = true;
+                                    f.SetValue(container, val);
+                                }
+                            }
+
                             if (box)
                                 GUILayout.EndVertical();
                         }
@@ -578,379 +667,442 @@ namespace UnityModManagerNet
                             if (f.GetCustomAttributes(typeof(FlagsAttribute), false).Length == 0)
                                 a.Type = DrawType.PopupList;
                         }
+                        else if (f.FieldType == typeof(KeyBinding))
+                        {
+                            a.Type = DrawType.KeyBinding;
+                        }
                     }
 
-                    if (a.Type == DrawType.Field)
+                    switch (a.Type)
                     {
-                        if (!Array.Exists(fieldTypes, x => x == f.FieldType) && !f.FieldType.IsArray)
-                        {
+                        case DrawType.Field
+                            when !Array.Exists(fieldTypes, x => x == f.FieldType) && !f.FieldType.IsArray:
                             throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.Field}");
-                        }
-
-                        options.Add(a.Width != 0 ? GUILayout.Width(a.Width) : GUILayout.Width(Scale(100)));
-                        options.Add(a.Height != 0 ? GUILayout.Height(a.Height) : GUILayout.Height(Scale((int)drawHeight)));
-                        if (f.FieldType == typeof(Vector2))
-                        {
-                            if (a.Vertical)
-                                GUILayout.BeginVertical();
-                            else
-                                GUILayout.BeginHorizontal();
-                            GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                            if (!a.Vertical)
-                                GUILayout.Space(Scale(5));
-                            var vec = (Vector2)f.GetValue(container);
-                            if (DrawVector(ref vec, null, options.ToArray()))
+                        case DrawType.Field:
                             {
-                                f.SetValue(container, vec);
-                                changed = true;
-                            }
-                            if (a.Vertical)
-                            {
-                                GUILayout.EndVertical();
-                            }
-                            else
-                            {
-                                GUILayout.FlexibleSpace();
-                                GUILayout.EndHorizontal();
-                            }
-                        }
-                        else if (f.FieldType == typeof(Vector3))
-                        {
-                            if (a.Vertical)
-                                GUILayout.BeginVertical();
-                            else
-                                GUILayout.BeginHorizontal();
-                            GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                            if (!a.Vertical)
-                                GUILayout.Space(Scale(5));
-                            var vec = (Vector3)f.GetValue(container);
-                            if (DrawVector(ref vec, null, options.ToArray()))
-                            {
-                                f.SetValue(container, vec);
-                                changed = true;
-                            }
-                            if (a.Vertical)
-                            {
-                                GUILayout.EndVertical();
-                            }
-                            else
-                            {
-                                GUILayout.FlexibleSpace();
-                                GUILayout.EndHorizontal();
-                            }
-                        }
-                        else if (f.FieldType == typeof(Vector4))
-                        {
-                            if (a.Vertical)
-                                GUILayout.BeginVertical();
-                            else
-                                GUILayout.BeginHorizontal();
-                            GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                            if (!a.Vertical)
-                                GUILayout.Space(Scale(5));
-                            var vec = (Vector4)f.GetValue(container);
-                            if (DrawVector(ref vec, null, options.ToArray()))
-                            {
-                                f.SetValue(container, vec);
-                                changed = true;
-                            }
-                            if (a.Vertical)
-                            {
-                                GUILayout.EndVertical();
-                            }
-                            else
-                            {
-                                GUILayout.FlexibleSpace();
-                                GUILayout.EndHorizontal();
-                            }
-                        }
-                        else if (f.FieldType == typeof(Color))
-                        {
-                            if (a.Vertical)
-                                GUILayout.BeginVertical();
-                            else
-                                GUILayout.BeginHorizontal();
-                            GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                            if (!a.Vertical)
-                                GUILayout.Space(Scale(5));
-                            var vec = (Color)f.GetValue(container);
-                            if (DrawColor(ref vec, null, options.ToArray()))
-                            {
-                                f.SetValue(container, vec);
-                                changed = true;
-                            }
-                            if (a.Vertical)
-                            {
-                                GUILayout.EndVertical();
-                            }
-                            else
-                            {
-                                GUILayout.FlexibleSpace();
-                                GUILayout.EndHorizontal();
-                            }
-                        }
-                        else
-                        {
-                            //var val = f.GetValue(container).ToString();
-                            var obj = f.GetValue(container);
-                            Type elementType = null;
-                            object[] values = null;
-                            if (f.FieldType.IsArray)
-                            {
-                                if (obj is IEnumerable array)
+                                options.Add(a.Width != 0 ? GUILayout.Width(a.Width) : GUILayout.Width(Scale(100)));
+                                options.Add(a.Height != 0
+                                    ? GUILayout.Height(a.Height)
+                                    : GUILayout.Height(Scale((int)drawHeight)));
+                                if (f.FieldType == typeof(Vector2))
                                 {
-                                    values = array.Cast<object>().ToArray();
-                                    elementType = obj.GetType().GetElementType();
-                                }
-                            }
-                            else
-                            {
-                                values = new object[] { obj };
-                                elementType = obj.GetType();
-                            }
-
-                            if (values == null)
-                                continue;
-
-                            var _changed = false;
-
-                            a.Vertical = a.Vertical || f.FieldType.IsArray;
-                            if (a.Vertical)
-                                GUILayout.BeginVertical();
-                            else
-                                GUILayout.BeginHorizontal();
-                            if (f.FieldType.IsArray)
-                            {
-                                GUILayout.BeginHorizontal();
-                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                                GUILayout.Space(Scale(5));
-                                if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
-                                {
-                                    Array.Resize(ref values, Math.Min(values.Length + 1, int.MaxValue));
-                                    values[values.Length - 1] = Convert.ChangeType("0", elementType);
-                                    _changed = true;
-                                    changed = true;
-                                }
-                                if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
-                                {
-                                    Array.Resize(ref values, Math.Max(values.Length - 1, 0));
-                                    if (values.Length > 0)
-                                        values[values.Length - 1] = Convert.ChangeType("0", elementType);
-                                    _changed = true;
-                                    changed = true;
-                                }
-                                GUILayout.EndHorizontal();
-                            }
-                            else
-                            {
-                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                            }
-                            if (!a.Vertical)
-                                GUILayout.Space(Scale(5));
-
-                            if (values.Length > 0)
-                            {
-                                var isFloat = f.FieldType == typeof(float) || f.FieldType == typeof(double) || f.FieldType == typeof(float[]) || f.FieldType == typeof(double[]);
-                                for (var i = 0; i < values.Length; i++)
-                                {
-                                    var val = values[i].ToString();
-                                    if (a.Precision >= 0 && isFloat)
-                                    {
-                                        if (double.TryParse(val, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out var num))
-                                        {
-                                            val = num.ToString($"f{a.Precision}");
-                                        }
-                                    }
-                                    if (f.FieldType.IsArray)
-                                    {
+                                    if (a.Vertical)
+                                        GUILayout.BeginVertical();
+                                    else
                                         GUILayout.BeginHorizontal();
-                                        GUILayout.Label($"  [{i}] ", GUILayout.ExpandWidth(false));
-                                    }
-                                    var result = f.FieldType == typeof(string) ? GUILayout.TextField(val, a.MaxLength, options.ToArray()) : GUILayout.TextField(val, options.ToArray());
-                                    if (f.FieldType.IsArray)
+                                    GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    if (!a.Vertical)
+                                        GUILayout.Space(Scale(5));
+                                    var vec = (Vector2)f.GetValue(container);
+                                    if (DrawVector(ref vec, null, options.ToArray()))
                                     {
-                                        GUILayout.EndHorizontal();
+                                        f.SetValue(container, vec);
+                                        changed = true;
                                     }
 
-                                    if (result == val) continue;
-                                    if (string.IsNullOrEmpty(result))
+                                    if (a.Vertical)
                                     {
-                                        if (f.FieldType != typeof(string))
-                                            result = "0";
+                                        GUILayout.EndVertical();
                                     }
                                     else
                                     {
-                                        if (double.TryParse(result, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out var num))
-                                        {
-                                            num = Math.Max(num, a.Min);
-                                            num = Math.Min(num, a.Max);
-                                            result = num.ToString(CultureInfo.InvariantCulture);
-                                        }
-                                        else
-                                        {
-                                            result = "0";
-                                        }
+                                        GUILayout.FlexibleSpace();
+                                        GUILayout.EndHorizontal();
                                     }
-                                    values[i] = Convert.ChangeType(result, elementType);
-                                    changed = true;
-                                    _changed = true;
                                 }
-                            }
-                            if (_changed)
-                            {
-                                if (f.FieldType.IsArray)
+                                else if (f.FieldType == typeof(Vector3))
                                 {
-                                    if (elementType == typeof(float))
-                                        f.SetValue(container, Array.ConvertAll(values, x => (float)x));
-                                    else if (elementType == typeof(int))
-                                        f.SetValue(container, Array.ConvertAll(values, x => (int)x));
-                                    else if (elementType == typeof(long))
-                                        f.SetValue(container, Array.ConvertAll(values, x => (long)x));
-                                    else if (elementType == typeof(double))
-                                        f.SetValue(container, Array.ConvertAll(values, x => (double)x));
+                                    if (a.Vertical)
+                                        GUILayout.BeginVertical();
+                                    else
+                                        GUILayout.BeginHorizontal();
+                                    GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    if (!a.Vertical)
+                                        GUILayout.Space(Scale(5));
+                                    var vec = (Vector3)f.GetValue(container);
+                                    if (DrawVector(ref vec, null, options.ToArray()))
+                                    {
+                                        f.SetValue(container, vec);
+                                        changed = true;
+                                    }
+
+                                    if (a.Vertical)
+                                    {
+                                        GUILayout.EndVertical();
+                                    }
+                                    else
+                                    {
+                                        GUILayout.FlexibleSpace();
+                                        GUILayout.EndHorizontal();
+                                    }
+                                }
+                                else if (f.FieldType == typeof(Vector4))
+                                {
+                                    if (a.Vertical)
+                                        GUILayout.BeginVertical();
+                                    else
+                                        GUILayout.BeginHorizontal();
+                                    GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    if (!a.Vertical)
+                                        GUILayout.Space(Scale(5));
+                                    var vec = (Vector4)f.GetValue(container);
+                                    if (DrawVector(ref vec, null, options.ToArray()))
+                                    {
+                                        f.SetValue(container, vec);
+                                        changed = true;
+                                    }
+
+                                    if (a.Vertical)
+                                    {
+                                        GUILayout.EndVertical();
+                                    }
+                                    else
+                                    {
+                                        GUILayout.FlexibleSpace();
+                                        GUILayout.EndHorizontal();
+                                    }
+                                }
+                                else if (f.FieldType == typeof(Color))
+                                {
+                                    if (a.Vertical)
+                                        GUILayout.BeginVertical();
+                                    else
+                                        GUILayout.BeginHorizontal();
+                                    GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    if (!a.Vertical)
+                                        GUILayout.Space(Scale(5));
+                                    var vec = (Color)f.GetValue(container);
+                                    if (DrawColor(ref vec, null, options.ToArray()))
+                                    {
+                                        f.SetValue(container, vec);
+                                        changed = true;
+                                    }
+
+                                    if (a.Vertical)
+                                    {
+                                        GUILayout.EndVertical();
+                                    }
+                                    else
+                                    {
+                                        GUILayout.FlexibleSpace();
+                                        GUILayout.EndHorizontal();
+                                    }
                                 }
                                 else
                                 {
-                                    f.SetValue(container, values[0]);
+                                    var obj = f.GetValue(container);
+                                    Type elementType = null;
+                                    object[] values = null;
+                                    if (f.FieldType.IsArray)
+                                    {
+                                        if (obj is IEnumerable array)
+                                        {
+                                            values = array.Cast<object>().ToArray();
+                                            elementType = obj.GetType().GetElementType();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        values = new[] { obj };
+                                        elementType = obj.GetType();
+                                    }
+
+                                    if (values == null)
+                                        continue;
+
+                                    var _changed = false;
+
+                                    a.Vertical = a.Vertical || f.FieldType.IsArray;
+                                    if (a.Vertical)
+                                        GUILayout.BeginVertical();
+                                    else
+                                        GUILayout.BeginHorizontal();
+                                    if (f.FieldType.IsArray)
+                                    {
+                                        GUILayout.BeginHorizontal();
+                                        GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                        GUILayout.Space(Scale(5));
+                                        if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
+                                        {
+                                            Array.Resize(ref values, Math.Min(values.Length + 1, int.MaxValue));
+                                            values[values.Length - 1] = Convert.ChangeType("0", elementType);
+                                            _changed = true;
+                                            changed = true;
+                                        }
+
+                                        if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
+                                        {
+                                            Array.Resize(ref values, Math.Max(values.Length - 1, 0));
+                                            if (values.Length > 0)
+                                                values[values.Length - 1] = Convert.ChangeType("0", elementType);
+                                            _changed = true;
+                                            changed = true;
+                                        }
+
+                                        GUILayout.EndHorizontal();
+                                    }
+                                    else
+                                    {
+                                        GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    }
+
+                                    if (!a.Vertical)
+                                        GUILayout.Space(Scale(5));
+
+                                    if (values.Length > 0)
+                                    {
+                                        var isFloat = f.FieldType == typeof(float) || f.FieldType == typeof(double) ||
+                                                      f.FieldType == typeof(float[]) || f.FieldType == typeof(double[]);
+                                        for (var i = 0; i < values.Length; i++)
+                                        {
+                                            var val = values[i].ToString();
+                                            if (a.Precision >= 0 && isFloat)
+                                                if (double.TryParse(val, NumberStyles.Float, NumberFormatInfo.InvariantInfo,
+                                                    out var num))
+                                                    val = num.ToString($"f{a.Precision}");
+                                            if (f.FieldType.IsArray)
+                                            {
+                                                GUILayout.BeginHorizontal();
+                                                GUILayout.Label($"  [{i}] ", GUILayout.ExpandWidth(false));
+                                            }
+
+                                            var result = f.FieldType == typeof(string)
+                                                ? GUILayout.TextField(val, a.MaxLength, options.ToArray())
+                                                : GUILayout.TextField(val, options.ToArray());
+                                            if (f.FieldType.IsArray) GUILayout.EndHorizontal();
+                                            if (result == val) continue;
+                                            if (string.IsNullOrEmpty(result))
+                                            {
+                                                if (f.FieldType != typeof(string))
+                                                    result = "0";
+                                            }
+                                            else
+                                            {
+                                                if (double.TryParse(result, NumberStyles.Float,
+                                                    NumberFormatInfo.InvariantInfo, out var num))
+                                                {
+                                                    num = Math.Max(num, a.Min);
+                                                    num = Math.Min(num, a.Max);
+                                                    result = num.ToString();
+                                                }
+                                                else
+                                                {
+                                                    result = "0";
+                                                }
+                                            }
+
+                                            values[i] = Convert.ChangeType(result, elementType);
+                                            changed = true;
+                                            _changed = true;
+                                        }
+                                    }
+
+                                    if (_changed)
+                                    {
+                                        if (f.FieldType.IsArray)
+                                        {
+                                            if (elementType == typeof(float))
+                                                f.SetValue(container, Array.ConvertAll(values, x => (float)x));
+                                            else if (elementType == typeof(int))
+                                                f.SetValue(container, Array.ConvertAll(values, x => (int)x));
+                                            else if (elementType == typeof(long))
+                                                f.SetValue(container, Array.ConvertAll(values, x => (long)x));
+                                            else if (elementType == typeof(double))
+                                                f.SetValue(container, Array.ConvertAll(values, x => (double)x));
+                                        }
+                                        else
+                                        {
+                                            f.SetValue(container, values[0]);
+                                        }
+                                    }
+
+                                    if (a.Vertical)
+                                        GUILayout.EndVertical();
+                                    else
+                                        GUILayout.EndHorizontal();
                                 }
+
+                                break;
                             }
-                            if (a.Vertical)
-                                GUILayout.EndVertical();
-                            else
-                                GUILayout.EndHorizontal();
-                        }
-                    }
-                    else if (a.Type == DrawType.Slider)
-                    {
-                        if (!Array.Exists(sliderTypes, x => x == f.FieldType))
-                        {
+
+                        case DrawType.Slider when !Array.Exists(sliderTypes, x => x == f.FieldType):
                             throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.Slider}");
-                        }
+                        case DrawType.Slider:
+                            {
+                                options.Add(a.Width != 0 ? GUILayout.Width(a.Width) : GUILayout.Width(Scale(200)));
+                                options.Add(a.Height != 0
+                                    ? GUILayout.Height(a.Height)
+                                    : GUILayout.Height(Scale((int)drawHeight)));
+                                if (a.Vertical)
+                                    GUILayout.BeginVertical();
+                                else
+                                    GUILayout.BeginHorizontal();
+                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                if (!a.Vertical)
+                                    GUILayout.Space(Scale(5));
+                                var val = f.GetValue(container).ToString();
+                                if (!double.TryParse(val, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out var num))
+                                    num = 0;
+                                if (a.Vertical)
+                                    GUILayout.BeginHorizontal();
+                                var fnum = (float)num;
+                                var result =
+                                    GUILayout.HorizontalSlider(fnum, (float)a.Min, (float)a.Max, options.ToArray());
+                                if (!a.Vertical)
+                                    GUILayout.Space(Scale(5));
+                                GUILayout.Label(result.ToString(), GUILayout.ExpandWidth(false),
+                                    GUILayout.Height(Scale((int)drawHeight)));
+                                if (a.Vertical)
+                                    GUILayout.EndHorizontal();
+                                if (a.Vertical)
+                                    GUILayout.EndVertical();
+                                else
+                                    GUILayout.EndHorizontal();
+                                if (!result.Equals(fnum))
+                                {
+                                    if ((f.FieldType == typeof(float) || f.FieldType == typeof(double)) && a.Precision >= 0)
+                                        result = (float)Math.Round(result, a.Precision);
+                                    f.SetValue(container, Convert.ChangeType(result, f.FieldType));
+                                    changed = true;
+                                }
 
-                        options.Add(a.Width != 0 ? GUILayout.Width(a.Width) : GUILayout.Width(Scale(200)));
-                        options.Add(a.Height != 0 ? GUILayout.Height(a.Height) : GUILayout.Height(Scale((int)drawHeight)));
-                        if (a.Vertical)
-                            GUILayout.BeginVertical();
-                        else
-                            GUILayout.BeginHorizontal();
-                        GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                        if (!a.Vertical)
-                            GUILayout.Space(Scale(5));
-                        var val = f.GetValue(container).ToString();
-                        if (!double.TryParse(val, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out var num))
-                        {
-                            num = 0;
-                        }
-                        if (a.Vertical)
-                            GUILayout.BeginHorizontal();
-                        var fnum = (float)num;
-                        var result = GUILayout.HorizontalSlider(fnum, (float)a.Min, (float)a.Max, options.ToArray());
-                        if (!a.Vertical)
-                            GUILayout.Space(Scale(5));
-                        GUILayout.Label(result.ToString(), GUILayout.ExpandWidth(false), GUILayout.Height(Scale((int)drawHeight)));
-                        if (a.Vertical)
-                            GUILayout.EndHorizontal();
-                        if (a.Vertical)
-                            GUILayout.EndVertical();
-                        else
-                            GUILayout.EndHorizontal();
-                        if (result.Equals(fnum)) continue;
-                        if ((f.FieldType == typeof(float) || f.FieldType == typeof(double)) && a.Precision >= 0)
-                            result = (float)Math.Round(result, a.Precision);
-                        f.SetValue(container, Convert.ChangeType(result, f.FieldType));
-                        changed = true;
-                    }
-                    else if (a.Type == DrawType.Toggle)
-                    {
-                        if (!Array.Exists(toggleTypes, x => x == f.FieldType))
-                        {
+                                break;
+                            }
+
+                        case DrawType.Toggle when !Array.Exists(toggleTypes, x => x == f.FieldType):
                             throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.Toggle}");
-                        }
+                        case DrawType.Toggle:
+                            {
+                                options.Add(GUILayout.ExpandWidth(false));
+                                options.Add(a.Height != 0
+                                    ? GUILayout.Height(a.Height)
+                                    : GUILayout.Height(Scale((int)drawHeight)));
+                                if (a.Vertical)
+                                    GUILayout.BeginVertical();
+                                else
+                                    GUILayout.BeginHorizontal();
+                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                var val = (bool)f.GetValue(container);
+                                var result = GUILayout.Toggle(val, "", options.ToArray());
+                                if (a.Vertical)
+                                    GUILayout.EndVertical();
+                                else
+                                    GUILayout.EndHorizontal();
+                                if (result != val)
+                                {
+                                    f.SetValue(container, Convert.ChangeType(result, f.FieldType));
+                                    changed = true;
+                                }
 
-                        options.Add(GUILayout.ExpandWidth(false));
-                        options.Add(a.Height != 0 ? GUILayout.Height(a.Height) : GUILayout.Height(Scale((int)drawHeight)));
-                        if (a.Vertical)
-                            GUILayout.BeginVertical();
-                        else
-                            GUILayout.BeginHorizontal();
-                        GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                        var val = (bool)f.GetValue(container);
-                        var result = GUILayout.Toggle(val, "", options.ToArray());
-                        if (a.Vertical)
-                            GUILayout.EndVertical();
-                        else
-                            GUILayout.EndHorizontal();
-                        if (result == val) continue;
-                        f.SetValue(container, Convert.ChangeType(result, f.FieldType));
-                        changed = true;
-                    }
-                    else if (a.Type == DrawType.ToggleGroup)
-                    {
-                        if (!f.FieldType.IsEnum || f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0)
-                        {
+                                break;
+                            }
+
+                        case DrawType.ToggleGroup when !f.FieldType.IsEnum ||
+                                                       f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0:
                             throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.ToggleGroup}");
-                        }
+                        case DrawType.ToggleGroup:
+                            {
+                                options.Add(GUILayout.ExpandWidth(false));
+                                options.Add(a.Height != 0
+                                    ? GUILayout.Height(a.Height)
+                                    : GUILayout.Height(Scale((int)drawHeight)));
+                                if (a.Vertical)
+                                    GUILayout.BeginVertical();
+                                else
+                                    GUILayout.BeginHorizontal();
+                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                if (!a.Vertical)
+                                    GUILayout.Space(Scale(5));
+                                var values = Enum.GetNames(f.FieldType);
+                                var val = (int)f.GetValue(container);
 
-                        options.Add(GUILayout.ExpandWidth(false));
-                        options.Add(a.Height != 0 ? GUILayout.Height(a.Height) : GUILayout.Height(Scale((int)drawHeight)));
-                        if (a.Vertical)
-                            GUILayout.BeginVertical();
-                        else
-                            GUILayout.BeginHorizontal();
-                        GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                        if (!a.Vertical)
-                            GUILayout.Space(Scale(5));
-                        var values = Enum.GetNames(f.FieldType);
-                        var val = (int)f.GetValue(container);
+                                if (ToggleGroup(ref val, values, null, options.ToArray()))
+                                {
+                                    var v = Enum.Parse(f.FieldType, values[val]);
+                                    f.SetValue(container, v);
+                                    changed = true;
+                                }
 
-                        if (ToggleGroup(ref val, values, null, options.ToArray()))
-                        {
-                            var v = Enum.Parse(f.FieldType, values[val]);
-                            f.SetValue(container, v);
-                            changed = true;
-                        }
-                        if (a.Vertical)
-                            GUILayout.EndVertical();
-                        else
-                            GUILayout.EndHorizontal();
-                    }
-                    else if (a.Type == DrawType.PopupList)
-                    {
-                        if (!f.FieldType.IsEnum || f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0)
-                        {
+                                if (a.Vertical)
+                                    GUILayout.EndVertical();
+                                else
+                                    GUILayout.EndHorizontal();
+                                break;
+                            }
+
+                        case DrawType.PopupList when !f.FieldType.IsEnum ||
+                                                     f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0:
                             throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.PopupList}");
-                        }
+                        case DrawType.PopupList:
+                            {
+                                options.Add(GUILayout.ExpandWidth(false));
+                                options.Add(a.Height != 0
+                                    ? GUILayout.Height(a.Height)
+                                    : GUILayout.Height(Scale((int)drawHeight)));
+                                if (a.Vertical)
+                                    GUILayout.BeginVertical();
+                                else
+                                    GUILayout.BeginHorizontal();
+                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                if (!a.Vertical)
+                                    GUILayout.Space(Scale(5));
+                                var values = Enum.GetNames(f.FieldType);
+                                var val = (int)f.GetValue(container);
+                                if (PopupToggleGroup(ref val, values, null, options.ToArray()))
+                                {
+                                    var v = Enum.Parse(f.FieldType, values[val]);
+                                    f.SetValue(container, v);
+                                    changed = true;
+                                }
 
-                        options.Add(GUILayout.ExpandWidth(false));
-                        options.Add(a.Height != 0 ? GUILayout.Height(a.Height) : GUILayout.Height(Scale((int)drawHeight)));
-                        if (a.Vertical)
-                            GUILayout.BeginVertical();
-                        else
-                            GUILayout.BeginHorizontal();
-                        GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
-                        if (!a.Vertical)
-                            GUILayout.Space(Scale(5));
-                        var values = Enum.GetNames(f.FieldType);
-                        var val = (int)f.GetValue(container);
-                        if (PopupToggleGroup(ref val, values, null, options.ToArray()))
-                        {
-                            var v = Enum.Parse(f.FieldType, values[val]);
-                            f.SetValue(container, v);
-                            changed = true;
-                        }
-                        if (a.Vertical)
-                            GUILayout.EndVertical();
-                        else
-                            GUILayout.EndHorizontal();
+                                if (a.Vertical)
+                                    GUILayout.EndVertical();
+                                else
+                                    GUILayout.EndHorizontal();
+                                break;
+                            }
+
+                        case DrawType.KeyBinding when f.FieldType != typeof(KeyBinding):
+                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.KeyBinding}");
+                        case DrawType.KeyBinding:
+                            {
+                                if (a.Vertical)
+                                    GUILayout.BeginVertical();
+                                else
+                                    GUILayout.BeginHorizontal();
+                                GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                if (!a.Vertical)
+                                    GUILayout.Space(Scale(5));
+                                var key = (KeyBinding)f.GetValue(container);
+                                if (DrawKeybinding(ref key, null, options.ToArray()))
+                                {
+                                    f.SetValue(container, key);
+                                    changed = true;
+                                }
+
+                                if (a.Vertical)
+                                {
+                                    GUILayout.EndVertical();
+                                }
+                                else
+                                {
+                                    GUILayout.FlexibleSpace();
+                                    GUILayout.EndHorizontal();
+                                }
+
+                                break;
+                            }
                     }
                 }
+
                 return changed;
             }
 
             /// <summary>
-            /// Renders fields [0.18.0]
+            ///     Renders fields [0.18.0]
             /// </summary>
-            public static void DrawFields<T>(ref T container, ModEntry mod, DrawFieldMask defaultMask, Action onChange = null) where T : new()
+            public static void DrawFields<T>(ref T container, ModEntry mod, DrawFieldMask defaultMask,
+                Action onChange = null) where T : new()
             {
                 object obj = container;
                 var changed = Draw(obj, typeof(T), mod, defaultMask);
@@ -972,7 +1124,7 @@ namespace UnityModManagerNet
     public static partial class Extensions
     {
         /// <summary>
-        /// Renders fields with mask OnlyDrawAttr. [0.18.0]
+        ///     Renders fields with mask OnlyDrawAttr. [0.18.0]
         /// </summary>
         public static void Draw<T>(this T instance, UnityModManager.ModEntry mod) where T : class, IDrawable, new()
         {

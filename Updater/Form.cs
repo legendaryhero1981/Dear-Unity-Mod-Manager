@@ -51,6 +51,8 @@ namespace UnityModManagerNet.Updater
 
         public void Start()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             if (!Utils.HasNetworkConnection())
             {
                 status.Text = $"无网络连接！";

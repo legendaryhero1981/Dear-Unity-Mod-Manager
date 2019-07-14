@@ -1,46 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.props" Condition="Exists('..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.props')" />
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  <Import Project="..\ReferenceLibs.props" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}</ProjectGuid>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <FileAlignment>512</FileAlignment>
     <RootNamespace>UnityModManagerTests</RootNamespace>
     <AssemblyName>UnityModManagerTests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -52,250 +28,13 @@
     <Reference Include="MSTest.Extensions, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTestEnhancer.1.6.0\lib\net47\MSTest.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AccessibilityModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.AccessibilityModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AIModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.AIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ARModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ARModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.BaselibModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.BaselibModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClothModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ClothModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClusterInputModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ClusterInputModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClusterRendererModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ClusterRendererModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CrashReportingModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.CrashReportingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.DirectorModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.FileSystemHttpModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.FileSystemHttpModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.GameCenterModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.GameCenterModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.GridModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.GridModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.HotReloadModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.HotReloadModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.InputModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.JSONSerializeModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.LocalizationModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.LocalizationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ParticleSystemModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PerformanceReportingModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.PerformanceReportingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.Physics2DModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ProfilerModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ProfilerModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.ScreenCaptureModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.SharedInternalsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpatialTrackingModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.SpatialTrackingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpriteMaskModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.SpriteMaskModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpriteShapeModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.SpriteShapeModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.StreamingModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.StreamingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.StyleSheetsModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.StyleSheetsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SubstanceModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.SubstanceModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TerrainModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TerrainPhysicsModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TerrainPhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TextCoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TilemapModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TimelineModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TimelineModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TLSModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.TLSModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UIElementsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UmbraModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UmbraModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UNETModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UNETModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityAnalyticsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityConnectModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityConnectModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityTestProtocolModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityTestProtocolModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityWebRequestModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VehiclesModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.VehiclesModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VFXModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.VFXModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VideoModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.VideoModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VRModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.VRModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.WindModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.WindModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule">
-      <HintPath>..\..\..\lib\Unity2018.4\UnityEngine.XRModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise />
-  </Choose>
-  <ItemGroup>
-    <Compile Include="BaseTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\Utils\ImguiUtilTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UnityModManager\UnityModManager.csproj">
-      <Project>{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}</Project>
-      <Name>UnityModManager</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\UnityModManager\UnityModManager.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="test.runsettings" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0-beta4" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.0.0-beta4" />
+    <PackageReference Include="MSTestEnhancer" Version="1.6.0" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.props'))" />
-    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.targets'))" />
-  </Target>
-  <Import Project="..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.2.0.0-beta4\build\net45\MSTest.TestAdapter.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -3,20 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{0EEC949D-BF5C-4F12-9743-0A635ABC8DE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{0EEC949D-BF5C-4F12-9743-0A635ABC8DE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityModManagerApp", "UnityModManagerApp\UnityModManagerApp.csproj", "{6E8F8B45-2A2D-4E5A-8573-3559337E68F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManagerApp", "UnityModManagerApp\UnityModManagerApp.csproj", "{6E8F8B45-2A2D-4E5A-8573-3559337E68F3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62} = {A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}
 		{0EEC949D-BF5C-4F12-9743-0A635ABC8DE4} = {0EEC949D-BF5C-4F12-9743-0A635ABC8DE4}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityModManager", "UnityModManager\UnityModManager.csproj", "{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManager", "UnityModManager\UnityModManager.csproj", "{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityModManagerTests", "UnityModManagerTests\UnityModManagerTests.csproj", "{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0172C731-5E28-464A-8B8B-9199A6F2F17A}"
 	ProjectSection(SolutionItems) = preProject
+		ReferenceLibs.props = ReferenceLibs.props
 		Repository.json = Repository.json
 		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
 	EndProjectSection
@@ -40,6 +41,7 @@ Global
 		{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
