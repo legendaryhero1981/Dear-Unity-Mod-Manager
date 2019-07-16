@@ -35,7 +35,7 @@ namespace UnityModManagerNet
                 try
                 {
                     ModParams.Clear();
-                    foreach (var mod in modEntries)
+                    foreach (var mod in ModEntries)
                     {
                         ModParams.Add(new Mod { Id = mod.Info.Id, Enabled = mod.Enabled });
                     }

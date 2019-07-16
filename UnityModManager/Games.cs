@@ -41,7 +41,7 @@ namespace UnityModManagerNet
                         {
                             SetModded(true);
                         }
-                        else if (modEntries.All(x => x == modEntry || !x.Info.IsCheat))
+                        else if (ModEntries.All(x => x == modEntry || !x.Info.IsCheat))
                         {
                             SetModded(false);
                         }

@@ -24,7 +24,7 @@ namespace UnityModManagerNet
 
             var urls = new HashSet<string>();
 
-            foreach (var modEntry in modEntries)
+            foreach (var modEntry in ModEntries)
                 if (!string.IsNullOrEmpty(modEntry.Info.Repository))
                     urls.Add(modEntry.Info.Repository);
 

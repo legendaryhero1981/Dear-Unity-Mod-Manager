@@ -22,7 +22,7 @@ namespace UnityModManagerNet
 
         private static bool forbidDisableMods;
 
-        public static readonly List<ModEntry> modEntries = new List<ModEntry>();
+        public static readonly List<ModEntry> ModEntries = new List<ModEntry>();
         internal static bool started;
         internal static bool initialized;
 
@@ -78,7 +78,7 @@ namespace UnityModManagerNet
             }
 
             unityVersion = ParseVersion(Application.unityVersion);
-            Logger.Log($"Unity引擎版本：{unityVersion}.");
+            Logger.Log($"Unity引擎版本：{unityVersion}。");
             Config = GameInfo.Load();
             if (Config == null) return false;
             Logger.Log($"游戏名称：{Config.Name}。");
@@ -245,7 +245,7 @@ namespace UnityModManagerNet
                     TopoSort(mods);
                     Params.ReadModParams();
                     Logger.Log("正在加载Mods……");
-                    foreach (var mod in modEntries)
+                    foreach (var mod in ModEntries)
                         if (!mod.Enabled)
                             mod.Logger.Log($"MOD“{mod.Info.Id}”已被禁用！");
                         else
@@ -253,7 +253,7 @@ namespace UnityModManagerNet
                 }
 
                 Logger.Log(
-                    $"Mods解析完成！成功加载了{modEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
+                    $"Mods解析完成！成功加载了{ModEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
             }
 
             GameScripts.OnAfterLoadMods();
@@ -262,9 +262,9 @@ namespace UnityModManagerNet
 
         private static void DFS(string id, IReadOnlyDictionary<string, ModEntry> mods)
         {
-            if (modEntries.Any(m => m.Info.Id == id)) return;
+            if (ModEntries.Any(m => m.Info.Id == id)) return;
             foreach (var req in mods[id].Requirements.Keys) DFS(req, mods);
-            modEntries.Add(mods[id]);
+            ModEntries.Add(mods[id]);
         }
 
         private static void TopoSort(Dictionary<string, ModEntry> mods)
@@ -274,7 +274,7 @@ namespace UnityModManagerNet
 
         public static ModEntry FindMod(string id)
         {
-            return modEntries.FirstOrDefault(x => x.Info.Id == id);
+            return ModEntries.FirstOrDefault(x => x.Info.Id == id);
         }
 
         public static Version GetVersion()
@@ -285,7 +285,7 @@ namespace UnityModManagerNet
         public static void SaveSettingsAndParams()
         {
             Params.Save();
-            foreach (var mod in modEntries)
+            foreach (var mod in ModEntries)
             {
                 if (!mod.Active || mod.OnSaveGUI == null) continue;
                 try
@@ -386,7 +386,6 @@ namespace UnityModManagerNet
                         modEntry.Logger.Error($"读取文件“{filepath}”失败！");
                         modEntry.Logger.LogException(e);
                     }
-
                 return t;
             }
 
@@ -521,6 +520,11 @@ namespace UnityModManagerNet
             ///     Not used
             /// </summary>
             public Version NewestVersion;
+
+            /// <summary>
+            ///     [0.20.0.10]
+            /// </summary>
+            public Action<ModEntry> OnModAction;
 
             /// <summary>
             ///     Called by MonoBehaviour.FixedUpdate [0.13.0]

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+
 using Harmony12;
+
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -28,7 +31,6 @@ namespace UnityModManagerNet
             ///     [0.13.1]
             /// </summary>
             public static GUIStyle button;
-
             private static GUIStyle settings;
             private static GUIStyle status;
             private static GUIStyle www;
@@ -36,14 +38,11 @@ namespace UnityModManagerNet
             private static GUIStyle toggle;
 
             private static readonly string[] mCheckUpdateStrings = { "从不", "自动" };
-
             private static readonly string[] mShowOnStartStrings = { "否", "是" };
-
             private static readonly string[] mHotkeyNames = { "CTRL+F10", "ScrollLock", "Num *", "~" };
 
             private static int mLastWindowId;
             private readonly List<Column> mColumns = new List<Column>();
-
             private readonly List<Column> mOriginColumns = new List<Column>
             {
                 new Column {name = "名称", width = 400, expand = true},
@@ -52,6 +51,11 @@ namespace UnityModManagerNet
                 new Column {name = "开/关", width = 100},
                 new Column {name = "状态", width = 100}
             };
+
+            /// <summary>
+            ///     [0.20.0.10]
+            /// </summary>
+            private static readonly IEnumerator<object> ActionResult = DoActionsFromMods();
 
             private GameObject mCanvas;
             private Resolution mCurrentResolution;
@@ -108,16 +112,16 @@ namespace UnityModManagerNet
                     if (mShowModSettings == mPreviousShowModSettings) return;
                     if (mShowModSettings == -1)
                     {
-                        Hide(modEntries[mPreviousShowModSettings]);
+                        Hide(ModEntries[mPreviousShowModSettings]);
                     }
                     else if (mPreviousShowModSettings == -1)
                     {
-                        Show(modEntries[mShowModSettings]);
+                        Show(ModEntries[mShowModSettings]);
                     }
                     else
                     {
-                        Hide(modEntries[mPreviousShowModSettings]);
-                        Show(modEntries[mShowModSettings]);
+                        Hide(ModEntries[mPreviousShowModSettings]);
+                        Show(ModEntries[mShowModSettings]);
                     }
 
                     mPreviousShowModSettings = mShowModSettings;
@@ -131,15 +135,39 @@ namespace UnityModManagerNet
                 try
                 {
                     new GameObject(typeof(UI).FullName, typeof(UI));
-
                     return true;
                 }
                 catch (Exception e)
                 {
                     Debug.LogException(e);
                 }
-
                 return false;
+            }
+
+            private static IEnumerator<object> DoActionsFromMods()
+            {
+                Logger.Log($"已启动协程 {typeof(UI).FullName}.DoActionsFromMods！");
+                while (true)
+                {
+                    var mods = ModEntries.FindAll(m => m.OnModAction != null);
+                    if (0 < mods.Count)
+                    {
+                        var task = DoAsyncActions(mods);
+                        yield return new WaitUntil(() => task.IsCompleted);
+                        Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoAsyncActions 共执行了{mods.Count}个任务！");
+                    }
+                    yield return new WaitForSecondsRealtime(.1f);
+                }
+            }
+
+            private static async Task DoAsyncActions(List<ModEntry> mods)
+            {
+                await Task.Run(() => mods.ForEach(m =>
+                {
+                    m.OnModAction(m);
+                    Logger.Log($"异步任务 {m.OnModAction?.Method.FullDescription()} 执行完毕！");
+                    m.OnModAction = null;
+                }));
             }
 
             private void Awake()
@@ -156,6 +184,7 @@ namespace UnityModManagerNet
                 var prefix =
                     typeof(Screen_lockCursor_Patch).GetMethod("Prefix", BindingFlags.Static | BindingFlags.NonPublic);
                 harmony.Patch(original, new HarmonyMethod(prefix));
+                StartCoroutine(ActionResult);
             }
 
             private void Start()
@@ -167,6 +196,8 @@ namespace UnityModManagerNet
 
             private void OnDestroy()
             {
+                Logger.Log($"已关闭协程 {typeof(UI).FullName}.DoActionsFromMods！");
+                StopCoroutine(ActionResult);
                 SaveSettingsAndParams();
                 Logger.WriteBuffers();
             }
@@ -180,7 +211,7 @@ namespace UnityModManagerNet
                 }
 
                 var deltaTime = Time.deltaTime;
-                foreach (var mod in modEntries)
+                foreach (var mod in ModEntries)
                 {
                     if (!mod.Active || mod.OnUpdate == null) continue;
                     try
@@ -201,7 +232,7 @@ namespace UnityModManagerNet
             private void FixedUpdate()
             {
                 var deltaTime = Time.fixedDeltaTime;
-                foreach (var mod in modEntries)
+                foreach (var mod in ModEntries)
                     if (mod.Active && mod.OnFixedUpdate != null)
                         try
                         {
@@ -216,7 +247,7 @@ namespace UnityModManagerNet
             private void LateUpdate()
             {
                 var deltaTime = Time.deltaTime;
-                foreach (var mod in modEntries)
+                foreach (var mod in ModEntries)
                     if (mod.Active && mod.OnLateUpdate != null)
                         try
                         {
@@ -414,12 +445,8 @@ namespace UnityModManagerNet
                                 GUILayout.ExpandHeight(false));
                             var amountWidth = mColumns.Where(x => !x.skip).Sum(x => x.width);
                             var expandWidth = mColumns.Where(x => x.expand && !x.skip).Sum(x => x.width);
-                            var mods = modEntries;
-                            var colWidth = mColumns.Select(x =>
-                                x.expand
-                                    ? GUILayout.Width(x.width / expandWidth *
-                                                      (mWindowSize.x + expandWidth - amountWidth - 100))
-                                    : GUILayout.Width(x.width)).ToArray();
+                            var mods = ModEntries;
+                            var colWidth = mColumns.Select(x => x.expand ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x + expandWidth - amountWidth - 100)) : GUILayout.Width(x.width)).ToArray();
                             GUILayout.BeginVertical("box");
                             GUILayout.BeginHorizontal("box");
                             for (var i = 0; i < mColumns.Count; i++)
@@ -428,7 +455,6 @@ namespace UnityModManagerNet
                                     continue;
                                 GUILayout.Label(mColumns[i].name, bold, colWidth[i]);
                             }
-
                             GUILayout.EndHorizontal();
                             for (int i = 0, j = 0, c = mods.Count; i < c; i++, j = 0)
                             {
@@ -447,19 +473,16 @@ namespace UnityModManagerNet
                                 {
                                     GUILayout.Label(mods[i].Info.DisplayName);
                                 }
-
                                 if (!string.IsNullOrEmpty(mods[i].Info.HomePage))
                                 {
                                     GUILayout.Space(10);
                                     if (GUILayout.Button(Textures.WWW, www)) Application.OpenURL(mods[i].Info.HomePage);
                                 }
-
                                 if (mods[i].NewestVersion != null)
                                 {
                                     GUILayout.Space(10);
                                     GUILayout.Box(Textures.Updates, updates);
                                 }
-
                                 GUILayout.Space(20);
                                 GUILayout.EndHorizontal();
                                 GUILayout.BeginHorizontal(colWidth[j++]);
@@ -487,7 +510,6 @@ namespace UnityModManagerNet
                                                 ? "<color=\"#CD5C5C\">" + id + "</color>"
                                                 : id, colWidth[j]);
                                     }
-
                                     j++;
                                 }
                                 else if (!string.IsNullOrEmpty(mods[i].CustomRequirements))
@@ -498,7 +520,6 @@ namespace UnityModManagerNet
                                 {
                                     GUILayout.Label("-", colWidth[j++]);
                                 }
-
                                 if (!forbidDisableMods)
                                 {
                                     var action = mods[i].Enabled;
@@ -516,7 +537,6 @@ namespace UnityModManagerNet
                                 {
                                     GUILayout.Label("", colWidth[j++]);
                                 }
-
                                 if (mods[i].Active)
                                     GUILayout.Box(mods[i].Enabled ? Textures.StatusActive : Textures.StatusNeedRestart,
                                         status);
@@ -534,7 +554,6 @@ namespace UnityModManagerNet
                                         if (GUILayout.Button("重载", button, GUILayout.ExpandWidth(false))) mods[i].Reload();
                                         GUILayout.Space(5);
                                     }
-
                                     if (mods[i].Active && mods[i].OnGUI != null)
                                     {
                                         GUILayout.Label("选项", h2);
@@ -550,10 +569,8 @@ namespace UnityModManagerNet
                                         }
                                     }
                                 }
-
                                 GUILayout.EndVertical();
                             }
-
                             GUILayout.EndVertical();
                             GUILayout.EndScrollView();
                             GUILayout.Space(10);
@@ -593,7 +610,6 @@ namespace UnityModManagerNet
                             GUILayout.EndHorizontal();
                             break;
                         }
-
                     case "日志":
                         {
                             mScrollPosition[tabId] = GUILayout.BeginScrollView(mScrollPosition[tabId], minWidth);
@@ -611,7 +627,6 @@ namespace UnityModManagerNet
                             };
                             break;
                         }
-
                     case "设置":
                         {
                             mScrollPosition[tabId] = GUILayout.BeginScrollView(mScrollPosition[tabId], minWidth);
@@ -660,7 +675,6 @@ namespace UnityModManagerNet
                                 Params.WindowWidth = mWindowSize.x;
                                 Params.WindowHeight = mWindowSize.y;
                             }
-
                             GUILayout.EndHorizontal();
                             GUILayout.EndVertical();
                             GUILayout.Space(5);
@@ -683,7 +697,6 @@ namespace UnityModManagerNet
                                 CalculateWindowPos();
                                 Params.WindowWidth = mWindowSize.x;
                             }
-
                             GUILayout.EndHorizontal();
                             GUILayout.EndVertical();
                             GUILayout.EndVertical();
@@ -695,7 +708,7 @@ namespace UnityModManagerNet
 
             public void FirstLaunch()
             {
-                if (mFirstLaunched || Params.ShowOnStart == 0 && modEntries.All(x => !x.ErrorOnLoading))
+                if (mFirstLaunched || Params.ShowOnStart == 0 && ModEntries.All(x => !x.ErrorOnLoading))
                     return;
                 ToggleWindow(true);
             }
@@ -719,7 +732,6 @@ namespace UnityModManagerNet
                     mShowModSettings = ShowModSettings;
                     ShowModSettings = -1;
                 }
-
                 try
                 {
                     BlockGameUI(Opened = open);
@@ -759,9 +771,7 @@ namespace UnityModManagerNet
                     panel.GetComponent<RectTransform>().offsetMax = Vector2.zero;
                 }
                 else if (mCanvas)
-                {
                     Destroy(mCanvas);
-                }
             }
 
             private static RectOffset RectOffset(int value)
