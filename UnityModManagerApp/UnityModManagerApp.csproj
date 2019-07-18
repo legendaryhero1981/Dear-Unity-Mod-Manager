@@ -21,9 +21,13 @@
     <Version>1.0.0.0</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
-    <Copyright>Copyright ©  Legend 2019</Copyright>
+    <Copyright>Copyright © Legend 2019</Copyright>
     <Description>亲爱的Unity游戏MOD管理器</Description>
     <AssemblyTitle>$(Description)</AssemblyTitle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony-1.2">
@@ -105,7 +109,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UnityModManager\UnityModManager.csproj"/>
+    <ProjectReference Include="..\UnityModManager\UnityModManager.csproj" />
     <ProjectReference Include="..\Updater\Updater.csproj" />
   </ItemGroup>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />

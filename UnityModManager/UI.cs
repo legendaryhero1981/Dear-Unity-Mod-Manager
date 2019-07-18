@@ -149,25 +149,35 @@ namespace UnityModManagerNet
                 Logger.Log($"已启动协程 {typeof(UI).FullName}.DoActionsFromMods！");
                 while (true)
                 {
-                    var mods = ModEntries.FindAll(m => m.OnModAction != null);
+                    var mods = ModEntries.FindAll(m => 0 < m.OnModActions.Count);
                     if (0 < mods.Count)
                     {
                         var task = DoAsyncActions(mods);
                         yield return new WaitUntil(() => task.IsCompleted);
-                        Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoAsyncActions 共执行了{mods.Count}个任务！");
+                        Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoAsyncActions 本次扫描共执行了{task.Result}个任务！");
                     }
-                    yield return new WaitForSecondsRealtime(.1f);
+                    else
+                        yield return new WaitForSecondsRealtime(.1f);
                 }
             }
 
-            private static async Task DoAsyncActions(List<ModEntry> mods)
+            private static async Task<int> DoAsyncActions(List<ModEntry> mods)
             {
-                await Task.Run(() => mods.ForEach(m =>
+                return await Task.Run(() =>
                 {
-                    m.OnModAction(m);
-                    Logger.Log($"异步任务 {m.OnModAction?.Method.FullDescription()} 执行完毕！");
-                    m.OnModAction = null;
-                }));
+                    var count = 0;
+                    mods.ForEach(m =>
+                    {
+                        while (0 < m.OnModActions.Count)
+                        {
+                            m.OnModActions.TryPop(out var action);
+                            action(m);
+                            Logger.Log($"异步任务 {action?.Method.FullDescription()} 执行完毕！");
+                            count++;
+                        }
+                    });
+                    return count;
+                });
             }
 
             private void Awake()

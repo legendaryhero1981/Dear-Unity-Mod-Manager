@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,9 +7,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+
 using dnlib.DotNet;
+
 using Harmony12;
+
 using UnityEngine;
+
 using Debug = UnityEngine.Debug;
 
 namespace UnityModManagerNet
@@ -377,7 +382,7 @@ namespace UnityModManagerNet
                         using (var stream = File.OpenRead(filepath))
                         {
                             var serializer = new XmlSerializer(typeof(T));
-                            var result = (T) serializer.Deserialize(stream);
+                            var result = (T)serializer.Deserialize(stream);
                             return result;
                         }
                     }
@@ -399,7 +404,7 @@ namespace UnityModManagerNet
                     using (var stream = File.OpenRead(filepath))
                     {
                         var serializer = new XmlSerializer(typeof(T), attributes);
-                        var result = (T) serializer.Deserialize(stream);
+                        var result = (T)serializer.Deserialize(stream);
                         return result;
                     }
                 }
@@ -522,9 +527,9 @@ namespace UnityModManagerNet
             public Version NewestVersion;
 
             /// <summary>
-            ///     [0.20.0.10]
+            ///     [0.20.0.11]
             /// </summary>
-            public Action<ModEntry> OnModAction;
+            public readonly ConcurrentStack<Action<ModEntry>> OnModActions = new ConcurrentStack<Action<ModEntry>>();
 
             /// <summary>
             ///     Called by MonoBehaviour.FixedUpdate [0.13.0]
@@ -741,7 +746,7 @@ namespace UnityModManagerNet
                         if (mFirstLoading)
                         {
                             var fi = new FileInfo(assemblyPath);
-                            var hash = (ushort) ((long) fi.LastWriteTimeUtc.GetHashCode() + version.GetHashCode() +
+                            var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + version.GetHashCode() +
                                                  ManagerVersion.GetHashCode()).GetHashCode();
                             assemblyCachePath = $"{assemblyPath}.{hash}.cache";
                             cacheExists = File.Exists(assemblyCachePath);
@@ -801,8 +806,8 @@ namespace UnityModManagerNet
 
                     try
                     {
-                        var param = new object[] {this};
-                        var types = new[] {typeof(ModEntry)};
+                        var param = new object[] { this };
+                        var types = new[] { typeof(ModEntry) };
                         if (FindMethod(Info.EntryMethod, types, false) == null)
                         {
                             param = null;
@@ -810,7 +815,7 @@ namespace UnityModManagerNet
                         }
 
                         if (!Invoke(Info.EntryMethod, out var result, param, types) ||
-                            result != null && (bool) result == false)
+                            result != null && (bool)result == false)
                         {
                             ErrorOnLoading = true;
                             Logger.Log($"加载入口方法“{Info.EntryMethod}”失败！");
@@ -1009,7 +1014,7 @@ namespace UnityModManagerNet
                     UnityModManager.Logger.Error($"不能找到方法“{namespaceClassnameMethodname}”，MOD“{Info.Id}”未加载！");
                 }
 
-                Exit:
+            Exit:
                 mCache[key] = methodInfo;
                 return methodInfo;
             }

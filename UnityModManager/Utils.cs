@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
+
 using UnityEngine;
 
 namespace UnityModManagerNet
@@ -10,16 +12,14 @@ namespace UnityModManagerNet
     {
         public static void OpenUnityFileLog()
         {
-            var folders = new string[] { Application.persistentDataPath, Application.dataPath };
+            var folders = new[] { Application.persistentDataPath, Application.dataPath };
             foreach (var folder in folders)
             {
                 var filepath = Path.Combine(folder, "output_log.txt");
-                if (File.Exists(filepath))
-                {
-                    Thread.Sleep(500);
-                    Application.OpenURL(filepath);
-                    return;
-                }
+                if (!File.Exists(filepath)) continue;
+                Thread.Sleep(500);
+                Application.OpenURL(filepath);
+                return;
             }
         }
 
@@ -29,14 +29,17 @@ namespace UnityModManagerNet
             if (array.Length >= 3)
             {
                 var regex = new Regex(@"\D");
-                return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")), int.Parse(regex.Replace(array[2], "")));
+                return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")),
+                    int.Parse(regex.Replace(array[2], "")));
             }
-            else if (array.Length >= 2)
+
+            if (array.Length >= 2)
             {
                 var regex = new Regex(@"\D");
                 return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")));
             }
-            else if (array.Length >= 1)
+
+            if (array.Length >= 1)
             {
                 var regex = new Regex(@"\D");
                 return new Version(int.Parse(regex.Replace(array[0], "")), 0);
@@ -48,28 +51,36 @@ namespace UnityModManagerNet
 
         public static bool IsUnixPlatform()
         {
-            int p = (int)Environment.OSVersion.Platform;
-            return (p == 4) || (p == 6) || (p == 128);
+            var p = (int)Environment.OSVersion.Platform;
+            return p == 4 || p == 6 || p == 128;
         }
     }
 
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
     public interface ICopyable
     {
     }
 
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
     [Flags]
-    public enum CopyFieldMask { Any = 0, Matching = 1, Public = 2, Serialized = 4, SkipNotSerialized = 8, OnlyCopyAttr = 16 };
+    public enum CopyFieldMask
+    {
+        Any = 0,
+        Matching = 1,
+        Public = 2,
+        Serialized = 4,
+        SkipNotSerialized = 8,
+        OnlyCopyAttr = 16
+    }
 
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public class CopyFieldsAttribute : Attribute
     {
         public CopyFieldMask Mask;
@@ -81,9 +92,9 @@ namespace UnityModManagerNet
     }
 
     /// <summary>
-    /// [0.18.0]
+    ///     [0.18.0]
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field)]
     public class CopyAttribute : Attribute
     {
         public string Alias;
@@ -101,7 +112,7 @@ namespace UnityModManagerNet
     public static partial class Extensions
     {
         /// <summary>
-        /// Only works on ARGB32, RGB24 and Alpha8 textures that are marked readable
+        ///     Only works on ARGB32, RGB24 and Alpha8 textures that are marked readable
         /// </summary>
         /// <param name="tex"></param>
         /// <param name="size"></param>
@@ -113,7 +124,7 @@ namespace UnityModManagerNet
         }
 
         /// <summary>
-        /// [0.18.0]
+        ///     [0.18.0]
         /// </summary>
         public static void CopyFieldsTo<T1, T2>(this T1 from, ref T2 to)
             where T1 : ICopyable, new()
@@ -125,39 +136,38 @@ namespace UnityModManagerNet
         }
     }
 
-    public static partial class Utils
+    public static class Utils
     {
         /// <summary>
-        /// [0.18.0]
+        ///     [0.18.0]
         /// </summary>
         public static void CopyFields<T1, T2>(object from, object to, CopyFieldMask defaultMask)
             where T1 : new()
             where T2 : new()
         {
-            CopyFieldMask mask = defaultMask;
+            var mask = defaultMask;
             foreach (CopyFieldsAttribute attr in typeof(T1).GetCustomAttributes(typeof(CopyFieldsAttribute), false))
-            {
                 mask = attr.Mask;
-            }
 
-            var fields = typeof(T1).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var fields = typeof(T1).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var f in fields)
             {
-                CopyAttribute a = new CopyAttribute();
+                var a = new CopyAttribute();
                 var attributes = f.GetCustomAttributes(typeof(CopyAttribute), false);
                 if (attributes.Length > 0)
                 {
-                    foreach (CopyAttribute a_ in attributes)
-                    {
-                        a = a_;
-                    }
+                    foreach (CopyAttribute a_ in attributes) a = a_;
                 }
                 else
                 {
-                    if ((mask & CopyFieldMask.OnlyCopyAttr) == 0 && ((mask & CopyFieldMask.SkipNotSerialized) == 0 || !f.IsNotSerialized)
-                        && ((mask & CopyFieldMask.Public) > 0 && f.IsPublic
-                        || (mask & CopyFieldMask.Serialized) > 0 && f.GetCustomAttributes(typeof(SerializeField), false).Length > 0
-                        || (mask & CopyFieldMask.Public) == 0 && (mask & CopyFieldMask.Serialized) == 0))
+                    if ((mask & CopyFieldMask.OnlyCopyAttr) == 0 && ((mask & CopyFieldMask.SkipNotSerialized) == 0 ||
+                                                                     !f.IsNotSerialized)
+                                                                 && ((mask & CopyFieldMask.Public) > 0 && f.IsPublic
+                                                                     || (mask & CopyFieldMask.Serialized) > 0 &&
+                                                                     f.GetCustomAttributes(typeof(SerializeField),
+                                                                         false).Length > 0
+                                                                     || (mask & CopyFieldMask.Public) == 0 &&
+                                                                     (mask & CopyFieldMask.Serialized) == 0))
                     {
                     }
                     else
@@ -169,18 +179,22 @@ namespace UnityModManagerNet
                 if (string.IsNullOrEmpty(a.Alias))
                     a.Alias = f.Name;
 
-                var f2 = typeof(T2).GetField(a.Alias, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var f2 = typeof(T2).GetField(a.Alias,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 if (f2 == null)
                 {
                     if ((mask & CopyFieldMask.Matching) == 0)
                         UnityModManager.Logger.Error($"Field '{typeof(T2).Name}.{a.Alias}' not found");
                     continue;
                 }
+
                 if (f.FieldType != f2.FieldType)
                 {
-                    UnityModManager.Logger.Error($"Fields '{typeof(T1).Name}.{f.Name}' and '{typeof(T2).Name}.{f2.Name}' have different types");
+                    UnityModManager.Logger.Error(
+                        $"Fields '{typeof(T1).Name}.{f.Name}' and '{typeof(T2).Name}.{f2.Name}' have different types");
                     continue;
                 }
+
                 f2.SetValue(to, f.GetValue(from));
             }
         }
@@ -188,18 +202,6 @@ namespace UnityModManagerNet
 
     public static class TextureScale
     {
-        public class ThreadData
-        {
-            public int start;
-            public int end;
-
-            public ThreadData(int s, int e)
-            {
-                start = s;
-                end = e;
-            }
-        }
-
         private static Color[] texColors;
         private static Color[] newColors;
         private static int w;
@@ -230,56 +232,44 @@ namespace UnityModManagerNet
             }
             else
             {
-                ratioX = ((float)tex.width) / newWidth;
-                ratioY = ((float)tex.height) / newHeight;
+                ratioX = (float)tex.width / newWidth;
+                ratioY = (float)tex.height / newHeight;
             }
+
             w = tex.width;
             w2 = newWidth;
             var cores = Mathf.Min(SystemInfo.processorCount, newHeight);
             var slice = newHeight / cores;
 
             finishCount = 0;
-            if (mutex == null)
-            {
-                mutex = new Mutex(false);
-            }
+            if (mutex == null) mutex = new Mutex(false);
             if (cores > 1)
             {
-                int i = 0;
+                var i = 0;
                 ThreadData threadData;
                 for (i = 0; i < cores - 1; i++)
                 {
                     threadData = new ThreadData(slice * i, slice * (i + 1));
-                    ParameterizedThreadStart ts =
-                        useBilinear ? new ParameterizedThreadStart(BilinearScale) : new ParameterizedThreadStart(PointScale);
-                    Thread thread = new Thread(ts);
+                    var ts =
+                        useBilinear ? BilinearScale : new ParameterizedThreadStart(PointScale);
+                    var thread = new Thread(ts);
                     thread.Start(threadData);
                 }
+
                 threadData = new ThreadData(slice * i, newHeight);
                 if (useBilinear)
-                {
                     BilinearScale(threadData);
-                }
                 else
-                {
                     PointScale(threadData);
-                }
-                while (finishCount < cores)
-                {
-                    Thread.Sleep(1);
-                }
+                while (finishCount < cores) Thread.Sleep(1);
             }
             else
             {
-                ThreadData threadData = new ThreadData(0, newHeight);
+                var threadData = new ThreadData(0, newHeight);
                 if (useBilinear)
-                {
                     BilinearScale(threadData);
-                }
                 else
-                {
                     PointScale(threadData);
-                }
             }
 
             tex.Resize(newWidth, newHeight);
@@ -290,22 +280,24 @@ namespace UnityModManagerNet
             newColors = null;
         }
 
-        public static void BilinearScale(System.Object obj)
+        public static void BilinearScale(object obj)
         {
-            ThreadData threadData = (ThreadData)obj;
+            var threadData = (ThreadData)obj;
             for (var y = threadData.start; y < threadData.end; y++)
             {
-                int yFloor = (int)Mathf.Floor(y * ratioY);
+                var yFloor = (int)Mathf.Floor(y * ratioY);
                 var y1 = yFloor * w;
                 var y2 = (yFloor + 1) * w;
                 var yw = y * w2;
 
                 for (var x = 0; x < w2; x++)
                 {
-                    int xFloor = (int)Mathf.Floor(x * ratioX);
+                    var xFloor = (int)Mathf.Floor(x * ratioX);
                     var xLerp = x * ratioX - xFloor;
-                    newColors[yw + x] = ColorLerpUnclamped(ColorLerpUnclamped(texColors[y1 + xFloor], texColors[y1 + xFloor + 1], xLerp),
-                        ColorLerpUnclamped(texColors[y2 + xFloor], texColors[y2 + xFloor + 1], xLerp), y * ratioY - yFloor);
+                    newColors[yw + x] = ColorLerpUnclamped(
+                        ColorLerpUnclamped(texColors[y1 + xFloor], texColors[y1 + xFloor + 1], xLerp),
+                        ColorLerpUnclamped(texColors[y2 + xFloor], texColors[y2 + xFloor + 1], xLerp),
+                        y * ratioY - yFloor);
                 }
             }
 
@@ -314,17 +306,14 @@ namespace UnityModManagerNet
             mutex.ReleaseMutex();
         }
 
-        public static void PointScale(System.Object obj)
+        public static void PointScale(object obj)
         {
-            ThreadData threadData = (ThreadData)obj;
+            var threadData = (ThreadData)obj;
             for (var y = threadData.start; y < threadData.end; y++)
             {
                 var thisY = (int)(ratioY * y) * w;
                 var yw = y * w2;
-                for (var x = 0; x < w2; x++)
-                {
-                    newColors[yw + x] = texColors[(int)(thisY + ratioX * x)];
-                }
+                for (var x = 0; x < w2; x++) newColors[yw + x] = texColors[(int)(thisY + ratioX * x)];
             }
 
             mutex.WaitOne();
@@ -334,7 +323,20 @@ namespace UnityModManagerNet
 
         private static Color ColorLerpUnclamped(Color c1, Color c2, float value)
         {
-            return new Color(c1.r + (c2.r - c1.r) * value, c1.g + (c2.g - c1.g) * value, c1.b + (c2.b - c1.b) * value, c1.a + (c2.a - c1.a) * value);
+            return new Color(c1.r + (c2.r - c1.r) * value, c1.g + (c2.g - c1.g) * value, c1.b + (c2.b - c1.b) * value,
+                c1.a + (c2.a - c1.a) * value);
+        }
+
+        public class ThreadData
+        {
+            public int end;
+            public int start;
+
+            public ThreadData(int s, int e)
+            {
+                start = s;
+                end = e;
+            }
         }
     }
 }
