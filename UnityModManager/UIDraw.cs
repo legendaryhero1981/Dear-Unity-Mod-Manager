@@ -207,7 +207,7 @@ namespace UnityModManagerNet
 
     public partial class UnityModManager
     {
-        public partial class UI : MonoBehaviour
+        public partial class UI
         {
             private static readonly Type[] fieldTypes =
             {

@@ -22,33 +22,30 @@ namespace UnityModManagerNet
     {
         private static readonly Version VER_0 = new Version();
         private static readonly Version VER_0_13 = new Version(0, 13);
-
         private static readonly ModuleDefMD thisModuleDef = ModuleDefMD.Load(typeof(UnityModManager).Module);
-
         private static bool forbidDisableMods;
-
         public static readonly List<ModEntry> ModEntries = new List<ModEntry>();
         internal static bool started;
         internal static bool initialized;
-
         /// <summary>
         ///     Contains version of UnityEngine
         /// </summary>
         public static Version unityVersion { get; private set; }
-
         /// <summary>
         ///     Contains version of a game, if configured [0.15.0]
         /// </summary>
         public static Version gameVersion { get; private set; } = new Version();
-
         /// <summary>
         ///     Contains version of UMM
         /// </summary>
         public static Version version { get; } = typeof(UnityModManager).Assembly.GetName().Version;
-
-        public static string modsPath { get; private set; }
+        internal static string modsPath { get; private set; }
         internal static Param Params { get; set; }
         internal static GameInfo Config { get; set; }
+        /// <summary>
+        ///     [0.20.0.12]
+        /// </summary>
+        internal static Action FreezeUI = () => { }, UnFreezeUI = () => { };
 
         public static void Main()
         {

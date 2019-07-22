@@ -4,6 +4,7 @@
   <HomePage>https://github.com/legendaryhero1981/Dear-Unity-Mod-Manager</HomePage>
   <GameInfo Name="开拓者：拥王者">
     <GameName>Pathfinder: Kingmaker</GameName>
+    <GameScriptName>PathfinderKingmaker</GameScriptName>
     <Folder>Pathfinder Kingmaker</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>

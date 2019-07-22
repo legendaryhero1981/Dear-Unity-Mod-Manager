@@ -189,11 +189,6 @@ namespace UnityModManagerNet
                 mUIScale = Mathf.Clamp(Params.UIScale, UI_SCALE_MIN, UI_SCALE_MAX);
                 mExpectedUIScale = mUIScale;
                 Textures.Init();
-                var harmony = HarmonyInstance.Create("UnityModManager.UI");
-                var original = typeof(Screen).GetMethod("set_lockCursor");
-                var prefix =
-                    typeof(Screen_lockCursor_Patch).GetMethod("Prefix", BindingFlags.Static | BindingFlags.NonPublic);
-                harmony.Patch(original, new HarmonyMethod(prefix));
                 StartCoroutine(ActionResult);
             }
 
@@ -744,20 +739,11 @@ namespace UnityModManagerNet
                 }
                 try
                 {
-                    BlockGameUI(Opened = open);
                     if (open)
-                    {
-                        GameCursorLocked = Cursor.lockState == CursorLockMode.Locked || !Cursor.visible;
-                        if (!GameCursorLocked) return;
-                        Cursor.visible = true;
-                        Cursor.lockState = CursorLockMode.None;
-                    }
+                        FreezeUI();
                     else
-                    {
-                        if (!GameCursorLocked) return;
-                        Cursor.visible = false;
-                        Cursor.lockState = CursorLockMode.Locked;
-                    }
+                        UnFreezeUI();
+                    BlockGameUI(Opened = open);
                 }
                 catch (Exception e)
                 {
@@ -805,20 +791,6 @@ namespace UnityModManagerNet
                 public string name;
                 public bool skip;
                 public float width;
-            }
-        }
-
-        //[HarmonyPatch(typeof(Screen), "lockCursor", MethodType.Setter)]
-        private static class Screen_lockCursor_Patch
-        {
-            private static bool Prefix(bool value)
-            {
-                if (UI.Instance == null || !UI.Instance.Opened) return true;
-                UI.Instance.GameCursorLocked = value;
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                return false;
-
             }
         }
     }
