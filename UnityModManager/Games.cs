@@ -41,16 +41,16 @@ namespace UnityModManagerNet
                 {
                     FreezeUI = () =>
                     {
-                        _escMode = KM.GameModes.GameModeType.EscMode == KM.Game.Instance.CurrentMode;
+                        _escMode = KM.GameModes.GameModeType.EscMode == KM.Game.Instance.CurrentMode || KM.GameModes.GameModeType.None == KM.Game.Instance.CurrentMode;
                         if (_escMode) return;
+                        Logger.Log($"当前游戏模式为{KM.Game.Instance.CurrentMode.ToString()}，已冻结游戏UI！");
                         KM.Game.Instance.StartMode(KM.GameModes.GameModeType.EscMode);
-                        Logger.Log($"已冻结游戏UI！");
                     };
                     UnFreezeUI = () =>
                     {
                         if (_escMode) return;
                         KM.Game.Instance.StopMode(KM.GameModes.GameModeType.EscMode);
-                        Logger.Log($"已解冻游戏UI！");
+                        Logger.Log($"已解冻游戏UI，当前游戏模式为{KM.Game.Instance.CurrentMode.ToString()}！");
                     };
                 }
             }

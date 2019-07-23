@@ -13,10 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManagerApp", "Unity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManager", "UnityModManager\UnityModManager.csproj", "{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityModManagerTests", "UnityModManagerTests\UnityModManagerTests.csproj", "{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManagerTests", "UnityModManagerTests\UnityModManagerTests.csproj", "{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0172C731-5E28-464A-8B8B-9199A6F2F17A}"
 	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
 		ReferenceLibs.props = ReferenceLibs.props
 		Repository.json = Repository.json
 		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
