@@ -42,8 +42,7 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\lib\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="IrisSkin4, Version=2006.3.22.45, Culture=neutral, PublicKeyToken=127be25a6db25e07, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="IrisSkin4">
       <HintPath>..\lib\IrisSkin4.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -114,6 +113,6 @@
   </ItemGroup>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup>
-    <PostBuildEvent>D:\games\exe4j\11\file -c!~ "(?i)(\.xml|version.+\.dll|System\.Xml\.dll)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\11\file -c!~ "(?i)(\.xml|version.+\.dll|`system.xml.dll`)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
