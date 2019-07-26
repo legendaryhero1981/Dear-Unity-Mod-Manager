@@ -8,13 +8,11 @@ using dnlib.DotNet;
 
 namespace UnityModManagerNet.Installer
 {
-    static class Utils
+    internal static class Utils
     {
-        static Utils()
-        {
-        }
+        internal const string FileSuffixBak = ".bak";
 
-        public static Dictionary<string, string> GetMatchedFiles(string path, string regex, Dictionary<string, string> defaults = null)
+        internal static Dictionary<string, string> GetMatchedFiles(string path, string regex, Dictionary<string, string> defaults = null)
         {
             Dictionary<string, string> results;
             if (null != defaults && 0 < defaults.Count)
@@ -27,7 +25,7 @@ namespace UnityModManagerNet.Installer
             return results;
         }
 
-        public static Version ParseVersion(string str)
+        internal static Version ParseVersion(string str)
         {
             var array = str.Split('.');
             if (array.Length >= 3)
@@ -50,7 +48,7 @@ namespace UnityModManagerNet.Installer
             return new Version();
         }
 
-        public static bool IsDirectoryWritable(string dirpath)
+        internal static bool IsDirectoryWritable(string dirpath)
         {
             try
             {
@@ -66,7 +64,7 @@ namespace UnityModManagerNet.Installer
             }
         }
 
-        public static bool IsFileWritable(string filepath)
+        internal static bool IsFileWritable(string filepath)
         {
             try
             {
@@ -82,13 +80,13 @@ namespace UnityModManagerNet.Installer
             }
         }
 
-        public static bool TryParseEntryPoint(string str, out string assembly)
+        internal static bool TryParseEntryPoint(string str, out string assembly)
         {
             assembly = string.Empty;
             return TryParseEntryPoint(str, out assembly, out _, out _, out _);
         }
 
-        public static bool TryParseEntryPoint(string str, out string assembly, out string @class, out string method, out string insertionPlace)
+        internal static bool TryParseEntryPoint(string str, out string assembly, out string @class, out string method, out string insertionPlace)
         {
             assembly = string.Empty;
             @class = string.Empty;
@@ -161,7 +159,7 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static bool TryGetEntryPoint(ModuleDefMD assemblyDef, string str, out MethodDef foundMethod, out string insertionPlace, bool createConstructor = false)
+        internal static bool TryGetEntryPoint(ModuleDefMD assemblyDef, string str, out MethodDef foundMethod, out string insertionPlace, bool createConstructor = false)
         {
             foundMethod = null;
 
@@ -201,7 +199,7 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static string ResolveOSXFileUrl(string url)
+        internal static string ResolveOSXFileUrl(string url)
         {
             Process p = new Process();
             p.StartInfo.UseShellExecute = false;
@@ -214,19 +212,19 @@ namespace UnityModManagerNet.Installer
             return output.TrimEnd();
         }
 
-        public static bool IsUnixPlatform()
+        internal static bool IsUnixPlatform()
         {
             int p = (int)Environment.OSVersion.Platform;
             return (p == 4) || (p == 6) || (p == 128);
         }
 
-        public static bool MakeBackup(string path)
+        internal static bool MakeBackup(string path)
         {
             try
             {
                 if (File.Exists(path))
                 {
-                    File.Copy(path, $"{path}.backup_", true);
+                    File.Copy(path, $"{path}{FileSuffixBak}", true);
                 }
             }
             catch (Exception e)
@@ -238,7 +236,7 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static bool MakeBackup(string[] arr)
+        internal static bool MakeBackup(string[] arr)
         {
             try
             {
@@ -246,7 +244,7 @@ namespace UnityModManagerNet.Installer
                 {
                     if (File.Exists(path))
                     {
-                        File.Copy(path, $"{path}.backup_", true);
+                        File.Copy(path, $"{path}{FileSuffixBak}", true);
                     }
                 }
             }
@@ -259,11 +257,11 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static bool RestoreBackup(string path)
+        internal static bool RestoreBackup(string path)
         {
             try
             {
-                var backup = $"{path}.backup_";
+                var backup = $"{path}{FileSuffixBak}";
                 if (File.Exists(backup))
                 {
                     File.Copy(backup, path, true);
@@ -278,13 +276,13 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static bool RestoreBackup(string[] arr)
+        internal static bool RestoreBackup(string[] arr)
         {
             try
             {
                 foreach (var path in arr)
                 {
-                    var backup = $"{path}.backup_";
+                    var backup = $"{path}{FileSuffixBak}";
                     if (File.Exists(backup))
                     {
                         File.Copy(backup, path, true);
@@ -300,11 +298,11 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static bool DeleteBackup(string path)
+        internal static bool DeleteBackup(string path)
         {
             try
             {
-                var backup = $"{path}.backup_";
+                var backup = $"{path}{FileSuffixBak}";
                 if (File.Exists(backup))
                 {
                     File.Delete(backup);
@@ -319,13 +317,13 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public static bool DeleteBackup(string[] arr)
+        internal static bool DeleteBackup(string[] arr)
         {
             try
             {
                 foreach (var path in arr)
                 {
-                    var backup = $"{path}.backup_";
+                    var backup = $"{path}{FileSuffixBak}";
                     if (File.Exists(backup))
                     {
                         File.Delete(backup);
@@ -341,7 +339,7 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        public enum MachineType : ushort
+        internal enum MachineType : ushort
         {
             IMAGE_FILE_MACHINE_UNKNOWN = 0x0,
             IMAGE_FILE_MACHINE_AM33 = 0x1d3,
@@ -365,7 +363,7 @@ namespace UnityModManagerNet.Installer
             IMAGE_FILE_MACHINE_WCEMIPSV2 = 0x169,
         }
 
-        public static MachineType GetDllMachineType(string dllPath)
+        internal static MachineType GetDllMachineType(string dllPath)
         {
             // See http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx
             // Offset to PE header is always at 0x3C.
@@ -388,7 +386,7 @@ namespace UnityModManagerNet.Installer
             return machineType;
         }
 
-        public static bool? UnmanagedDllIs64Bit(string dllPath)
+        internal static bool? UnmanagedDllIs64Bit(string dllPath)
         {
             switch (GetDllMachineType(dllPath))
             {
@@ -401,17 +399,5 @@ namespace UnityModManagerNet.Installer
                     return null;
             }
         }
-
-        //[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        //public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
-
-        //public enum SymbolicLink
-        //{
-        //    File = 0,
-        //    Directory = 1
-        //}
-
-        //[DllImport("kernel32.dll")]
-        //public static extern uint GetLastError();
     }
 }

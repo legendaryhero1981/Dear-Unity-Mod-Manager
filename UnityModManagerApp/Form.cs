@@ -309,20 +309,12 @@ namespace UnityModManagerNet.Installer
             for (var i = 0; i < libraryFiles.Length; i++)
                 libraryPaths[i] = Path.Combine(managerPath, libraryFiles[i]);
 
-            var parent = new DirectoryInfo(Application.StartupPath).Parent;
-
-            for (var i = 0; i < 3; i++)
+            var path = new DirectoryInfo(Application.StartupPath).FullName;
+            if (path.StartsWith(gamePath))
             {
-                if (parent == null)
-                    break;
-
-                if (parent.FullName == gamePath)
-                {
-                    InactiveForm();
-                    Log.Print("Unity游戏MOD管理器不能定位游戏主目录！");
-                    return;
-                }
-                parent = parent.Parent;
+                InactiveForm();
+                Log.Print("DUMM目录不能放在游戏主目录及其子目录下，请先关闭DUMM，再将DUMM目录移动到单独的目录下再试！");
+                return;
             }
 
             try
@@ -723,22 +715,14 @@ namespace UnityModManagerNet.Installer
                     }
                     break;
             }
-
         EXIT:
             if (write)
             {
-                try
-                {
-                    Utils.DeleteBackup(doorstopPath);
-                    Utils.DeleteBackup(doorstopConfigPath);
-                    Utils.DeleteBackup(libraryPaths);
-                    Utils.DeleteBackup(gameConfigPath);
-                }
-                catch (Exception)
-                {
-                }
+                Utils.DeleteBackup(doorstopPath);
+                Utils.DeleteBackup(doorstopConfigPath);
+                Utils.DeleteBackup(libraryPaths);
+                Utils.DeleteBackup(gameConfigPath);
             }
-
             return success;
         }
 
