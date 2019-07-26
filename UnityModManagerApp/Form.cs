@@ -425,7 +425,7 @@ namespace UnityModManagerNet.Installer
             }
 
             if (selectedGameParams.InstallType == InstallType.Assembly)
-                btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}.original_");
+                btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}{Utils.FileSuffixCache}");
 
             tabControl.TabPages[1].Enabled = true;
             managerDef = managerDef ?? injectedAssemblyDef;
@@ -565,7 +565,7 @@ namespace UnityModManagerNet.Installer
             if (selectedGameParams.InstallType == InstallType.Assembly)
             {
                 var injectedEntryAssemblyPath = Path.Combine(managedPath, injectedAssemblyDef.Name);
-                var originalAssemblyPath = $"{injectedEntryAssemblyPath}.original_";
+                var originalAssemblyPath = $"{injectedEntryAssemblyPath}{Utils.FileSuffixCache}";
                 RestoreOriginal(injectedEntryAssemblyPath, originalAssemblyPath);
             }
 
@@ -733,7 +733,7 @@ namespace UnityModManagerNet.Installer
             var gameConfigPath = GameInfo.filepathInGame;
 
             var assemblyPath = Path.Combine(managedPath, assemblyDef.Name);
-            var originalAssemblyPath = $"{assemblyPath}.original_";
+            var originalAssemblyPath = $"{assemblyPath}{Utils.FileSuffixCache}";
 
             var success = false;
 

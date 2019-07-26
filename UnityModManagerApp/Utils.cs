@@ -11,6 +11,9 @@ namespace UnityModManagerNet.Installer
     internal static class Utils
     {
         internal const string FileSuffixBak = ".bak";
+        internal const string FileSuffixCache = ".cache";
+
+        static Utils() { }
 
         internal static Dictionary<string, string> GetMatchedFiles(string path, string regex, Dictionary<string, string> defaults = null)
         {
