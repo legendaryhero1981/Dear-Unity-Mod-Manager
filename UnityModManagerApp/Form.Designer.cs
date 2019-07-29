@@ -47,6 +47,7 @@ namespace UnityModManagerNet.Installer
             this.label3 = new System.Windows.Forms.Label();
             this.installTypeGroup = new System.Windows.Forms.GroupBox();
             this.btnRestore = new System.Windows.Forms.Button();
+            this.btnDownloadUpdate = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnOpenFolder = new System.Windows.Forms.Button();
             this.btnInstall = new System.Windows.Forms.Button();
@@ -62,7 +63,6 @@ namespace UnityModManagerNet.Installer
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.modInstallFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.skinEngine = new Sunisoft.IrisSkin.SkinEngine();
-            this.btnDownloadUpdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMods)).BeginInit();
             this.splitContainerMods.Panel1.SuspendLayout();
             this.splitContainerMods.Panel2.SuspendLayout();
@@ -243,7 +243,7 @@ namespace UnityModManagerNet.Installer
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.installTypeGroup);
             this.tabPage1.Controls.Add(this.btnRestore);
-            this.tabPage1.Controls.Add(btnDownloadUpdate);
+            this.tabPage1.Controls.Add(this.btnDownloadUpdate);
             this.tabPage1.Controls.Add(this.btnRemove);
             this.tabPage1.Controls.Add(this.btnOpenFolder);
             this.tabPage1.Controls.Add(this.btnInstall);
@@ -331,14 +331,14 @@ namespace UnityModManagerNet.Installer
             // 
             // btnDownloadUpdate
             // 
-            resources.ApplyResources(btnDownloadUpdate, "btnDownloadUpdate");
-            btnDownloadUpdate.BackColor = System.Drawing.Color.Transparent;
-            btnDownloadUpdate.ForeColor = System.Drawing.Color.Green;
-            btnDownloadUpdate.Name = "btnDownloadUpdate";
-            btnDownloadUpdate.Tag = "";
-            btnDownloadUpdate.UseMnemonic = false;
-            btnDownloadUpdate.UseVisualStyleBackColor = false;
-            btnDownloadUpdate.Click += new System.EventHandler(this.btnDownloadUpdate_Click);
+            resources.ApplyResources(this.btnDownloadUpdate, "btnDownloadUpdate");
+            this.btnDownloadUpdate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnDownloadUpdate.ForeColor = System.Drawing.Color.Green;
+            this.btnDownloadUpdate.Name = "btnDownloadUpdate";
+            this.btnDownloadUpdate.Tag = "";
+            this.btnDownloadUpdate.UseMnemonic = false;
+            this.btnDownloadUpdate.UseVisualStyleBackColor = false;
+            this.btnDownloadUpdate.Click += new System.EventHandler(this.btnDownloadUpdate_Click);
             // 
             // btnRemove
             // 
@@ -511,7 +511,6 @@ namespace UnityModManagerNet.Installer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox gameList;
         private System.Windows.Forms.Button btnOpenFolder;
-        private System.Windows.Forms.Button btnDownloadUpdate;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPage1;
@@ -546,6 +545,7 @@ namespace UnityModManagerNet.Installer
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.GroupBox skinSetGroup;
         private System.Windows.Forms.ComboBox skinSetBox;
+        private System.Windows.Forms.Button btnDownloadUpdate;
     }
 }
 

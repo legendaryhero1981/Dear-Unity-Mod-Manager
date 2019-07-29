@@ -154,7 +154,6 @@ namespace UnityModManagerNet
                     {
                         var task = DoAsyncActions(mods);
                         yield return new WaitUntil(() => task.IsCompleted);
-                        Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoAsyncActions 本次扫描共执行了{task.Result}个任务！");
                     }
                     else
                         yield return new WaitForSecondsRealtime(.1f);
@@ -176,6 +175,7 @@ namespace UnityModManagerNet
                             count++;
                         }
                     });
+                    Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoAsyncActions 本次扫描共执行了{count}个任务！");
                     return count;
                 });
             }

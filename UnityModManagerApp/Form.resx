@@ -165,36 +165,6 @@
   <data name="ModcontextMenuStrip1.Font" type="System.Drawing.Font, System.Drawing">
     <value>微软雅黑, 14.25pt</value>
   </data>
-  <data name="installToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 30</value>
-  </data>
-  <data name="installToolStripMenuItem.Text" xml:space="preserve">
-    <value>安装</value>
-  </data>
-  <data name="updateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 30</value>
-  </data>
-  <data name="updateToolStripMenuItem.Text" xml:space="preserve">
-    <value>更新</value>
-  </data>
-  <data name="revertToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 30</value>
-  </data>
-  <data name="revertToolStripMenuItem.Text" xml:space="preserve">
-    <value>还原</value>
-  </data>
-  <data name="uninstallToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 30</value>
-  </data>
-  <data name="uninstallToolStripMenuItem.Text" xml:space="preserve">
-    <value>卸载</value>
-  </data>
-  <data name="wwwToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 30</value>
-  </data>
-  <data name="wwwToolStripMenuItem1.Text" xml:space="preserve">
-    <value>主页</value>
-  </data>
   <data name="ModcontextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 154</value>
   </data>
@@ -217,7 +187,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="listMods.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 569</value>
+    <value>776, 578</value>
   </data>
   <data name="listMods.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -274,7 +244,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="btnModInstall.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 37</value>
+    <value>776, 34</value>
   </data>
   <data name="btnModInstall.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -322,10 +292,10 @@
     <value>1</value>
   </data>
   <data name="splitContainerModsInstall.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 117</value>
+    <value>776, 108</value>
   </data>
   <data name="splitContainerModsInstall.SplitterDistance" type="System.Int32, mscorlib">
-    <value>37</value>
+    <value>34</value>
   </data>
   <data name="splitContainerModsInstall.SplitterWidth" type="System.Int32, mscorlib">
     <value>1</value>
@@ -361,7 +331,7 @@
     <value>776, 687</value>
   </data>
   <data name="splitContainerMods.SplitterDistance" type="System.Int32, mscorlib">
-    <value>569</value>
+    <value>578</value>
   </data>
   <data name="splitContainerMods.SplitterWidth" type="System.Int32, mscorlib">
     <value>1</value>
@@ -380,6 +350,36 @@
   </data>
   <data name="&gt;&gt;splitContainerMods.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="installToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="installToolStripMenuItem.Text" xml:space="preserve">
+    <value>安装</value>
+  </data>
+  <data name="updateToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="updateToolStripMenuItem.Text" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="revertToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="revertToolStripMenuItem.Text" xml:space="preserve">
+    <value>还原</value>
+  </data>
+  <data name="uninstallToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="uninstallToolStripMenuItem.Text" xml:space="preserve">
+    <value>卸载</value>
+  </data>
+  <data name="wwwToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 30</value>
+  </data>
+  <data name="wwwToolStripMenuItem1.Text" xml:space="preserve">
+    <value>主页</value>
   </data>
   <data name="splitContainerMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -403,7 +403,7 @@
     <value>微软雅黑, 20.25pt</value>
   </data>
   <data name="installedVersion.Location" type="System.Drawing.Point, System.Drawing">
-    <value>644, 643</value>
+    <value>640, 643</value>
   </data>
   <data name="installedVersion.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -457,7 +457,7 @@
     <value>776, 46</value>
   </data>
   <data name="gameList.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;gameList.Name" xml:space="preserve">
     <value>gameList</value>
@@ -540,27 +540,6 @@
   <data name="additionallyGroupBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="notesTextBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="notesTextBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 28</value>
-  </data>
-  <data name="notesTextBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="notesTextBox.ScrollBars" type="System.Windows.Forms.RichTextBoxScrollBars, System.Windows.Forms">
-    <value>Vertical</value>
-  </data>
-  <data name="notesTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>760, 130</value>
-  </data>
-  <data name="notesTextBox.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="notesTextBox.Text" xml:space="preserve">
-    <value />
-  </data>
   <data name="&gt;&gt;notesTextBox.Name" xml:space="preserve">
     <value>notesTextBox</value>
   </data>
@@ -613,7 +592,7 @@
     <value>微软雅黑, 20.25pt</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>459, 643</value>
+    <value>455, 643</value>
   </data>
   <data name="label3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -711,9 +690,6 @@
   <data name="&gt;&gt;btnRestore.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <metadata name="btnDownloadUpdate.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
   <data name="btnDownloadUpdate.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -796,7 +772,7 @@
     <value>776, 45</value>
   </data>
   <data name="btnOpenFolder.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnOpenFolder.Text" xml:space="preserve">
     <value>请选择游戏主目录</value>
@@ -900,27 +876,6 @@
   <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="inputLog.Font" type="System.Drawing.Font, System.Drawing">
-    <value>微软雅黑, 12pt</value>
-  </data>
-  <data name="inputLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="inputLog.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="inputLog.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="inputLog.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
-    <value>Vertical</value>
-  </data>
-  <data name="inputLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 687</value>
-  </data>
-  <data name="inputLog.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
   <data name="&gt;&gt;inputLog.Name" xml:space="preserve">
     <value>inputLog</value>
   </data>
@@ -959,66 +914,6 @@
   </data>
   <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <data name="skinSetGroup.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="skinSetBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>Flat</value>
-  </data>
-  <data name="skinSetBox.IntegralHeight" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="skinSetBox.ItemHeight" type="System.Int32, mscorlib">
-    <value>28</value>
-  </data>
-  <data name="skinSetBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 32</value>
-  </data>
-  <data name="skinSetBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="skinSetBox.MaxDropDownItems" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="skinSetBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 36</value>
-  </data>
-  <data name="skinSetBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.Name" xml:space="preserve">
-    <value>skinSetBox</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.Parent" xml:space="preserve">
-    <value>skinSetGroup</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="skinSetGroup.Font" type="System.Drawing.Font, System.Drawing">
-    <value>微软雅黑, 15.75pt, style=Bold</value>
-  </data>
-  <data name="skinSetGroup.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="skinSetGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="skinSetGroup.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="skinSetGroup.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 100</value>
-  </data>
-  <data name="skinSetGroup.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="skinSetGroup.Text" xml:space="preserve">
-    <value>个性化皮肤设置</value>
   </data>
   <data name="&gt;&gt;skinSetGroup.Name" xml:space="preserve">
     <value>skinSetGroup</value>
@@ -1116,18 +1011,6 @@
   <data name="statusStrip1.Font" type="System.Drawing.Font, System.Drawing">
     <value>微软雅黑, 15.75pt</value>
   </data>
-  <data name="statusLabel.Font" type="System.Drawing.Font, System.Drawing">
-    <value>微软雅黑, 14.25pt, style=Bold, Italic</value>
-  </data>
-  <data name="statusLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 26</value>
-  </data>
-  <data name="statusLabel.Text" xml:space="preserve">
-    <value>就绪</value>
-  </data>
-  <data name="statusLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
@@ -1193,6 +1076,168 @@
   </data>
   <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="notesTextBox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="notesTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 28</value>
+  </data>
+  <data name="notesTextBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="notesTextBox.ScrollBars" type="System.Windows.Forms.RichTextBoxScrollBars, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="notesTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>760, 130</value>
+  </data>
+  <data name="notesTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="notesTextBox.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;notesTextBox.Name" xml:space="preserve">
+    <value>notesTextBox</value>
+  </data>
+  <data name="&gt;&gt;notesTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;notesTextBox.Parent" xml:space="preserve">
+    <value>additionallyGroupBox</value>
+  </data>
+  <data name="&gt;&gt;notesTextBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="inputLog.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 12pt</value>
+  </data>
+  <data name="inputLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="inputLog.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="inputLog.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="inputLog.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
+    <value>Vertical</value>
+  </data>
+  <data name="inputLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 687</value>
+  </data>
+  <data name="inputLog.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;inputLog.Name" xml:space="preserve">
+    <value>inputLog</value>
+  </data>
+  <data name="&gt;&gt;inputLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;inputLog.Parent" xml:space="preserve">
+    <value>tabPage3</value>
+  </data>
+  <data name="&gt;&gt;inputLog.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="skinSetGroup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Name" xml:space="preserve">
+    <value>skinSetBox</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Parent" xml:space="preserve">
+    <value>skinSetGroup</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="skinSetGroup.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 15.75pt, style=Bold</value>
+  </data>
+  <data name="skinSetGroup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="skinSetGroup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="skinSetGroup.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="skinSetGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>776, 100</value>
+  </data>
+  <data name="skinSetGroup.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="skinSetGroup.Text" xml:space="preserve">
+    <value>个性化皮肤设置</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.Name" xml:space="preserve">
+    <value>skinSetGroup</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.Parent" xml:space="preserve">
+    <value>tabPage4</value>
+  </data>
+  <data name="&gt;&gt;skinSetGroup.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="skinSetBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="skinSetBox.IntegralHeight" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="skinSetBox.ItemHeight" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="skinSetBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 32</value>
+  </data>
+  <data name="skinSetBox.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="skinSetBox.MaxDropDownItems" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="skinSetBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 36</value>
+  </data>
+  <data name="skinSetBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Name" xml:space="preserve">
+    <value>skinSetBox</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.Parent" xml:space="preserve">
+    <value>skinSetGroup</value>
+  </data>
+  <data name="&gt;&gt;skinSetBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="statusLabel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>微软雅黑, 14.25pt, style=Bold, Italic</value>
+  </data>
+  <data name="statusLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 26</value>
+  </data>
+  <data name="statusLabel.Text" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="statusLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="panelMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>

@@ -197,7 +197,7 @@ namespace UnityModManagerNet
                 }
 
             Next:
-            GameScripts.Init();
+            GameScripts.Init(ModEntries);
             GameScripts.OnBeforeLoadMods();
             if (Directory.Exists(modsPath))
             {
@@ -221,16 +221,13 @@ namespace UnityModManagerNet
                             Logger.Error("Id为空！");
                             continue;
                         }
-
                         if (mods.ContainsKey(modInfo.Id))
                         {
                             Logger.Error($"Id“{modInfo.Id}”已经被另一个MOD占用！");
                             continue;
                         }
-
                         if (string.IsNullOrEmpty(modInfo.AssemblyName))
                             modInfo.AssemblyName = modInfo.Id + ".dll";
-
                         var modEntry = new ModEntry(modInfo, dir + Path.DirectorySeparatorChar);
                         mods.Add(modInfo.Id, modEntry);
                     }
@@ -240,7 +237,6 @@ namespace UnityModManagerNet
                         Debug.LogException(exception);
                     }
                 }
-
                 if (mods.Count > 0)
                 {
                     Logger.Log("正在排序Mods……");
@@ -253,11 +249,9 @@ namespace UnityModManagerNet
                         else
                             mod.Active = true;
                 }
-
                 Logger.Log(
                     $"Mods解析完成！成功加载了{ModEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
             }
-
             GameScripts.OnAfterLoadMods();
             if (!UI.Load()) Logger.Error("不能加载UI！");
         }
@@ -417,31 +411,25 @@ namespace UnityModManagerNet
 
         public class ModInfo : IEquatable<ModInfo>
         {
-            public string AssemblyName;
-
             public string Author;
-
+            public string AssemblyName;
             public string DisplayName;
-
             public string EntryMethod;
-
             public string GameVersion;
-
             public string HomePage;
             public string Id;
-
             /// <summary>
             ///     Used for RoR2 game [0.17.0]
             /// </summary>
             [NonSerialized] public bool IsCheat = true;
-
             public string ManagerVersion;
-
             public string Repository;
-
             public string[] Requirements;
-
             public string Version;
+            /// <summary>
+            ///  [0.20.0.15]
+            /// </summary>
+            public string FreezeUI;
 
             public bool Equals(ModInfo other)
             {

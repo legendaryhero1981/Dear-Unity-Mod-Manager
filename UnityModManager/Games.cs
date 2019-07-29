@@ -14,8 +14,12 @@ namespace UnityModManagerNet
         private class GameScripts
         {
             private static readonly List<GameScript> scripts = new List<GameScript>();
+            /// <summary>
+            ///  [0.20.0.15]
+            /// </summary>
+            private static bool _freezeUI;
 
-            public static void Init()
+            public static void Init(List<ModEntry> modEntries)
             {
                 foreach (var t in typeof(GameScripts).GetNestedTypes(BindingFlags.NonPublic))
                 {
@@ -37,8 +41,9 @@ namespace UnityModManagerNet
             {
                 private bool _escMode;
 
-                public override void OnBeforeLoadMods()
+                public override void OnAfterLoadMods()
                 {
+                    if (!_freezeUI) return;
                     FreezeUI = () =>
                     {
                         _escMode = KM.GameModes.GameModeType.EscMode == KM.Game.Instance.CurrentMode || KM.GameModes.GameModeType.None == KM.Game.Instance.CurrentMode;
@@ -120,6 +125,11 @@ namespace UnityModManagerNet
 
             public static void OnAfterLoadMods()
             {
+                var mod = ModEntries.Find(m => "0".Equals(m.Info.FreezeUI) || "false".Equals(m.Info.FreezeUI?.ToLower()));
+                _freezeUI = null == mod;
+                Logger.Log(_freezeUI
+                    ? $"DUMM冻结游戏UI模式已开启！"
+                    : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
                 foreach (var o in scripts)
                 {
                     try
