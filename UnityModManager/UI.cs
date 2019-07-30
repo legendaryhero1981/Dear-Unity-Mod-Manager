@@ -45,7 +45,7 @@ namespace UnityModManagerNet
             private readonly List<Column> mColumns = new List<Column>();
             private readonly List<Column> mOriginColumns = new List<Column>
             {
-                new Column {name = "名称", width = 400, expand = true},
+                new Column {name = "名称", width = 600, expand = true},
                 new Column {name = "版本", width = 100},
                 new Column {name = "依赖MOD", width = 100, expand = true},
                 new Column {name = "开/关", width = 100},
@@ -56,6 +56,11 @@ namespace UnityModManagerNet
             ///     [0.20.0.10]
             /// </summary>
             private static readonly IEnumerator<object> ActionResult = DoActionsFromMods();
+            /// <summary>
+            ///     [0.20.0.16]
+            /// </summary>
+            public static Vector2 WindowSize => mWindowSize;
+            private static Vector2 mWindowSize = Vector2.zero;
 
             private GameObject mCanvas;
             private Resolution mCurrentResolution;
@@ -69,7 +74,6 @@ namespace UnityModManagerNet
             private float mUIScale = 1f;
             private bool mUIScaleChanged;
             private Rect mWindowRect = new Rect(0, 0, 0, 0);
-            private Vector2 mWindowSize = Vector2.zero;
 
             public int tabId;
             public string[] tabs = { "Mods", "日志", "设置" };
@@ -424,11 +428,13 @@ namespace UnityModManagerNet
                     GUI.DragWindow(mWindowRect);
                 UnityAction buttons = () => { };
                 GUILayout.Label($"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", h1);
+                GUILayout.BeginVertical();
+                GUILayout.Space(20);
+                GUILayout.EndVertical();
                 GUILayout.Space(5);
                 tabId = GUILayout.Toolbar(tabId, tabs, button, GUILayout.ExpandWidth(false));
                 GUILayout.Space(5);
-                if (mScrollPosition.Length != tabs.Length)
-                    mScrollPosition = new Vector2[tabs.Length];
+                if (mScrollPosition.Length != tabs.Length) mScrollPosition = new Vector2[tabs.Length];
                 DrawTab(tabId, ref buttons);
                 GUILayout.FlexibleSpace();
                 GUILayout.Space(5);
@@ -441,7 +447,7 @@ namespace UnityModManagerNet
 
             private void DrawTab(int tabId, ref UnityAction buttons)
             {
-                var minWidth = GUILayout.MinWidth(mWindowSize.x - 10);
+                var minWidth = GUILayout.MinWidth(mWindowSize.x - 20f);
                 switch (tabs[tabId])
                 {
                     case "Mods":
@@ -451,7 +457,7 @@ namespace UnityModManagerNet
                             var amountWidth = mColumns.Where(x => !x.skip).Sum(x => x.width);
                             var expandWidth = mColumns.Where(x => x.expand && !x.skip).Sum(x => x.width);
                             var mods = ModEntries;
-                            var colWidth = mColumns.Select(x => x.expand ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x + expandWidth - amountWidth - 100)) : GUILayout.Width(x.width)).ToArray();
+                            var colWidth = mColumns.Select(x => x.expand ? GUILayout.Width(x.width / expandWidth * (mWindowSize.x + expandWidth - amountWidth - 100f)) : GUILayout.Width(x.width)).ToArray();
                             GUILayout.BeginVertical("box");
                             GUILayout.BeginHorizontal("box");
                             for (var i = 0; i < mColumns.Count; i++)
