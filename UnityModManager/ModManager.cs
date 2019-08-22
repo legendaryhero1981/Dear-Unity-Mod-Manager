@@ -47,7 +47,7 @@ namespace UnityModManagerNet
         /// </summary>
         internal static Action FreezeUI = () => { }, UnFreezeUI = () => { };
 
-        public static void Main()
+        public static void Main(string[] args)
         {
             AppDomain.CurrentDomain.AssemblyLoad += OnLoad;
         }

@@ -32,6 +32,7 @@ namespace UnityModManagerNet.Installer
         {
             //"UnityModManager.xml",
             //"0Harmony.dll",
+            "background.jpg",
             "0Harmony12.dll",
             "0Harmony-1.2.dll",
             "dnlib.dll",

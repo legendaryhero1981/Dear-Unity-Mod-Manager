@@ -209,17 +209,6 @@ namespace UnityModManagerNet
             {
                 buffer.Clear();
                 history.Clear();
-                if (File.Exists(filepath))
-                {
-                    try
-                    {
-                        File.Delete(filepath);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogException(e);
-                    }
-                }
             }
         }
     }

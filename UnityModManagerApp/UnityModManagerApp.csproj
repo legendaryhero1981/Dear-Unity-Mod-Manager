@@ -113,6 +113,6 @@
   </ItemGroup>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup>
-    <PostBuildEvent>D:\games\exe4j\11\file -c!~ "(?i)(\.xml|version.+\.dll|`system.xml.dll`)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\11\file -c!~ "(?i)(\.xml|version.+\.dll|`system.xml.dll`|`background.jpg`)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
