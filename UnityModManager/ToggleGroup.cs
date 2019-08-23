@@ -71,7 +71,7 @@ namespace UnityModManagerNet
                 {
                     if (Recalculating)
                     {
-                        mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", window);
+                        mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", WindowStyle);
                         if (!(mWindowRect.width > 0)) return;
                         mWidth = (int)(Math.Min(Math.Max(mWindowRect.width, 250), Screen.width - MARGIN));
                         mHeight = (int)(Math.Min(mWindowRect.height, Screen.height - MARGIN));
@@ -80,7 +80,7 @@ namespace UnityModManagerNet
                     }
                     else
                     {
-                        mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", window, GUILayout.Width(mWidth), GUILayout.Height(mHeight + 20));
+                        mWindowRect = GUILayout.Window(mId, mWindowRect, WindowFunction, "", WindowStyle, GUILayout.Width(mWidth), GUILayout.Height(mHeight + 20));
                         GUI.BringWindowToFront(mId);
                     }
                 }
@@ -88,7 +88,7 @@ namespace UnityModManagerNet
                 private void WindowFunction(int windowId)
                 {
                     if (title != null)
-                        GUILayout.Label(title, h1);
+                        GUILayout.Label(title, H1FontStyle);
                     if (!Recalculating)
                         mScrollPosition = GUILayout.BeginScrollView(mScrollPosition);
                     if (values != null)

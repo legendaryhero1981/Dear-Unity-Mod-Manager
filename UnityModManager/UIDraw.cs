@@ -581,7 +581,7 @@ namespace UnityModManagerNet
                         GUILayout.Space(Scale((int)a_.height));
 
                     foreach (HeaderAttribute a_ in f.GetCustomAttributes(typeof(HeaderAttribute), false))
-                        GUILayout.Label(a_.header, bold, GUILayout.ExpandWidth(false));
+                        GUILayout.Label(a_.header, BoldFontStyle, GUILayout.ExpandWidth(false));
 
                     var fieldName = a.Label ?? f.Name;
 

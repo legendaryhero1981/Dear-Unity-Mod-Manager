@@ -13,11 +13,11 @@ namespace UnityModManagerNet
     {
         private class GameScripts
         {
-            private static readonly List<GameScript> scripts = new List<GameScript>();
+            private static readonly List<GameScript> Scripts = new List<GameScript>();
             /// <summary>
             ///  [0.20.0.15]
             /// </summary>
-            private static bool _freezeUI;
+            private static bool _freezeUi;
 
             public static void Init(List<ModEntry> modEntries)
             {
@@ -25,7 +25,7 @@ namespace UnityModManagerNet
                 {
                     if (!t.IsClass || !t.IsSubclassOf(typeof(GameScript)) || !t.Name.Equals(Config.GameScriptName?.Trim())) continue;
                     var script = (GameScript)Activator.CreateInstance(t);
-                    scripts.Add(script);
+                    Scripts.Add(script);
                     Logger.Log($"已初始化游戏脚本“{t.Name}”。");
                 }
             }
@@ -43,7 +43,7 @@ namespace UnityModManagerNet
 
                 public override void OnAfterLoadMods()
                 {
-                    if (!_freezeUI) return;
+                    if (!_freezeUi) return;
                     FreezeUI = () =>
                     {
                         _escMode = KM.GameModes.GameModeType.EscMode == KM.Game.Instance.CurrentMode || KM.GameModes.GameModeType.None == KM.Game.Instance.CurrentMode;
@@ -80,20 +80,20 @@ namespace UnityModManagerNet
                     forbidDisableMods = true;
                 }
 
-                private static FieldInfo mFieldModded;
+                private static FieldInfo _mFieldModded;
 
                 private static FieldInfo FieldModded
                 {
                     get
                     {
-                        if (mFieldModded != null) return mFieldModded;
+                        if (_mFieldModded != null) return _mFieldModded;
                         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                         {
                             if (assembly.ManifestModule.Name != "Assembly-CSharp.dll") continue;
-                            mFieldModded = assembly.GetType("RoR2.RoR2Application").GetField("isModded", BindingFlags.Public | BindingFlags.Static);
+                            _mFieldModded = assembly.GetType("RoR2.RoR2Application").GetField("isModded", BindingFlags.Public | BindingFlags.Static);
                             break;
                         }
-                        return mFieldModded;
+                        return _mFieldModded;
                     }
                 }
 
@@ -110,7 +110,7 @@ namespace UnityModManagerNet
 
             public static void OnBeforeLoadMods()
             {
-                foreach (var o in scripts)
+                foreach (var o in Scripts)
                 {
                     try
                     {
@@ -126,11 +126,9 @@ namespace UnityModManagerNet
             public static void OnAfterLoadMods()
             {
                 var mod = ModEntries.Find(m => "0".Equals(m.Info.FreezeUI) || "false".Equals(m.Info.FreezeUI?.ToLower()));
-                _freezeUI = null == mod;
-                Logger.Log(_freezeUI
-                    ? $"DUMM冻结游戏UI模式已开启！"
-                    : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
-                foreach (var o in scripts)
+                _freezeUi = null == mod;
+                Logger.Log(_freezeUi ? $"DUMM冻结游戏UI模式已开启！" : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
+                foreach (var o in Scripts)
                 {
                     try
                     {
@@ -145,7 +143,7 @@ namespace UnityModManagerNet
 
             public static void OnModToggle(ModEntry modEntry, bool value)
             {
-                foreach (var o in scripts)
+                foreach (var o in Scripts)
                 {
                     try
                     {
