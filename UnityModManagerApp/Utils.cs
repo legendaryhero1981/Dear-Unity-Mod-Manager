@@ -1,10 +1,11 @@
-﻿using System;
+﻿using dnlib.DotNet;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using dnlib.DotNet;
 
 namespace UnityModManagerNet.Installer
 {
@@ -22,7 +23,7 @@ namespace UnityModManagerNet.Installer
                 results = new Dictionary<string, string>(defaults);
             else
                 results = new Dictionary<string, string>();
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            var directoryInfo = new DirectoryInfo(path);
             foreach (var fileInfo in directoryInfo.GetFiles(regex))
                 results[Path.GetFileNameWithoutExtension(fileInfo.FullName)] = fileInfo.FullName;
             return results;
@@ -31,33 +32,30 @@ namespace UnityModManagerNet.Installer
         internal static Version ParseVersion(string str)
         {
             var array = str.Split('.');
-            if (array.Length >= 3)
-            {
-                var regex = new Regex(@"\D");
-                return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")), int.Parse(regex.Replace(array[2], "")));
-            }
-            else if (array.Length >= 2)
-            {
-                var regex = new Regex(@"\D");
-                return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")));
-            }
-            else if (array.Length >= 1)
-            {
-                var regex = new Regex(@"\D");
-                return new Version(int.Parse(regex.Replace(array[0], "")), 0);
-            }
+            var regex = new Regex(@"\D");
 
-            Log.Print($"版本字符串“{str}”解析失败！");
-            return new Version();
+            switch (array.Length)
+            {
+                case 1:
+                    return new Version(int.Parse(regex.Replace(array[0], "")), 0);
+                case 2:
+                    return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")));
+                case 3:
+                    return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")), int.Parse(regex.Replace(array[2], "")));
+                case 4:
+                    return new Version(int.Parse(regex.Replace(array[0], "")), int.Parse(regex.Replace(array[1], "")), int.Parse(regex.Replace(array[2], "")), int.Parse(regex.Replace(array[3], "")));
+                default:
+                    Log.Print($"版本字符串“{str}”解析失败！");
+                    return new Version();
+            }
         }
 
         internal static bool IsDirectoryWritable(string dirpath)
         {
             try
             {
-                if (Directory.Exists(dirpath))
-                    using (FileStream fs = File.Create(Path.Combine(dirpath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
-                    {; }
+                if (!Directory.Exists(dirpath)) return true;
+                using (var fs = File.Create(Path.Combine(dirpath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose)) { }
                 return true;
             }
             catch
@@ -71,9 +69,8 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                if (File.Exists(filepath))
-                    using (FileStream fs = File.OpenWrite(filepath))
-                    {; }
+                if (!File.Exists(filepath)) return true;
+                using (var fs = File.OpenWrite(filepath)) { }
                 return true;
             }
             catch
@@ -106,27 +103,23 @@ namespace UnityModManagerNet.Installer
                 {
                     foreach (var group in groupNames)
                     {
-                        if (match.Groups[group].Success)
+                        if (!match.Groups[@group].Success) continue;
+                        switch (@group)
                         {
-                            switch (group)
-                            {
-                                case "assembly":
-                                    assembly = match.Groups[group].Value;
-                                    break;
-                                case "class":
-                                    @class = match.Groups[group].Value;
-                                    break;
-                                case "func":
-                                    method = match.Groups[group].Value;
-                                    if (method == "ctor")
-                                        method = ".ctor";
-                                    else if (method == "cctor")
-                                        method = ".cctor";
-                                    break;
-                                case "mod":
-                                    insertionPlace = match.Groups[group].Value.ToLower();
-                                    break;
-                            }
+                            case "assembly":
+                                assembly = match.Groups[@group].Value;
+                                break;
+                            case "class":
+                                @class = match.Groups[@group].Value;
+                                break;
+                            case "func":
+                                method = match.Groups[@group].Value;
+                                if (method == "ctor") method = ".ctor";
+                                else if (method == "cctor") method = ".cctor";
+                                break;
+                            case "mod":
+                                insertionPlace = match.Groups[@group].Value.ToLower();
+                                break;
                         }
                     }
                 }
@@ -153,13 +146,10 @@ namespace UnityModManagerNet.Installer
                 Log.Print("找不到方法名称！");
             }
 
-            if (hasError)
-            {
-                Log.Print($"解析入口点字符串“{str}”失败！");
-                return false;
-            }
+            if (!hasError) return true;
+            Log.Print($"解析入口点字符串“{str}”失败！");
+            return false;
 
-            return true;
         }
 
         internal static bool TryGetEntryPoint(ModuleDefMD assemblyDef, string str, out MethodDef foundMethod, out string insertionPlace, bool createConstructor = false)
@@ -204,20 +194,20 @@ namespace UnityModManagerNet.Installer
 
         internal static string ResolveOSXFileUrl(string url)
         {
-            Process p = new Process();
+            var p = new Process();
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.FileName = "osascript";
             p.StartInfo.Arguments = $"-e \"获取posix文件的路径 \\\"{url}\\\"\"";
             p.Start();
-            string output = p.StandardOutput.ReadToEnd();
+            var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
             return output.TrimEnd();
         }
 
         internal static bool IsUnixPlatform()
         {
-            int p = (int)Environment.OSVersion.Platform;
+            var p = (int)Environment.OSVersion.Platform;
             return (p == 4) || (p == 6) || (p == 128);
         }
 
@@ -373,17 +363,17 @@ namespace UnityModManagerNet.Installer
             // The PE header starts with "PE\0\0" =  0x50 0x45 0x00 0x00,
             // followed by a 2-byte machine type field (see the document above for the enum).
             //
-            FileStream fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
+            var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
+            var br = new BinaryReader(fs);
             fs.Seek(0x3c, SeekOrigin.Begin);
-            Int32 peOffset = br.ReadInt32();
+            var peOffset = br.ReadInt32();
             fs.Seek(peOffset, SeekOrigin.Begin);
-            UInt32 peHead = br.ReadUInt32();
+            var peHead = br.ReadUInt32();
 
             if (peHead != 0x00004550) // "PE\0\0", little-endian
                 throw new Exception($"找不到文件{dllPath}的PE头数据！");
 
-            MachineType machineType = (MachineType)br.ReadUInt16();
+            var machineType = (MachineType)br.ReadUInt16();
             br.Close();
             fs.Close();
             return machineType;

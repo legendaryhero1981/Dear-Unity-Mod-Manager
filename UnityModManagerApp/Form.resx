@@ -187,7 +187,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="listMods.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 578</value>
+    <value>776, 581</value>
   </data>
   <data name="listMods.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -244,7 +244,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="btnModInstall.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 34</value>
+    <value>776, 33</value>
   </data>
   <data name="btnModInstall.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -292,10 +292,10 @@
     <value>1</value>
   </data>
   <data name="splitContainerModsInstall.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 108</value>
+    <value>776, 105</value>
   </data>
   <data name="splitContainerModsInstall.SplitterDistance" type="System.Int32, mscorlib">
-    <value>34</value>
+    <value>33</value>
   </data>
   <data name="splitContainerModsInstall.SplitterWidth" type="System.Int32, mscorlib">
     <value>1</value>
@@ -331,7 +331,7 @@
     <value>776, 687</value>
   </data>
   <data name="splitContainerMods.SplitterDistance" type="System.Int32, mscorlib">
-    <value>578</value>
+    <value>581</value>
   </data>
   <data name="splitContainerMods.SplitterWidth" type="System.Int32, mscorlib">
     <value>1</value>

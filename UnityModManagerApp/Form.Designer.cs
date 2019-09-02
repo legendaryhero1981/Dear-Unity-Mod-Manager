@@ -351,11 +351,12 @@ namespace UnityModManagerNet.Installer
             // btnOpenFolder
             // 
             resources.ApplyResources(this.btnOpenFolder, "btnOpenFolder");
+            this.btnOpenFolder.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnOpenFolder.ForeColor = System.Drawing.Color.Red;
             this.btnOpenFolder.Name = "btnOpenFolder";
             this.btnOpenFolder.Tag = "";
             this.btnOpenFolder.UseMnemonic = false;
-            this.btnOpenFolder.UseVisualStyleBackColor = true;
+            this.btnOpenFolder.UseVisualStyleBackColor = false;
             this.btnOpenFolder.Click += new System.EventHandler(this.btnOpenFolder_Click);
             // 
             // btnInstall

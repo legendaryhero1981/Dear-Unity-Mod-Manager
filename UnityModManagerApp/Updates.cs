@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Windows.Forms;
 
 namespace UnityModManagerNet.Installer
 {
     public partial class UnityModManagerForm : Form
     {
         private readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> repositories = new Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>>();
-        private static readonly string _repositoryUrl = "raw.githubusercontent.com";
+        private const string RepositoryUrl = "raw.githubusercontent.com";
 
         private void CheckModUpdates()
         {
@@ -157,7 +158,7 @@ namespace UnityModManagerNet.Installer
             {
                 using (var ping = new Ping())
                 {
-                    var reply = ping.Send(_repositoryUrl, 1000);
+                    var reply = ping.Send(RepositoryUrl, 1000);
                     return reply?.Status == IPStatus.Success;
                 }
             }
