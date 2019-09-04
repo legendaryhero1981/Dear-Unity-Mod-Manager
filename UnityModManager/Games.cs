@@ -30,6 +30,54 @@ namespace UnityModManagerNet
                 }
             }
 
+            public static void OnBeforeLoadMods()
+            {
+                foreach (var o in Scripts)
+                {
+                    try
+                    {
+                        o.OnBeforeLoadMods();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogException("OnBeforeLoadMods", e);
+                    }
+                }
+            }
+
+            public static void OnAfterLoadMods()
+            {
+                var mod = ModEntries.Find(m => "0".Equals(m.Info.FreezeUI) || "false".Equals(m.Info.FreezeUI?.ToLower()));
+                _freezeUi = null == mod;
+                Logger.Log(_freezeUi ? $"DUMM冻结游戏UI模式已开启！" : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
+                foreach (var o in Scripts)
+                {
+                    try
+                    {
+                        o.OnAfterLoadMods();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogException("OnAfterLoadMods", e);
+                    }
+                }
+            }
+
+            public static void OnModToggle(ModEntry modEntry, bool value)
+            {
+                foreach (var o in Scripts)
+                {
+                    try
+                    {
+                        o.OnModToggle(modEntry, value);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogException("OnModToggle", e);
+                    }
+                }
+            }
+
             private class GameScript
             {
                 public virtual void OnModToggle(ModEntry modEntry, bool value) { }
@@ -105,54 +153,6 @@ namespace UnityModManagerNet
                 private static void SetModded(bool value)
                 {
                     FieldModded.SetValue(null, value);
-                }
-            }
-
-            public static void OnBeforeLoadMods()
-            {
-                foreach (var o in Scripts)
-                {
-                    try
-                    {
-                        o.OnBeforeLoadMods();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogException("OnBeforeLoadMods", e);
-                    }
-                }
-            }
-
-            public static void OnAfterLoadMods()
-            {
-                var mod = ModEntries.Find(m => "0".Equals(m.Info.FreezeUI) || "false".Equals(m.Info.FreezeUI?.ToLower()));
-                _freezeUi = null == mod;
-                Logger.Log(_freezeUi ? $"DUMM冻结游戏UI模式已开启！" : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
-                foreach (var o in Scripts)
-                {
-                    try
-                    {
-                        o.OnAfterLoadMods();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogException("OnAfterLoadMods", e);
-                    }
-                }
-            }
-
-            public static void OnModToggle(ModEntry modEntry, bool value)
-            {
-                foreach (var o in Scripts)
-                {
-                    try
-                    {
-                        o.OnModToggle(modEntry, value);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.LogException("OnModToggle", e);
-                    }
                 }
             }
         }

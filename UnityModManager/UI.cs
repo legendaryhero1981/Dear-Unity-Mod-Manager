@@ -425,20 +425,34 @@ namespace UnityModManagerNet
                 }
 
                 foreach (var item in toRemove) PopupToggleGroup_GUI.mList.Remove(item);
-                if (!Opened) return;
-                if (mCurrentResolution.width != Screen.currentResolution.width || mCurrentResolution.height != Screen.currentResolution.height)
+                if (Opened)
                 {
-                    mCurrentResolution = Screen.currentResolution;
-                    CalculateWindowPos();
+                    if (mCurrentResolution.width != Screen.currentResolution.width || mCurrentResolution.height != Screen.currentResolution.height)
+                    {
+                        mCurrentResolution = Screen.currentResolution;
+                        CalculateWindowPos();
+                    }
+
+                    if (mUIScaleChanged)
+                    {
+                        mUIScaleChanged = false;
+                        ScaleGUI();
+                    }
+                    mWindowRect = GL.Window(0, mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(mWindowSize.x), GL.Height(mWindowSize.y));
                 }
 
-                if (mUIScaleChanged)
+                foreach (var mod in ModEntries)
                 {
-                    mUIScaleChanged = false;
-                    ScaleGUI();
+                    if (!mod.Active || mod.OnFixedGUI == null) continue;
+                    try
+                    {
+                        mod.OnFixedGUI.Invoke(mod);
+                    }
+                    catch (Exception e)
+                    {
+                        mod.Logger.LogException("OnFixedGUI", e);
+                    }
                 }
-                //mWindowRect = GUI.ModalWindow(0, mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", WindowStyle);
-                mWindowRect = GL.Window(0, mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(mWindowSize.x), GL.Height(mWindowSize.y));
             }
 
             private void WindowFunction(int windowId)

@@ -278,6 +278,13 @@ namespace UnityModManagerNet.Installer
                 return;
             }
 
+            if (Utils.IsMacPlatform() && !selectedGameParams.Path.EndsWith(".app"))
+            {
+                InactiveForm();
+                Log.Print("请选择游戏可执行文件（扩展名为.app）所在的目录。");
+                return;
+            }
+
             Utils.TryParseEntryPoint(selectedGame.EntryPoint, out var assemblyName);
             gamePath = selectedGameParams.Path;
             btnOpenFolder.ForeColor = Color.Green;
@@ -492,18 +499,17 @@ namespace UnityModManagerNet.Installer
 
         private string FindManagedFolder(string str)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            if (Utils.IsMacPlatform())
             {
-                var appName = $"{Path.GetFileName(str)}.app";
-                if (!Directory.Exists(Path.Combine(str, appName)))
-                {
-                    appName = Directory.GetDirectories(str).FirstOrDefault(dir => dir.EndsWith(".app"));
-                }
-                var path = Path.Combine(str, $"{appName}/Contents/Resources/Data/Managed");
+                var path = $"{str}/Contents/Resources/Data/Managed";
                 if (Directory.Exists(path))
                 {
                     return path;
                 }
+
+                InactiveForm();
+                Log.Print("选择游戏主目录（包含Contents子目录）。");
+                return null;
             }
             var regex = new Regex(".*_Data$");
             var directory = new DirectoryInfo(str);
@@ -517,7 +523,9 @@ namespace UnityModManagerNet.Installer
                     return path;
                 }
             }
-            return str;
+            InactiveForm();
+            Log.Print("选择游戏主目录（包含Data子目录）。");
+            return null;
         }
 
         private void btnRemove_Click(object sender, EventArgs e)

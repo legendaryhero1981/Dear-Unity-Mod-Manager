@@ -1,4 +1,8 @@
-﻿using System;
+﻿using dnlib.DotNet;
+
+using Harmony12;
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,10 +11,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-
-using dnlib.DotNet;
-
-using Harmony12;
 
 using UnityEngine;
 
@@ -522,9 +522,14 @@ namespace UnityModManagerNet
             public Action<ModEntry, float> OnFixedUpdate;
 
             /// <summary>
-            ///     Called by MonoBehaviour.OnGUI
+            /// Called by MonoBehaviour.OnGUI when mod options are visible.
             /// </summary>
             public Action<ModEntry> OnGUI;
+
+            /// <summary>
+            /// Called by MonoBehaviour.OnGUI, always [0.21.0]
+            /// </summary>
+            public Action<ModEntry> OnFixedGUI;
 
             /// <summary>
             ///     Called when closing mod GUI [0.16.0]
