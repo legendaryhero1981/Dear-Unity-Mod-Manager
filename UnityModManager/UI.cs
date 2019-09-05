@@ -22,14 +22,14 @@ namespace UnityModManagerNet
     {
         public partial class UI : MonoBehaviour
         {
-            public const float UI_SCALE_MIN = 1f;
-            public const float UI_SCALE_MAX = 2f;
-            public const int WINDOW_WIDTH_MIN = 1000;
-            public const int WINDOW_HEIGHT_MIN = 800;
-            public const string GLOBAL_FONT_NAME = "微软雅黑";
-            public const int GLOBAL_FONT_SIZE = 20;
-            public const int H1_FONT_SIZE = GLOBAL_FONT_SIZE + 4;
-            public const int H2_FONT_SIZE = GLOBAL_FONT_SIZE + 2;
+            public const float UiScaleMin = 1f;
+            public const float UiScaleMax = 2f;
+            public const int WindowWidthMin = 1000;
+            public const int WindowHeightMin = 800;
+            public const string GlobalFontName = "微软雅黑";
+            public const int GlobalFontSize = 20;
+            public const int H1FontSize = GlobalFontSize + 4;
+            public const int H2FontSize = GlobalFontSize + 2;
 
             /// <summary>
             /// [0.20.0.17] 新增多种自定义GUIStyle样式
@@ -46,19 +46,18 @@ namespace UnityModManagerNet
             public static GS CenterFontStyle;
             public static GS NormalFontStyle;
 
-            private static readonly string[] mCheckUpdateStrings = { "从不", "自动" };
-            private static readonly string[] mShowOnStartStrings = { "否", "是" };
-            private static readonly string[] mHotkeyNames = { "CTRL+F10", "ScrollLock", "Num *", "~" };
+            private static readonly string[] MCheckUpdateStrings = { "从不", "自动" };
+            private static readonly string[] MShowOnStartStrings = { "否", "是" };
 
-            private static int mLastWindowId;
-            private readonly List<Column> mColumns = new List<Column>();
-            private readonly List<Column> mOriginColumns = new List<Column>
+            private static int _mLastWindowId;
+            private readonly List<Column> _mColumns = new List<Column>();
+            private readonly List<Column> _mOriginColumns = new List<Column>
             {
-                new Column {name = "名称", width = 400, expand = true},
-                new Column {name = "版本", width = 200},
-                new Column {name = "依赖MOD", width = 160, expand = true},
-                new Column {name = "开/关", width = 120},
-                new Column {name = "状态", width = 100}
+                new Column {Name = "名称", Width = 400, Expand = true},
+                new Column {Name = "版本", Width = 200},
+                new Column {Name = "依赖MOD", Width = 160, Expand = true},
+                new Column {Name = "开/关", Width = 120},
+                new Column {Name = "状态", Width = 100}
             };
 
             /// <summary>
@@ -79,39 +78,39 @@ namespace UnityModManagerNet
                 var styleTooltip = new GS() { normal = { background = new Texture2D(1, 1) } };
                 styleTooltip.normal.background.SetPixels32(new[] { new Color32(0, 0, 0, 220) });
                 var x = (WindowSize.x - tooltipSize.x) / 2;
-                var y = Screen.height + ScrollViewPosition.y - WindowPosition.y - Input.mousePosition.y - Scale(H1_FONT_SIZE + GLOBAL_FONT_SIZE * 2) - textHeight;
+                var y = Screen.height + ScrollViewPosition.y - WindowPosition.y - Input.mousePosition.y - Scale(H1FontSize + GlobalFontSize * 2) - textHeight;
                 GUI.Label(new Rect(x, y, tooltipSize.x, tooltipSize.y), GUI.tooltip, styleTooltip);
                 //GUI.Label(new Rect(x, y, tooltipSize.x, tooltipSize.y), $"x={x},y={y},sx={ScrollViewPosition.x},sy={ScrollViewPosition.y},my={Input.mousePosition.y},th={textHeight},ry={WindowPosition.y}", styleTooltip);
             }
             /// <summary>
             /// [0.20.0.17] 当前选项卡的ScrollView控件位置
             /// </summary>
-            public static Vector2 ScrollViewPosition => mScrollPosition[tabId];
+            public static Vector2 ScrollViewPosition => MScrollPosition[_tabId];
             /// <summary>
             /// [0.20.0.17] 窗口位置
             /// </summary>
-            public static Vector2 WindowPosition => mWindowRect.position;
+            public static Vector2 WindowPosition => _mWindowRect.position;
             /// <summary>
             ///  [0.20.0.16] 窗口大小
             /// </summary>
-            public static Vector2 WindowSize => mWindowSize;
-            private static Vector2 mWindowSize = Vector2.zero;
+            public static Vector2 WindowSize => _mWindowSize;
+            private static Vector2 _mWindowSize = Vector2.zero;
 
-            private GameObject mCanvas;
-            private Resolution mCurrentResolution;
-            private float mExpectedUIScale = 1f;
-            private Vector2 mExpectedWindowSize = Vector2.zero;
-            private bool mFirstLaunched;
-            private bool mInit;
-            private int mPreviousShowModSettings = -1;
-            private int mShowModSettings = -1;
-            private float mUIScale = 1f;
-            private bool mUIScaleChanged;
-            private static Rect mWindowRect = new Rect(0, 0, 0, 0);
+            private GameObject _mCanvas;
+            private Resolution _mCurrentResolution;
+            private float _mExpectedUiScale = 1f;
+            private Vector2 _mExpectedWindowSize = Vector2.zero;
+            private bool _mFirstLaunched;
+            private bool _mInit;
+            private int _mPreviousShowModSettings = -1;
+            private int _mShowModSettings = -1;
+            private float _mUiScale = 1f;
+            private bool _mUiScaleChanged;
+            private static Rect _mWindowRect = new Rect(0, 0, 0, 0);
 
-            public static readonly string[] tabs = { "Mods", "日志", "设置" };
-            private static int tabId;
-            private static Vector2[] mScrollPosition = new Vector2[tabs.Length];
+            public static readonly string[] Tabs = { "Mods", "日志", "设置" };
+            private static int _tabId;
+            private static readonly Vector2[] MScrollPosition = new Vector2[Tabs.Length];
             private static Texture2D _mBackground;
             private static readonly string FilePathBackground = Path.Combine(Path.GetDirectoryName(typeof(UI).Assembly.Location), "background.jpg");
 
@@ -120,7 +119,7 @@ namespace UnityModManagerNet
 
             private int ShowModSettings
             {
-                get => mShowModSettings;
+                get => _mShowModSettings;
                 set
                 {
                     void Hide(ModEntry mod)
@@ -149,27 +148,25 @@ namespace UnityModManagerNet
                         }
                     }
 
-                    mShowModSettings = value;
-                    if (mShowModSettings == mPreviousShowModSettings) return;
-                    if (mShowModSettings == -1)
+                    _mShowModSettings = value;
+                    if (_mShowModSettings == _mPreviousShowModSettings) return;
+                    if (_mShowModSettings == -1)
                     {
-                        Hide(ModEntries[mPreviousShowModSettings]);
+                        Hide(ModEntries[_mPreviousShowModSettings]);
                     }
-                    else if (mPreviousShowModSettings == -1)
+                    else if (_mPreviousShowModSettings == -1)
                     {
-                        Show(ModEntries[mShowModSettings]);
+                        Show(ModEntries[_mShowModSettings]);
                     }
                     else
                     {
-                        Hide(ModEntries[mPreviousShowModSettings]);
-                        Show(ModEntries[mShowModSettings]);
+                        Hide(ModEntries[_mPreviousShowModSettings]);
+                        Show(ModEntries[_mShowModSettings]);
                     }
 
-                    mPreviousShowModSettings = mShowModSettings;
+                    _mPreviousShowModSettings = _mShowModSettings;
                 }
             }
-
-            internal bool GameCursorLocked { get; set; }
 
             internal static bool Load()
             {
@@ -225,14 +222,14 @@ namespace UnityModManagerNet
             {
                 Instance = this;
                 DontDestroyOnLoad(this);
-                mWindowSize = new Vector2(Params.WindowWidth, Params.WindowHeight);
+                _mWindowSize = new Vector2(Params.WindowWidth, Params.WindowHeight);
                 CorrectWindowSize();
-                mExpectedWindowSize = mWindowSize;
-                mUIScale = Mathf.Clamp(Params.UIScale, UI_SCALE_MIN, UI_SCALE_MAX);
-                mExpectedUIScale = mUIScale;
+                _mExpectedWindowSize = _mWindowSize;
+                _mUiScale = Mathf.Clamp(Params.UIScale, UiScaleMin, UiScaleMax);
+                _mExpectedUiScale = _mUiScale;
                 Textures.Init();
                 if (null == _mBackground)
-                    _mBackground = FileToTexture2D(FilePathBackground, (int)mWindowSize.x, (int)mWindowSize.y);
+                    _mBackground = FileToTexture2D(FilePathBackground, (int)_mWindowSize.x, (int)_mWindowSize.y);
                 StartCoroutine(ModActions);
             }
 
@@ -309,13 +306,13 @@ namespace UnityModManagerNet
                 Logger.Watcher(deltaTime);
             }
 
-            private static void PrepareGUI()
+            private static void PrepareGui()
             {
                 WindowStyle = new GS()
                 {
                     name = "umm window",
                     normal = { textColor = Color.white, background = _mBackground },
-                    fontSize = H1_FONT_SIZE,
+                    fontSize = H1FontSize,
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.UpperCenter,
                     padding = RectOffset(0),
@@ -325,29 +322,29 @@ namespace UnityModManagerNet
                 WindowStyle.normal.background.wrapMode = TextureWrapMode.Repeat;
                 HSliderStyle = new GS(GUI.skin.horizontalSlider)
                 {
-                    fixedHeight = GLOBAL_FONT_SIZE,
+                    fixedHeight = GlobalFontSize,
                     padding = RectOffset(0),
-                    margin = RectOffset(GLOBAL_FONT_SIZE / 4, GLOBAL_FONT_SIZE / 2)
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2)
                 };
                 HSliderThumbStyle = new GS(GUI.skin.horizontalSliderThumb)
                 {
-                    fixedHeight = GLOBAL_FONT_SIZE,
-                    padding = RectOffset(GLOBAL_FONT_SIZE / 2, 0),
+                    fixedHeight = GlobalFontSize,
+                    padding = RectOffset(GlobalFontSize / 2, 0),
                     margin = RectOffset(0)
                 };
                 H1FontStyle = new GS(GUI.skin.label)
                 {
                     name = "umm h1",
                     normal = { textColor = Color.white },
-                    fontSize = H1_FONT_SIZE,
+                    fontSize = H1FontSize,
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(GLOBAL_FONT_SIZE / 4),
-                    margin = RectOffset(GLOBAL_FONT_SIZE / 4),
+                    padding = RectOffset(GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize / 4),
                     wordWrap = true
                 };
-                H2FontStyle = new GS(H1FontStyle) { name = "umm h2", fontSize = H2_FONT_SIZE };
-                CenterFontStyle = new GS(H2FontStyle) { name = "umm center", fontSize = GLOBAL_FONT_SIZE };
+                H2FontStyle = new GS(H1FontStyle) { name = "umm h2", fontSize = H2FontSize };
+                CenterFontStyle = new GS(H2FontStyle) { name = "umm center", fontSize = GlobalFontSize };
                 BoldFontStyle = new GS(CenterFontStyle) { name = "umm bold", alignment = TextAnchor.MiddleLeft };
                 NormalFontStyle = new GS(BoldFontStyle) { name = "umm normal", fontStyle = FontStyle.Normal };
                 IconStyle = new GS(GUI.skin.box)
@@ -355,7 +352,7 @@ namespace UnityModManagerNet
                     name = "umm icon",
                     alignment = TextAnchor.MiddleCenter,
                     padding = RectOffset(0),
-                    margin = RectOffset(GLOBAL_FONT_SIZE / 4, GLOBAL_FONT_SIZE / 2),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2),
                     stretchHeight = true,
                     stretchWidth = true,
                 };
@@ -363,49 +360,49 @@ namespace UnityModManagerNet
                 {
                     name = "umm button",
                     normal = { textColor = Color.white },
-                    fontSize = GLOBAL_FONT_SIZE,
+                    fontSize = GlobalFontSize,
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.UpperCenter,
-                    padding = new RectOffset(GLOBAL_FONT_SIZE / 4, GLOBAL_FONT_SIZE / 2, GLOBAL_FONT_SIZE / 4, GLOBAL_FONT_SIZE / 2),
-                    margin = RectOffset(GLOBAL_FONT_SIZE / 4),
+                    padding = new RectOffset(GlobalFontSize / 4, GlobalFontSize / 2, GlobalFontSize / 4, GlobalFontSize / 2),
+                    margin = RectOffset(GlobalFontSize / 4),
                     wordWrap = false
                 };
                 ToggleStyle = new GS(GUI.skin.toggle)
                 {
                     name = "umm toggle",
                     normal = { textColor = Color.white },
-                    fontSize = GLOBAL_FONT_SIZE,
+                    fontSize = GlobalFontSize,
                     alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(GLOBAL_FONT_SIZE / 2, GLOBAL_FONT_SIZE / 4),
-                    margin = RectOffset(GLOBAL_FONT_SIZE / 4),
+                    padding = RectOffset(GlobalFontSize / 2, GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize / 4),
                     wordWrap = true
                 };
             }
 
-            private void ScaleGUI()
+            private void ScaleGui()
             {
-                GUI.skin.font = Font.CreateDynamicFontFromOSFont(GLOBAL_FONT_NAME, Scale(GLOBAL_FONT_SIZE));
+                GUI.skin.font = Font.CreateDynamicFontFromOSFont(GlobalFontName, Scale(GlobalFontSize));
                 GUI.skin.horizontalSlider = HSliderStyle;
                 GUI.skin.horizontalSliderThumb = HSliderThumbStyle;
                 GUI.skin.toggle = ToggleStyle;
                 GUI.skin.button = ButtonStyle;
                 GUI.skin.label = NormalFontStyle;
-                HSliderStyle.fixedHeight = HSliderThumbStyle.fixedHeight = Scale(GLOBAL_FONT_SIZE);
-                ToggleStyle.fontSize = ButtonStyle.fontSize = NormalFontStyle.fontSize = CenterFontStyle.fontSize = BoldFontStyle.fontSize = Scale(GLOBAL_FONT_SIZE);
-                WindowStyle.fontSize = H1FontStyle.fontSize = Scale(H1_FONT_SIZE);
-                IconStyle.fixedWidth = IconStyle.fixedHeight = H2FontStyle.fontSize = Scale(H2_FONT_SIZE);
-                mColumns.Clear();
-                foreach (var column in mOriginColumns)
-                    mColumns.Add(new Column { name = column.name, width = Scale(column.width), expand = column.expand, skip = column.skip });
+                HSliderStyle.fixedHeight = HSliderThumbStyle.fixedHeight = Scale(GlobalFontSize);
+                ToggleStyle.fontSize = ButtonStyle.fontSize = NormalFontStyle.fontSize = CenterFontStyle.fontSize = BoldFontStyle.fontSize = Scale(GlobalFontSize);
+                WindowStyle.fontSize = H1FontStyle.fontSize = Scale(H1FontSize);
+                IconStyle.fixedWidth = IconStyle.fixedHeight = H2FontStyle.fontSize = Scale(H2FontSize);
+                _mColumns.Clear();
+                foreach (var column in _mOriginColumns)
+                    _mColumns.Add(new Column { Name = column.Name, Width = Scale(column.Width), Expand = column.Expand, Skip = column.Skip });
             }
 
             private void OnGUI()
             {
-                if (!mInit)
+                if (!_mInit)
                 {
-                    mInit = true;
-                    PrepareGUI();
-                    ScaleGUI();
+                    _mInit = true;
+                    PrepareGui();
+                    ScaleGui();
                 }
 
                 var toRemove = new List<PopupToggleGroup_GUI>(0);
@@ -427,18 +424,18 @@ namespace UnityModManagerNet
                 foreach (var item in toRemove) PopupToggleGroup_GUI.mList.Remove(item);
                 if (Opened)
                 {
-                    if (mCurrentResolution.width != Screen.currentResolution.width || mCurrentResolution.height != Screen.currentResolution.height)
+                    if (_mCurrentResolution.width != Screen.currentResolution.width || _mCurrentResolution.height != Screen.currentResolution.height)
                     {
-                        mCurrentResolution = Screen.currentResolution;
+                        _mCurrentResolution = Screen.currentResolution;
                         CalculateWindowPos();
                     }
 
-                    if (mUIScaleChanged)
+                    if (_mUiScaleChanged)
                     {
-                        mUIScaleChanged = false;
-                        ScaleGUI();
+                        _mUiScaleChanged = false;
+                        ScaleGui();
                     }
-                    mWindowRect = GL.Window(0, mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(mWindowSize.x), GL.Height(mWindowSize.y));
+                    _mWindowRect = GL.Window(0, _mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(_mWindowSize.x), GL.Height(_mWindowSize.y));
                 }
 
                 foreach (var mod in ModEntries)
@@ -458,15 +455,15 @@ namespace UnityModManagerNet
             private void WindowFunction(int windowId)
             {
                 UnityAction buttons = () => { };
-                if (Input.GetKey(KeyCode.LeftControl)) GUI.DragWindow(mWindowRect);
+                if (Input.GetKey(KeyCode.LeftControl)) GUI.DragWindow(_mWindowRect);
                 else CorrectWindowPos();
                 GL.BeginVertical();
-                GL.Space(Scale(H1_FONT_SIZE + GLOBAL_FONT_SIZE));
+                GL.Space(Scale(H1FontSize + GlobalFontSize));
                 GL.BeginHorizontal();
-                tabId = GL.Toolbar(tabId, tabs, ButtonStyle, GL.ExpandWidth(false));
+                _tabId = GL.Toolbar(_tabId, Tabs, ButtonStyle, GL.ExpandWidth(false));
                 GL.FlexibleSpace();
                 GL.EndHorizontal();
-                DrawTab(tabId, ref buttons);
+                DrawTab(_tabId, ref buttons);
                 GL.FlexibleSpace();
                 GL.BeginHorizontal();
                 if (GL.Button("关闭", ButtonStyle, GL.ExpandWidth(false))) ToggleWindow();
@@ -478,22 +475,22 @@ namespace UnityModManagerNet
 
             private void DrawTab(int tabId, ref UnityAction buttons)
             {
-                var minWidth = GL.Width(mWindowSize.x - GLOBAL_FONT_SIZE / 2f);
-                switch (tabs[tabId])
+                var minWidth = GL.Width(_mWindowSize.x - GlobalFontSize / 2f);
+                switch (Tabs[tabId])
                 {
                     case "Mods":
                         {
-                            mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
-                            var amountWidth = mColumns.Where(x => !x.skip).Sum(x => x.width);
-                            var expandWidth = mColumns.Where(x => x.expand && !x.skip).Sum(x => x.width);
+                            MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
+                            var amountWidth = _mColumns.Where(x => !x.Skip).Sum(x => x.Width);
+                            var expandWidth = _mColumns.Where(x => x.Expand && !x.Skip).Sum(x => x.Width);
                             var mods = ModEntries;
-                            var colWidth = mColumns.Select(x => x.expand ? GL.Width(x.width / expandWidth * (mWindowSize.x + expandWidth - amountWidth - GLOBAL_FONT_SIZE * 4)) : GL.Width(x.width)).ToArray();
+                            var colWidth = _mColumns.Select(x => x.Expand ? GL.Width(x.Width / expandWidth * (_mWindowSize.x + expandWidth - amountWidth - GlobalFontSize * 4)) : GL.Width(x.Width)).ToArray();
                             GL.BeginVertical("box");
                             GL.BeginHorizontal("box");
-                            for (var i = 0; i < mColumns.Count; i++)
+                            for (var i = 0; i < _mColumns.Count; i++)
                             {
-                                if (mColumns[i].skip) continue;
-                                GL.Label(mColumns[i].name, BoldFontStyle, colWidth[i]);
+                                if (_mColumns[i].Skip) continue;
+                                GL.Label(_mColumns[i].Name, BoldFontStyle, colWidth[i]);
                             }
                             GL.EndHorizontal();
                             for (int i = 0, j = 0, c = mods.Count; i < c; i++, j = 0)
@@ -603,10 +600,10 @@ namespace UnityModManagerNet
                         }
                     case "日志":
                         {
-                            mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
+                            MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
                             GL.BeginVertical("box");
-                            for (int c = Logger.history.Count, i = Mathf.Max(0, c - Logger.historyCapacity); i < c; i++)
-                                GL.Label(Logger.history[i]);
+                            for (int c = Logger.History.Count, i = Mathf.Max(0, c - Logger.HistoryCapacity); i < c; i++)
+                                GL.Label(Logger.History[i]);
                             GL.EndVertical();
                             GL.EndScrollView();
                             buttons += delegate
@@ -618,7 +615,7 @@ namespace UnityModManagerNet
                         }
                     case "设置":
                         {
-                            mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
+                            MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
                             GL.BeginVertical("box");
                             GL.BeginHorizontal();
                             GL.Label("热键（默认Ctrl+F10）", GL.ExpandWidth(false));
@@ -626,37 +623,37 @@ namespace UnityModManagerNet
                             GL.EndHorizontal();
                             GL.BeginHorizontal();
                             GL.Label("检查更新", GL.ExpandWidth(false));
-                            ToggleGroup(Params.CheckUpdates, mCheckUpdateStrings, i => { Params.CheckUpdates = i; }, null, GL.ExpandWidth(false));
+                            ToggleGroup(Params.CheckUpdates, MCheckUpdateStrings, i => { Params.CheckUpdates = i; }, null, GL.ExpandWidth(false));
                             GL.EndHorizontal();
                             GL.BeginHorizontal();
                             GL.Label("游戏启动时自动显示MOD管理器窗口", GL.ExpandWidth(false));
-                            ToggleGroup(Params.ShowOnStart, mShowOnStartStrings, i => { Params.ShowOnStart = i; }, null, GL.ExpandWidth(false));
+                            ToggleGroup(Params.ShowOnStart, MShowOnStartStrings, i => { Params.ShowOnStart = i; }, null, GL.ExpandWidth(false));
                             GL.EndHorizontal();
                             GL.BeginVertical("box");
                             GL.Label("窗口大小", BoldFontStyle, GL.ExpandWidth(false));
                             GL.BeginHorizontal();
                             GL.Label("宽度", GL.ExpandWidth(false));
-                            mExpectedWindowSize.x = GL.HorizontalSlider(mExpectedWindowSize.x,
-                                Mathf.Min(Screen.width, WINDOW_WIDTH_MIN), Screen.width, GL.MaxWidth(Scale(200)));
-                            GL.Label(" " + mExpectedWindowSize.x.ToString("f0") + " px ",
+                            _mExpectedWindowSize.x = GL.HorizontalSlider(_mExpectedWindowSize.x,
+                                Mathf.Min(Screen.width, WindowWidthMin), Screen.width, GL.MaxWidth(Scale(200)));
+                            GL.Label(" " + _mExpectedWindowSize.x.ToString("f0") + " px ",
                                 GL.ExpandWidth(false));
                             GL.Label("高度", GL.ExpandWidth(false));
-                            mExpectedWindowSize.y = GL.HorizontalSlider(mExpectedWindowSize.y,
-                                Mathf.Min(Screen.height, WINDOW_HEIGHT_MIN), Screen.height, GL.MaxWidth(Scale(200)));
-                            GL.Label(" " + mExpectedWindowSize.y.ToString("f0") + " px ",
+                            _mExpectedWindowSize.y = GL.HorizontalSlider(_mExpectedWindowSize.y,
+                                Mathf.Min(Screen.height, WindowHeightMin), Screen.height, GL.MaxWidth(Scale(200)));
+                            GL.Label(" " + _mExpectedWindowSize.y.ToString("f0") + " px ",
                                 GL.ExpandWidth(false));
                             GL.FlexibleSpace();
                             if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)))
                             {
-                                mWindowSize.x = Mathf.Floor(mExpectedWindowSize.x) % 2 > 0
-                                    ? Mathf.Ceil(mExpectedWindowSize.x)
-                                    : Mathf.Floor(mExpectedWindowSize.x);
-                                mWindowSize.y = Mathf.Floor(mExpectedWindowSize.y) % 2 > 0
-                                    ? Mathf.Ceil(mExpectedWindowSize.y)
-                                    : Mathf.Floor(mExpectedWindowSize.y);
+                                _mWindowSize.x = Mathf.Floor(_mExpectedWindowSize.x) % 2 > 0
+                                    ? Mathf.Ceil(_mExpectedWindowSize.x)
+                                    : Mathf.Floor(_mExpectedWindowSize.x);
+                                _mWindowSize.y = Mathf.Floor(_mExpectedWindowSize.y) % 2 > 0
+                                    ? Mathf.Ceil(_mExpectedWindowSize.y)
+                                    : Mathf.Floor(_mExpectedWindowSize.y);
                                 CalculateWindowPos();
-                                Params.WindowWidth = mWindowSize.x;
-                                Params.WindowHeight = mWindowSize.y;
+                                Params.WindowWidth = _mWindowSize.x;
+                                Params.WindowHeight = _mWindowSize.y;
                             }
                             GL.EndHorizontal();
                             GL.EndVertical();
@@ -664,19 +661,19 @@ namespace UnityModManagerNet
                             GL.Label("UI", BoldFontStyle, GL.ExpandWidth(false));
                             GL.BeginHorizontal();
                             GL.Label("缩放", GL.ExpandWidth(false));
-                            mExpectedUIScale = GL.HorizontalSlider(mExpectedUIScale, UI_SCALE_MIN, UI_SCALE_MAX,
+                            _mExpectedUiScale = GL.HorizontalSlider(_mExpectedUiScale, UiScaleMin, UiScaleMax,
                                 GL.MaxWidth(Scale(600)));
-                            GL.Label(" " + mExpectedUIScale.ToString("f2"), GL.ExpandWidth(false));
+                            GL.Label(" " + _mExpectedUiScale.ToString("f2"), GL.ExpandWidth(false));
                             GL.FlexibleSpace();
-                            if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)) && !mUIScale.Equals(mExpectedUIScale))
+                            if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)) && !_mUiScale.Equals(_mExpectedUiScale))
                             {
-                                mUIScaleChanged = true;
-                                mUIScale = mExpectedUIScale;
-                                Params.UIScale = mUIScale;
-                                mExpectedWindowSize.x = Mathf.Min(Screen.width, WINDOW_WIDTH_MIN * Mathf.Pow(mUIScale, 1.5f));
-                                mWindowSize.x = Mathf.Floor(mExpectedWindowSize.x) % 2 > 0 ? Mathf.Ceil(mExpectedWindowSize.x) : Mathf.Floor(mExpectedWindowSize.x);
+                                _mUiScaleChanged = true;
+                                _mUiScale = _mExpectedUiScale;
+                                Params.UIScale = _mUiScale;
+                                _mExpectedWindowSize.x = Mathf.Min(Screen.width, WindowWidthMin * Mathf.Pow(_mUiScale, 1.5f));
+                                _mWindowSize.x = Mathf.Floor(_mExpectedWindowSize.x) % 2 > 0 ? Mathf.Ceil(_mExpectedWindowSize.x) : Mathf.Floor(_mExpectedWindowSize.x);
                                 CalculateWindowPos();
-                                Params.WindowWidth = mWindowSize.x;
+                                Params.WindowWidth = _mWindowSize.x;
                             }
                             GL.EndHorizontal();
                             GL.EndVertical();
@@ -690,38 +687,38 @@ namespace UnityModManagerNet
             public static int Scale(int value)
             {
                 if (!Instance) return value;
-                return (int)(value * Instance.mUIScale);
+                return (int)(value * Instance._mUiScale);
             }
 
             private float Scale(float value)
             {
                 if (!Instance) return value;
-                return value * mUIScale;
+                return value * _mUiScale;
             }
 
             private void CalculateWindowPos()
             {
                 CorrectWindowSize();
-                mWindowRect.size = mWindowSize;
-                mWindowRect.x = (Screen.width - mWindowSize.x) / 2f;
-                mWindowRect.y = 0;
+                _mWindowRect.size = _mWindowSize;
+                _mWindowRect.x = (Screen.width - _mWindowSize.x) / 2f;
+                _mWindowRect.y = 0;
             }
 
-            private void CorrectWindowPos()
+            private static void CorrectWindowPos()
             {
-                mWindowRect.x = Mathf.Clamp(mWindowRect.x, 0, Screen.width - mWindowRect.width);
-                mWindowRect.y = Mathf.Clamp(mWindowRect.y, 0, Screen.height - mWindowRect.height);
+                _mWindowRect.x = Mathf.Clamp(_mWindowRect.x, 0, Screen.width - _mWindowRect.width);
+                _mWindowRect.y = Mathf.Clamp(_mWindowRect.y, 0, Screen.height - _mWindowRect.height);
             }
 
-            private void CorrectWindowSize()
+            private static void CorrectWindowSize()
             {
-                mWindowSize.x = Mathf.Clamp(mWindowSize.x, Mathf.Min(Screen.width, WINDOW_WIDTH_MIN), Screen.width);
-                mWindowSize.y = Mathf.Clamp(mWindowSize.y, Mathf.Min(Screen.height, WINDOW_HEIGHT_MIN), Screen.height);
+                _mWindowSize.x = Mathf.Clamp(_mWindowSize.x, Mathf.Min(Screen.width, WindowWidthMin), Screen.width);
+                _mWindowSize.y = Mathf.Clamp(_mWindowSize.y, Mathf.Min(Screen.height, WindowHeightMin), Screen.height);
             }
 
             public void FirstLaunch()
             {
-                if (mFirstLaunched || Params.ShowOnStart == 0 && ModEntries.All(x => !x.ErrorOnLoading))
+                if (_mFirstLaunched || Params.ShowOnStart == 0 && ModEntries.All(x => !x.ErrorOnLoading))
                     return;
                 ToggleWindow(true);
             }
@@ -737,12 +734,12 @@ namespace UnityModManagerNet
                     return;
                 if (open)
                 {
-                    mFirstLaunched = true;
-                    ShowModSettings = mShowModSettings;
+                    _mFirstLaunched = true;
+                    ShowModSettings = _mShowModSettings;
                 }
                 else
                 {
-                    mShowModSettings = ShowModSettings;
+                    _mShowModSettings = ShowModSettings;
                     ShowModSettings = -1;
                 }
                 try
@@ -751,7 +748,7 @@ namespace UnityModManagerNet
                         FreezeUI();
                     else
                         UnFreezeUI();
-                    BlockGameUI(Opened = open);
+                    BlockGameUi(Opened = open);
                 }
                 catch (Exception e)
                 {
@@ -759,23 +756,23 @@ namespace UnityModManagerNet
                 }
             }
 
-            private void BlockGameUI(bool value)
+            private void BlockGameUi(bool value)
             {
                 if (value)
                 {
-                    mCanvas = new GameObject("", typeof(Canvas), typeof(GraphicRaycaster));
-                    mCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-                    mCanvas.GetComponent<Canvas>().sortingOrder = short.MaxValue;
-                    DontDestroyOnLoad(mCanvas);
+                    _mCanvas = new GameObject("", typeof(Canvas), typeof(GraphicRaycaster));
+                    _mCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+                    _mCanvas.GetComponent<Canvas>().sortingOrder = short.MaxValue;
+                    DontDestroyOnLoad(_mCanvas);
                     var panel = new GameObject("", typeof(Image));
-                    panel.transform.SetParent(mCanvas.transform);
+                    panel.transform.SetParent(_mCanvas.transform);
                     panel.GetComponent<RectTransform>().anchorMin = new Vector2(1, 0);
                     panel.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);
                     panel.GetComponent<RectTransform>().offsetMin = Vector2.zero;
                     panel.GetComponent<RectTransform>().offsetMax = Vector2.zero;
                 }
-                else if (mCanvas)
-                    Destroy(mCanvas);
+                else if (_mCanvas)
+                    Destroy(_mCanvas);
             }
 
             private static RectOffset RectOffset(int value)
@@ -790,15 +787,15 @@ namespace UnityModManagerNet
 
             public static int GetNextWindowId()
             {
-                return ++mLastWindowId;
+                return ++_mLastWindowId;
             }
 
             private class Column
             {
-                public bool expand;
-                public string name;
-                public bool skip;
-                public float width;
+                public bool Expand;
+                public string Name;
+                public bool Skip;
+                public float Width;
             }
         }
     }

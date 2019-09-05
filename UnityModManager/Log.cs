@@ -18,13 +18,13 @@ namespace UnityModManagerNet
                 protected readonly string PrefixWarning;
                 protected readonly string PrefixException;
 
-                public ModLogger(string Id)
+                public ModLogger(string id)
                 {
-                    Prefix = $"[{Id}] ";
-                    PrefixError = $"[{Id}] [错误] ";
-                    PrefixCritical = $"[{Id}] [严重错误] ";
-                    PrefixWarning = $"[{Id}] [警告] ";
-                    PrefixException = $"[{Id}] [异常] ";
+                    Prefix = $"[{id}] ";
+                    PrefixError = $"[{id}] [错误] ";
+                    PrefixCritical = $"[{id}] [严重错误] ";
+                    PrefixWarning = $"[{id}] [警告] ";
+                    PrefixException = $"[{id}] [异常] ";
                 }
 
                 public void Log(string str)
@@ -72,11 +72,11 @@ namespace UnityModManagerNet
 
         public static class Logger
         {
-            const string Prefix = "[MOD管理器] ";
-            const string PrefixError = "[MOD管理器] [错误] ";
-            const string PrefixException = "[MOD管理器] [异常] ";
+            private const string Prefix = "[MOD管理器] ";
+            private const string PrefixError = "[MOD管理器] [错误] ";
+            private const string PrefixException = "[MOD管理器] [异常] ";
 
-            public static readonly string filepath = Path.Combine(Path.Combine(Application.dataPath, Path.Combine("Managed", nameof(UnityModManager))), "Log.txt");
+            public static readonly string Filepath = Path.Combine(Path.Combine(Application.dataPath, Path.Combine("Managed", nameof(UnityModManager))), "Log.txt");
 
             public static void NativeLog(string str)
             {
@@ -129,50 +129,46 @@ namespace UnityModManagerNet
             /// </summary>
             public static void LogException(string key, Exception e, string prefix)
             {
-                if (string.IsNullOrEmpty(key))
-                    Write($"{prefix}{e.GetType().Name} - {e.Message}");
-                else
-                    Write($"{prefix}{key}: {e.GetType().Name} - {e.Message}");
+                Write(string.IsNullOrEmpty(key)
+                    ? $"{prefix}{e.GetType().Name} - {e.Message}"
+                    : $"{prefix}{key}: {e.GetType().Name} - {e.Message}");
                 Console.WriteLine(e.ToString());
             }
 
-            private static int bufferCapacity = 100;
-            private static List<string> buffer = new List<string>(bufferCapacity);
-            internal static int historyCapacity = 200;
-            internal static List<string> history = new List<string>(historyCapacity * 2);
+            private const int BufferCapacity = 100;
+            private static readonly List<string> Buffer = new List<string>(BufferCapacity);
+            internal static int HistoryCapacity = 200;
+            internal static List<string> History = new List<string>(HistoryCapacity * 2);
 
             private static void Write(string str, bool onlyNative = false)
             {
-                if (str == null)
-                    return;
+                if (str == null) return;
 
                 Console.WriteLine(str);
 
-                if (onlyNative)
-                    return;
+                if (onlyNative) return;
 
-                buffer.Add(str);
-                history.Add(str);
+                Buffer.Add(str);
+                History.Add(str);
 
-                if (history.Count >= historyCapacity * 2)
-                {
-                    var result = history.Skip(historyCapacity);
-                    history.Clear();
-                    history.AddRange(result);
-                }
+                if (History.Count < HistoryCapacity * 2) return;
+
+                var result = History.Skip(HistoryCapacity);
+                History.Clear();
+                History.AddRange(result);
             }
 
-            private static float timer;
+            private static float _timer;
 
             internal static void Watcher(float dt)
             {
-                if (buffer.Count >= bufferCapacity || timer > 1f)
+                if (Buffer.Count >= BufferCapacity || _timer > 1f)
                 {
                     WriteBuffers();
                 }
                 else
                 {
-                    timer += dt;
+                    _timer += dt;
                 }
             }
 
@@ -180,16 +176,12 @@ namespace UnityModManagerNet
             {
                 try
                 {
-                    if (buffer.Count > 0)
+                    if (Buffer.Count > 0)
                     {
-                        if (!File.Exists(filepath))
+                        using (File.Create(Filepath)) { }
+                        using (var writer = File.AppendText(Filepath))
                         {
-                            using (File.Create(filepath))
-                            {; }
-                        }
-                        using (StreamWriter writer = File.AppendText(filepath))
-                        {
-                            foreach (var str in buffer)
+                            foreach (var str in Buffer)
                             {
                                 writer.WriteLine(str);
                             }
@@ -201,14 +193,14 @@ namespace UnityModManagerNet
                     Debug.LogException(e);
                 }
 
-                buffer.Clear();
-                timer = 0;
+                Buffer.Clear();
+                _timer = 0;
             }
 
             public static void Clear()
             {
-                buffer.Clear();
-                history.Clear();
+                Buffer.Clear();
+                History.Clear();
             }
         }
     }
