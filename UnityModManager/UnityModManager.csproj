@@ -4,7 +4,6 @@
   <PropertyGroup>
     <ProjectGuid>{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}</ProjectGuid>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-    <NeutralLanguage>zh-CN</NeutralLanguage>
     <OutputType>Library</OutputType>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworks>net472</TargetFrameworks>
