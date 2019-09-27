@@ -61,6 +61,10 @@ namespace UnityModManagerNet
             };
 
             /// <summary>
+            /// [0.21.1.20] 新增Mod依赖列表字段
+            /// </summary>
+            private static List<string> _mJoinList = new List<string>();
+            /// <summary>
             /// [0.20.0.17] Mod任务执行
             /// </summary>
             private static readonly IEnumerator<object> ModActions = DoActionsFromMods();
@@ -519,13 +523,16 @@ namespace UnityModManagerNet
                                     GL.Label("<color=\"#CD5C5C\">游戏v" + mods[i].Info.GameVersion + "</color>", colWidth[j++]);
                                 else if (mods[i].Requirements.Count > 0)
                                 {
+                                    GL.BeginHorizontal(colWidth[j++]);
+                                    _mJoinList.Clear();
                                     foreach (var item in mods[i].Requirements)
                                     {
                                         var id = item.Key;
                                         var mod = FindMod(id);
-                                        GL.Label((mod == null || item.Value != null && item.Value > mod.Version || !mod.Active) && mods[i].Active ? "<color=\"#CD5C5C\">" + id + "</color>" : id, colWidth[j]);
+                                        _mJoinList.Add(((mod == null || item.Value != null && item.Value > mod.Version || !mod.Active) && mods[i].Active) ? "<color=\"#CD5C5C\">" + id + "</color> " : id);
                                     }
-                                    j++;
+                                    GL.Label(string.Join(", ", _mJoinList.ToArray()));
+                                    GL.EndHorizontal();
                                 }
                                 else if (!string.IsNullOrEmpty(mods[i].CustomRequirements))
                                     GL.Label(mods[i].CustomRequirements, colWidth[j++]);

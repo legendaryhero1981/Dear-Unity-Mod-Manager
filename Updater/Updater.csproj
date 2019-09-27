@@ -11,8 +11,8 @@
     <StartupObject>UnityModManagerNet.Updater.Program</StartupObject>
     <ApplicationIcon>DUMM.ico</ApplicationIcon>
     <AssemblyName>DUMMUpdater</AssemblyName>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Version>1.0.0.0</Version>

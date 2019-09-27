@@ -22,6 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Repository.json = Repository.json
 		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
 	EndProjectSection
+	ProjectSection(FolderGlobals) = preProject
+		E_5_4Decompile_4Code_4src_4Dear-Unity-Mod-Manager_4Repository_1json__JsonSchema = http://json.schemastore.org/appveyor
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

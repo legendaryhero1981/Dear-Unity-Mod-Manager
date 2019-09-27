@@ -87,8 +87,17 @@ namespace UnityModManagerNet
             Params = Param.Load();
             modsPath = Path.Combine(Environment.CurrentDirectory, Config.ModsDirectory);
             if (!Directory.Exists(modsPath))
-                Directory.CreateDirectory(modsPath);
+            {
+                var modsPath2 = Path.Combine(Path.GetDirectoryName(Environment.CurrentDirectory), Config.ModsDirectory);
+
+                if (Directory.Exists(modsPath2))
+                    modsPath = modsPath2;
+                else
+                    Directory.CreateDirectory(modsPath);
+            }
+            Logger.Log($"Mods路径：{modsPath}。");
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
             return true;
         }
 
