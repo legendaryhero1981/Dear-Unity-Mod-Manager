@@ -27,8 +27,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>F:\games\Pathfinder Kingmaker\Kingmaker_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>..\lib\Assembly-CSharp-PathfinderKingmaker.dll</HintPath>
+      <Private>False</Private>
       <Aliases>PathfinderKingmaker</Aliases>
     </Reference>
     <Reference Include="0Harmony-1.2">
