@@ -78,6 +78,8 @@ namespace UnityModManagerNet
 
             public static readonly string Filepath = Path.Combine(Path.Combine(Application.dataPath, Path.Combine("Managed", nameof(UnityModManager))), "Log.txt");
 
+            private static bool _clearOnce;
+
             public static void NativeLog(string str)
             {
                 NativeLog(str, Prefix);
@@ -163,22 +165,22 @@ namespace UnityModManagerNet
             internal static void Watcher(float dt)
             {
                 if (Buffer.Count >= BufferCapacity || _timer > 1f)
-                {
                     WriteBuffers();
-                }
                 else
-                {
                     _timer += dt;
-                }
             }
 
             internal static void WriteBuffers()
             {
                 try
                 {
+                    if (!_clearOnce)
+                    {
+                        File.Create(Filepath).Close();
+                        _clearOnce = true;
+                    }
                     if (Buffer.Count > 0)
                     {
-                        using (File.Create(Filepath)) { }
                         using (var writer = File.AppendText(Filepath))
                         {
                             foreach (var str in Buffer)

@@ -64,9 +64,9 @@ namespace UnityModManagerNet.Installer
         public string GameName;
         public string GameVersionPoint;
         public string GameScriptName;
-
         public string OldPatchTarget;
         public string Additionally;
+        public string FixBlackUI;
         //public string MachineConfig;
 
         public override string ToString()

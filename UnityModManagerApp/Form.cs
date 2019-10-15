@@ -225,7 +225,8 @@ namespace UnityModManagerNet.Installer
                 nameof(GameInfo.StartingPoint),
                 nameof(GameInfo.UIStartingPoint),
                 nameof(GameInfo.OldPatchTarget),
-                nameof(GameInfo.Additionally)
+                nameof(GameInfo.Additionally),
+                nameof(GameInfo.FixBlackUI)
             };
 
             var prefix = (!string.IsNullOrEmpty(gameInfo.Name) ? $"[{gameInfo.Name}]" : "[?]");

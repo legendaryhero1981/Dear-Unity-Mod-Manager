@@ -103,6 +103,7 @@ namespace UnityModManagerNet
             public string GameName;
             public string GameVersionPoint;
             public string GameScriptName;
+            public string FixBlackUI;
 
             static readonly string filepath = Path.Combine(Path.GetDirectoryName(typeof(GameInfo).Assembly.Location), "Config.xml");
 

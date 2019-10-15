@@ -14,22 +14,24 @@ namespace UnityModManagerNet.UI.Utils
         /// </summary>
         public static Texture2D FileToTexture2D(string path, int width, int height)
         {
-            var texture2D = new Texture2D(width, height);
             try
             {
+                var texture2D = new Texture2D(width, height);
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
                     var buffer = new byte[fs.Length];
                     fs.Read(buffer, 0, (int)fs.Length);
                     texture2D.LoadImage(buffer);
                     Logger.Log($"将文件{path}转换为Texture2D对象成功！");
+                    _ = true;
+                    return texture2D;
                 }
             }
             catch (Exception e)
             {
                 Logger.Error($"将文件{path}转换为Texture2D对象失败！错误信息：{e.Message}");
+                return null;
             }
-            return texture2D;
         }
         /// <summary>
         /// 将图片文件转换成base64编码文本

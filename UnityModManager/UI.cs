@@ -70,23 +70,6 @@ namespace UnityModManagerNet
             private static readonly IEnumerator<object> ModActions = DoActionsFromMods();
 
             /// <summary>
-            /// [0.20.0.17] 显示控件的文本提示
-            /// </summary>
-            public static void ShowTooltip()
-            {
-                if (string.IsNullOrEmpty(GUI.tooltip)) return;
-                var tooltip = new GC(GUI.tooltip);
-                var styleRect = GUI.skin.box;
-                var tooltipSize = styleRect.CalcSize(tooltip);
-                var textHeight = styleRect.CalcHeight(tooltip, tooltipSize.x);
-                var styleTooltip = new GS() { normal = { background = new Texture2D(1, 1) } };
-                styleTooltip.normal.background.SetPixels32(new[] { new Color32(0, 0, 0, 220) });
-                var x = (WindowSize.x - tooltipSize.x) / 2;
-                var y = Screen.height + ScrollViewPosition.y - WindowPosition.y - Input.mousePosition.y - Scale(H1FontSize + GlobalFontSize * 2) - textHeight;
-                GUI.Label(new Rect(x, y, tooltipSize.x, tooltipSize.y), GUI.tooltip, styleTooltip);
-                //GUI.Label(new Rect(x, y, tooltipSize.x, tooltipSize.y), $"x={x},y={y},sx={ScrollViewPosition.x},sy={ScrollViewPosition.y},my={Input.mousePosition.y},th={textHeight},ry={WindowPosition.y}", styleTooltip);
-            }
-            /// <summary>
             /// [0.20.0.17] 当前选项卡的ScrollView控件位置
             /// </summary>
             public static Vector2 ScrollViewPosition => MScrollPosition[_tabId];
@@ -120,6 +103,24 @@ namespace UnityModManagerNet
 
             public static UI Instance { get; private set; }
             public bool Opened { get; private set; }
+
+            /// <summary>
+            /// [0.20.0.17] 显示控件的文本提示
+            /// </summary>
+            public static void ShowTooltip()
+            {
+                if (string.IsNullOrEmpty(GUI.tooltip)) return;
+                var tooltip = new GC(GUI.tooltip);
+                var styleRect = GUI.skin.box;
+                var tooltipSize = styleRect.CalcSize(tooltip);
+                var textHeight = styleRect.CalcHeight(tooltip, tooltipSize.x);
+                var styleTooltip = new GS() { normal = { background = new Texture2D(1, 1) } };
+                styleTooltip.normal.background.SetPixels32(new[] { new Color32(0, 0, 0, 220) });
+                var x = (WindowSize.x - tooltipSize.x) / 2;
+                var y = Screen.height + ScrollViewPosition.y - WindowPosition.y - Input.mousePosition.y - Scale(H1FontSize + GlobalFontSize * 2) - textHeight;
+                GUI.Label(new Rect(x, y, tooltipSize.x, tooltipSize.y), GUI.tooltip, styleTooltip);
+                //GUI.Label(new Rect(x, y, tooltipSize.x, tooltipSize.y), $"x={x},y={y},sx={ScrollViewPosition.x},sy={ScrollViewPosition.y},my={Input.mousePosition.y},th={textHeight},ry={WindowPosition.y}", styleTooltip);
+            }
 
             private int ShowModSettings
             {
@@ -233,7 +234,11 @@ namespace UnityModManagerNet
                 _mExpectedUiScale = _mUiScale;
                 Textures.Init();
                 if (null == _mBackground)
+                {
                     _mBackground = FileToTexture2D(FilePathBackground, (int)_mWindowSize.x, (int)_mWindowSize.y);
+                    if (null == _mBackground)
+                        _mBackground = "1".Equals(Config.FixBlackUI) || "true".Equals(Config.FixBlackUI?.ToLower()) ? Textures.WindowLighter : Textures.Window;
+                }
                 StartCoroutine(ModActions);
             }
 
@@ -767,16 +772,19 @@ namespace UnityModManagerNet
             {
                 if (value)
                 {
-                    _mCanvas = new GameObject("", typeof(Canvas), typeof(GraphicRaycaster));
-                    _mCanvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-                    _mCanvas.GetComponent<Canvas>().sortingOrder = short.MaxValue;
+                    _mCanvas = new GameObject("UMM blocking UI", typeof(Canvas), typeof(GraphicRaycaster));
+                    var canvas = _mCanvas.GetComponent<Canvas>();
+                    canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                    canvas.sortingOrder = short.MaxValue;
                     DontDestroyOnLoad(_mCanvas);
-                    var panel = new GameObject("", typeof(Image));
+                    var panel = new GameObject("Image", typeof(Image));
                     panel.transform.SetParent(_mCanvas.transform);
-                    panel.GetComponent<RectTransform>().anchorMin = new Vector2(1, 0);
-                    panel.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);
-                    panel.GetComponent<RectTransform>().offsetMin = Vector2.zero;
-                    panel.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+                    var rect = panel.GetComponent<RectTransform>();
+                    rect.anchorMin = new Vector2(0, 0);
+                    rect.anchorMax = new Vector2(1, 1);
+                    rect.offsetMin = Vector2.zero;
+                    rect.offsetMax = Vector2.zero;
+                    panel.GetComponent<Image>().color = new Color(0, 0, 0, 0.3f);
                 }
                 else if (_mCanvas)
                     Destroy(_mCanvas);
