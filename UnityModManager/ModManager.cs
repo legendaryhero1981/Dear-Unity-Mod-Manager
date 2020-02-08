@@ -268,7 +268,7 @@ namespace UnityModManagerNet
         private static void DFS(string id, IReadOnlyDictionary<string, ModEntry> mods)
         {
             if (ModEntries.Any(m => m.Info.Id == id)) return;
-            foreach (var req in mods[id].Requirements.Keys) DFS(req, mods);
+            foreach (var req in mods[id].Requirements.Keys.Where(mods.ContainsKey)) DFS(req, mods);
             ModEntries.Add(mods[id]);
         }
 
@@ -1013,7 +1013,7 @@ namespace UnityModManagerNet
                     UnityModManager.Logger.Error($"不能找到方法“{namespaceClassnameMethodname}”，MOD“{Info.Id}”未加载！");
                 }
 
-            Exit:
+                Exit:
                 mCache[key] = methodInfo;
                 return methodInfo;
             }
