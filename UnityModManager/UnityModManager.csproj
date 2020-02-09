@@ -11,10 +11,10 @@
     <RootNamespace>UnityModManagerNet</RootNamespace>
     <AssemblyName>UnityModManager</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationVersion>0.21.4.23</ApplicationVersion>
-    <AssemblyVersion>0.21.4.23</AssemblyVersion>
-    <FileVersion>0.21.4.23</FileVersion>
-    <Version>0.21.4.23</Version>
+    <ApplicationVersion>0.21.4.24</ApplicationVersion>
+    <AssemblyVersion>0.21.4.24</AssemblyVersion>
+    <FileVersion>0.21.4.24</FileVersion>
+    <Version>0.21.4.24</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
     <Copyright>Copyright © Legend 2020</Copyright>

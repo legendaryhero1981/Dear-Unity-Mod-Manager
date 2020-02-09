@@ -177,7 +177,7 @@ namespace UnityModManagerNet
             {
                 try
                 {
-                    new GameObject(typeof(UI).FullName, typeof(UI));
+                    var gameObject = new GameObject(typeof(UI).FullName, typeof(UI));
                     return true;
                 }
                 catch (Exception e)
@@ -187,28 +187,27 @@ namespace UnityModManagerNet
                 return false;
             }
 
+            /// <summary>
+            /// [0.21.4.24] 使用独立的协程异步高效地执行来自各Mod的Actions
+            /// </summary>
             private static IEnumerator<object> DoActionsFromMods()
             {
                 Logger.Log($"已启动协程 {typeof(UI).FullName}.DoActionsFromMods！");
+                var waitUntil = new WaitUntil(() => DoActionsAsync().IsCompleted);
+                var waitSeconds = new WaitForSecondsRealtime(1f);
                 while (true)
                 {
-                    var mods = ModEntries.FindAll(m => 0 < m.OnModActions.Count);
-                    if (0 < mods.Count)
-                    {
-                        var task = DoActionsAsync(mods);
-                        yield return new WaitUntil(() => task.IsCompleted);
-                    }
-                    else
-                        yield return new WaitForSecondsRealtime(.1f);
+                    yield return waitUntil;
+                    yield return waitSeconds;
                 }
             }
 
-            private static async Task<int> DoActionsAsync(List<ModEntry> mods)
+            private static async Task<int> DoActionsAsync()
             {
                 return await Task.Run(() =>
                 {
                     var count = 0;
-                    mods.ForEach(m =>
+                    ModEntries.FindAll(m => 0 < m.OnModActions.Count).ForEach(m =>
                     {
                         while (0 < m.OnModActions.Count)
                         {
@@ -218,7 +217,8 @@ namespace UnityModManagerNet
                             count++;
                         }
                     });
-                    Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoActionsAsync 本次扫描共执行了{count}个任务！");
+                    if (0 < count)
+                        Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoActionsAsync 本次扫描共执行了{count}个任务！");
                     return count;
                 });
             }
