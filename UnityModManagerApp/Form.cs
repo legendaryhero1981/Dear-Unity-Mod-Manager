@@ -437,7 +437,7 @@ namespace UnityModManagerNet.Installer
                 btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}{Utils.FileSuffixCache}");
 
             tabControl.TabPages[1].Enabled = true;
-            managerDef = managerDef ?? injectedAssemblyDef;
+            managerDef ??= injectedAssemblyDef;
             var managerInstalled = managerDef.Types.FirstOrDefault(x => x.Name == managerType.Name);
 
             if (managerInstalled != null && (hasInjectedAssembly || selectedGameParams.InstallType == InstallType.DoorstopProxy))

@@ -64,10 +64,6 @@ namespace UnityModManagerNet
             /// [0.21.1.20] 新增Mod依赖列表字段
             /// </summary>
             private static List<string> _mJoinList = new List<string>();
-            /// <summary>
-            /// [0.20.0.17] Mod任务执行
-            /// </summary>
-            private static readonly IEnumerator<object> ModActions = DoActionsFromMods();
 
             /// <summary>
             /// [0.20.0.17] 当前选项卡的ScrollView控件位置
@@ -190,15 +186,18 @@ namespace UnityModManagerNet
             /// <summary>
             /// [0.21.4.24] 使用独立的协程异步高效地执行来自各Mod的Actions
             /// </summary>
-            private static IEnumerator<object> DoActionsFromMods()
+            private static IEnumerator<object> DoActionsFromMods
             {
-                Logger.Log($"已启动协程 {typeof(UI).FullName}.DoActionsFromMods！");
-                var waitUntil = new WaitUntil(() => DoActionsAsync().IsCompleted);
-                var waitSeconds = new WaitForSecondsRealtime(1f);
-                while (true)
+                get
                 {
-                    yield return waitUntil;
-                    yield return waitSeconds;
+                    Logger.Log($"已启动协程 {typeof(UI).FullName}.DoActionsFromMods！");
+                    var waitUntil = new WaitUntil(() => DoActionsAsync().IsCompleted);
+                    var waitSeconds = new WaitForSecondsRealtime(1f);
+                    while (true)
+                    {
+                        yield return waitUntil;
+                        yield return waitSeconds;
+                    }
                 }
             }
 
@@ -239,7 +238,7 @@ namespace UnityModManagerNet
                     if (null == _mBackground)
                         _mBackground = "1".Equals(Config.FixBlackUI) || "true".Equals(Config.FixBlackUI?.ToLower()) ? Textures.WindowLighter : Textures.Window;
                 }
-                StartCoroutine(ModActions);
+                StartCoroutine(DoActionsFromMods);
             }
 
             private void Start()
@@ -252,7 +251,7 @@ namespace UnityModManagerNet
             private void OnDestroy()
             {
                 Logger.Log($"已关闭协程 {typeof(UI).FullName}.DoActionsFromMods！");
-                StopCoroutine(ModActions);
+                StopCoroutine(DoActionsFromMods);
                 SaveSettingsAndParams();
                 Logger.WriteBuffers();
             }
