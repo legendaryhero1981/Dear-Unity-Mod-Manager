@@ -28,7 +28,7 @@ namespace UnityModManagerNet.Installer
             InitPageMods();
         }
 
-        static readonly string[] libraryFiles = new string[]
+        static readonly string[] libraryFiles = new[]
         {
             //"UnityModManager.xml",
             //"0Harmony.dll",
@@ -92,13 +92,13 @@ namespace UnityModManagerNet.Installer
                 {
                     var registry = asm.GetType("Microsoft.Win32.Registry");
                     if (registry == null) continue;
-                    var getValue = registry.GetMethod("GetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
+                    var getValue = registry.GetMethod("GetValue", new[] { typeof(string), typeof(string), typeof(object) });
                     if (getValue != null)
                     {
                         var exePath = getValue.Invoke(null, new object[] { REG_PATH, "ExePath", string.Empty }) as string;
                         if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
                         {
-                            var setValue = registry.GetMethod("SetValue", new Type[] { typeof(string), typeof(string), typeof(object) });
+                            var setValue = registry.GetMethod("SetValue", new[] { typeof(string), typeof(string), typeof(object) });
                             if (setValue != null)
                             {
                                 setValue.Invoke(null, new object[] { REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "DearUnityModManager.exe") });
@@ -474,58 +474,59 @@ namespace UnityModManagerNet.Installer
 
         private string FindGameFolder(string str)
         {
-            var disks = new string[] { @"C:\", @"D:\", @"E:\", @"F:\" };
-            var roots = new string[] { "Games", "Program files", "Program files (x86)", "" };
-            var folders = new string[] { @"Steam\SteamApps\common", @"GoG Galaxy\Games", "" };
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
-                return (from disk in disks
-                        from root in roots
-                        from folder in folders
-                        let path = Path.Combine(disk, root)
-                        select Path.Combine(path, folder)
-                    into path
-                        select Path.Combine(path, str)).FirstOrDefault(Directory.Exists);
+            var disks = new[] { @"C:\", @"D:\", @"E:\", @"F:\" };
+            var roots = new[] { "Games", "Program files", "Program files (x86)", "" };
+            var folders = new[] { @"Steam\SteamApps\common", @"GoG Galaxy\Games", "" };
 
-            disks = new string[] { Environment.GetEnvironmentVariable("HOME") };
-            roots = new string[] { "Library/Application Support", ".steam" };
-            folders = new string[] { "Steam/SteamApps/common", "steam/steamapps/common" };
-            return (from disk in disks
-                    from root in roots
-                    from folder in folders
-                    let path = Path.Combine(disk, root)
-                    select Path.Combine(path, folder)
-                into path
-                    select Path.Combine(path, str)).FirstOrDefault(Directory.Exists);
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                disks = new[] { Environment.GetEnvironmentVariable("HOME") };
+                roots = new[] { "Library/Application Support", ".steam" };
+                folders = new[] { "Steam/SteamApps/common", "steam/steamapps/common", "Steam/steamapps/common" };
+            }
+
+            foreach (var disk in disks)
+                foreach (var root in roots)
+                    foreach (var folder in folders)
+                    {
+                        var path = Path.Combine(disk, root);
+                        path = Path.Combine(path, folder);
+                        path = Path.Combine(path, str);
+                        if (!Directory.Exists(path)) continue;
+                        if (!Utils.IsMacPlatform()) return path;
+                        foreach (var dir in Directory.GetDirectories(path))
+                        {
+                            if (!dir.EndsWith(".app")) continue;
+                            path = Path.Combine(path, dir);
+                            break;
+                        }
+                        return path;
+                    }
+            return null;
         }
 
-        private string FindManagedFolder(string str)
+        private string FindManagedFolder(string path)
         {
             if (Utils.IsMacPlatform())
             {
-                var path = $"{str}/Contents/Resources/Data/Managed";
-                if (Directory.Exists(path))
-                {
-                    return path;
-                }
+                var dir = $"{path}/Contents/Resources/Data/Managed";
+                if (Directory.Exists(dir))
+                    return dir;
+            }
 
-                InactiveForm();
-                Log.Print("选择游戏主目录（包含Contents子目录）。");
-                return null;
-            }
-            var regex = new Regex(".*_Data$");
-            var directory = new DirectoryInfo(str);
-            foreach (var dir in directory.GetDirectories())
+            foreach (var di in new DirectoryInfo(path).GetDirectories())
             {
-                var match = regex.Match(dir.Name);
-                if (!match.Success) continue;
-                var path = Path.Combine(str, $"{dir.Name}{Path.DirectorySeparatorChar}Managed");
-                if (Directory.Exists(path))
-                {
-                    return path;
-                }
+                if ((di.Attributes & System.IO.FileAttributes.ReparsePoint) != 0)
+                    continue;
+
+                var dir = di.FullName;
+                if (dir.EndsWith("Managed") && (File.Exists(Path.Combine(dir, "Assembly-CSharp.dll")) || File.Exists(Path.Combine(dir, "UnityEngine.dll"))))
+                    return dir;
+                var result = FindManagedFolder(dir);
+                if (!string.IsNullOrEmpty(result))
+                    return result;
             }
-            InactiveForm();
-            Log.Print("选择游戏主目录（包含Data子目录）。");
+
             return null;
         }
 

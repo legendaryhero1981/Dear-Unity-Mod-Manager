@@ -260,6 +260,20 @@ namespace UnityModManagerNet
                 }
                 Logger.Log(
                     $"Mods解析完成！成功加载了{ModEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.ManifestModule.Name == "UnityModManager.dll");
+                if (assemblies.Count() > 1)
+                {
+                    Logger.Error($"检测到UnityModManager.dll的额外副本！");
+                    foreach(var ass in assemblies)
+                    {
+                        Logger.Log($"- {ass.CodeBase}");
+                    }
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Logger.Log($"目录“{modsPath}”不存在！");
             }
             GameScripts.OnAfterLoadMods();
             if (!UI.Load()) Logger.Error("不能加载UI！");
@@ -997,7 +1011,7 @@ namespace UnityModManagerNet
 
                         methodInfo = type.GetMethod(methodString,
                             BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, null, types,
-                            new ParameterModifier[0]);
+                            null);
                         if (methodInfo == null && showLog)
                             Logger.Log(types.Length > 0
                                 ? $"未找到方法“{namespaceClassnameMethodname}[{string.Join(", ", types.Select(x => x.Name).ToArray())}]”！"
