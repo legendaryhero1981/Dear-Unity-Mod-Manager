@@ -65,7 +65,10 @@ namespace UnityModManagerNet.Installer
         public string GameVersionPoint;
         public string GameScriptName;
         public string OldPatchTarget;
-        public string Additionally;
+         /// <summary>
+        /// [0.21.8.26]
+        /// </summary>
+       public string Comment;
         public string FixBlackUI;
         //public string MachineConfig;
 
@@ -169,9 +172,11 @@ namespace UnityModManagerNet.Installer
                 }
                 catch (Exception e)
                 {
-                    Log.Print(e.ToString());
+                    Log.Print(e.ToString() + Environment.NewLine + filename);
                 }
             }
+            else
+                Log.Print($"配置文件“{filename}”不存在！");
             return null;
         }
 
@@ -244,7 +249,7 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception e)
             {
-                Log.Print(e.ToString());
+                Log.Print(e.ToString() + Environment.NewLine + path);
             }
         }
 
@@ -264,7 +269,7 @@ namespace UnityModManagerNet.Installer
                 }
                 catch (Exception e)
                 {
-                    Log.Print(e.ToString());
+                    Log.Print(e.ToString() + Environment.NewLine + path);
                 }
             }
             return new Param();

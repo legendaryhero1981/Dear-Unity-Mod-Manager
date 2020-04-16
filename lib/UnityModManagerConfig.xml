@@ -113,8 +113,8 @@
     <GameExe>Risk of Rain 2.exe</GameExe>
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]RoR2.RoR2Application.Awake:After</StartingPoint>
-    <Additionally>You need to download mscorlib.dll file and copy it to the "Risk of Rain 2_Data\Managed" folder. 
+    <Comment>You need to download mscorlib.dll file and copy it to the "Risk of Rain 2_Data\Managed" folder. 
 Save the old file if you want to delete the UMM.
-4.4.2019 - https://bit.ly/2IpuREb</Additionally>
+4.4.2019 - https://bit.ly/2IpuREb</Comment>
   </GameInfo>
 </Config>

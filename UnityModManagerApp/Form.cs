@@ -1,16 +1,15 @@
-﻿using System;
+﻿using dnlib.DotNet;
+using dnlib.DotNet.Emit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using UnityModManagerNet.UI.Utils;
-using dnlib.DotNet;
-using dnlib.DotNet.Emit;
 using UnityModManagerNet.Installer.Properties;
+using UnityModManagerNet.UI.Utils;
 
 namespace UnityModManagerNet.Installer
 {
@@ -20,13 +19,6 @@ namespace UnityModManagerNet.Installer
         const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil _autoSizeFormControlUtil;
-
-        public UnityModManagerForm()
-        {
-            InitializeComponent();
-            Init();
-            InitPageMods();
-        }
 
         static readonly string[] libraryFiles = new[]
         {
@@ -72,6 +64,18 @@ namespace UnityModManagerNet.Installer
         GameInfo selectedGame => (GameInfo)gameList.SelectedItem;
         Param.GameParam selectedGameParams = null;
         ModInfo selectedMod => listMods.SelectedItems.Count > 0 ? mods.Find(x => x.DisplayName == listMods.SelectedItems[0].Text) : null;
+
+        public UnityModManagerForm()
+        {
+            InitializeComponent();
+            Load += UnityModManagerForm_Load;
+        }
+
+        private void UnityModManagerForm_Load(object sender, EventArgs e)
+        {
+            Init();
+            InitPageMods();
+        }
 
         private void Init()
         {
@@ -183,7 +187,7 @@ namespace UnityModManagerNet.Installer
 
         private void UnityModLoaderForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //Properties.Settings.Default.Save();
+            if (config == null) return;
             Log.Writer.Close();
             param.LastSelectedSkin = skinSetBox.SelectedIndex;
             param.Sync(config.GameInfo);
@@ -197,7 +201,6 @@ namespace UnityModManagerNet.Installer
             btnRestore.Enabled = false;
             tabControl.TabPages[1].Enabled = false;
             installedVersion.Text = "-";
-            additionallyGroupBox.Visible = false;
 
             foreach (var ctrl in installTypeGroup.Controls)
             {
@@ -225,7 +228,7 @@ namespace UnityModManagerNet.Installer
                 nameof(GameInfo.StartingPoint),
                 nameof(GameInfo.UIStartingPoint),
                 nameof(GameInfo.OldPatchTarget),
-                nameof(GameInfo.Additionally),
+                nameof(GameInfo.Comment),
                 nameof(GameInfo.FixBlackUI)
             };
 
@@ -253,7 +256,6 @@ namespace UnityModManagerNet.Installer
 
             btnInstall.Text = "安装MOD管理器模块到游戏";
             btnRestore.Enabled = false;
-            additionallyGroupBox.Visible = false;
             gamePath = "";
 
             if (string.IsNullOrEmpty(selectedGameParams.Path) || !Directory.Exists(selectedGameParams.Path))
@@ -333,7 +335,7 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 InactiveForm();
-                Log.Print(e.ToString());
+                Log.Print(e.ToString() + Environment.NewLine + entryAssemblyPath);
                 return;
             }
 
@@ -372,7 +374,7 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 InactiveForm();
-                Log.Print(e.ToString());
+                Log.Print(e.ToString() + Environment.NewLine + injectedEntryAssemblyPath + Environment.NewLine + managerAssemblyPath);
                 return;
             }
 
@@ -466,10 +468,6 @@ namespace UnityModManagerNet.Installer
                 btnInstall.Enabled = true;
                 btnRemove.Enabled = false;
             }
-
-            if (string.IsNullOrEmpty(selectedGame.Additionally)) return;
-            notesTextBox.Text = selectedGame.Additionally;
-            additionallyGroupBox.Visible = true;
         }
 
         private string FindGameFolder(string str)
@@ -613,6 +611,7 @@ namespace UnityModManagerNet.Installer
 
         private void gameList_Changed(object sender, EventArgs e)
         {
+            additionallyGroupBox.Visible = false;
             var selected = (GameInfo)((ComboBox)sender).SelectedItem;
             if (selected != null)
             {
@@ -621,6 +620,12 @@ namespace UnityModManagerNet.Installer
                 selectedGameParams = param.GetGameParam(selected);
                 if (!string.IsNullOrEmpty(selectedGameParams.Path))
                     Log.Print($"游戏目录“{selectedGameParams.Path}”。");
+            }
+
+            if (!string.IsNullOrEmpty(selected.Comment))
+            {
+                notesTextBox.Text = selected.Comment;
+                additionallyGroupBox.Visible = true;
             }
 
             RefreshForm();
