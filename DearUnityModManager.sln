@@ -15,15 +15,31 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManager", "UnityMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityModManagerTests", "UnityModManagerTests\UnityModManagerTests.csproj", "{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0172C731-5E28-464A-8B8B-9199A6F2F17A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{0172C731-5E28-464A-8B8B-9199A6F2F17A}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		ReferenceLibs.props = ReferenceLibs.props
 		Repository.json = Repository.json
-		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
 	EndProjectSection
 	ProjectSection(FolderGlobals) = preProject
 		E_5_4Decompile_4Code_4src_4Dear-Unity-Mod-Manager_4Repository_1json__JsonSchema = http://json.schemastore.org/appveyor
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2F-4115-8425-9BAEE6E153A4}"
+	ProjectSection(SolutionItems) = preProject
+		lib\0Harmony-1.2.dll = lib\0Harmony-1.2.dll
+		lib\0Harmony.dll = lib\0Harmony.dll
+		lib\0Harmony12.dll = lib\0Harmony12.dll
+		lib\Assembly-CSharp-PathfinderKingmaker.dll = lib\Assembly-CSharp-PathfinderKingmaker.dll
+		lib\background.jpg = lib\background.jpg
+		lib\dnlib.dll = lib\dnlib.dll
+		lib\Ionic.Zip.dll = lib\Ionic.Zip.dll
+		lib\IrisSkin4.dll = lib\IrisSkin4.dll
+		lib\Newtonsoft.Json.dll = lib\Newtonsoft.Json.dll
+		lib\System.Xml.dll = lib\System.Xml.dll
+		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
+		lib\winhttp_x64.dll = lib\winhttp_x64.dll
+		lib\winhttp_x86.dll = lib\winhttp_x86.dll
 	EndProjectSection
 EndProject
 Global

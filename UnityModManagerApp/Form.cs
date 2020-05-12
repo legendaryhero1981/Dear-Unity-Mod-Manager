@@ -20,11 +20,10 @@ namespace UnityModManagerNet.Installer
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil _autoSizeFormControlUtil;
 
-        static readonly string[] libraryFiles = new[]
-        {
+        private static readonly string[] LibraryFiles = {
             //"UnityModManager.xml",
-            //"0Harmony.dll",
             "background.jpg",
+            "0Harmony.dll",
             "0Harmony12.dll",
             "0Harmony-1.2.dll",
             "dnlib.dll",
@@ -305,7 +304,7 @@ namespace UnityModManagerNet.Installer
             managerDef = null;
             doorstopPath = Path.Combine(gamePath, doorstopFilename);
             doorstopConfigPath = Path.Combine(gamePath, doorstopConfigFilename);
-            libraryPaths = new string[libraryFiles.Length];
+            libraryPaths = new string[LibraryFiles.Length];
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
             {
@@ -317,8 +316,8 @@ namespace UnityModManagerNet.Installer
             else
                 gameExePath = string.Empty;
 
-            for (var i = 0; i < libraryFiles.Length; i++)
-                libraryPaths[i] = Path.Combine(managerPath, libraryFiles[i]);
+            for (var i = 0; i < LibraryFiles.Length; i++)
+                libraryPaths[i] = Path.Combine(managerPath, LibraryFiles[i]);
 
             var path = new DirectoryInfo(Application.StartupPath).FullName;
             if (path.StartsWith(gamePath))
@@ -973,7 +972,7 @@ namespace UnityModManagerNet.Installer
 
             for (var i = 0; i < libraryPaths.Length; i++)
             {
-                var filename = libraryFiles[i];
+                var filename = LibraryFiles[i];
                 var path = libraryPaths[i];
                 if (action == Actions.Install)
                 {

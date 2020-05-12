@@ -11,10 +11,10 @@
     <RootNamespace>UnityModManagerNet</RootNamespace>
     <AssemblyName>UnityModManager</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationVersion>0.21.8.26</ApplicationVersion>
-    <AssemblyVersion>0.21.8.26</AssemblyVersion>
-    <FileVersion>0.21.8.26</FileVersion>
-    <Version>0.21.8.26</Version>
+    <ApplicationVersion>0.22.1.27</ApplicationVersion>
+    <AssemblyVersion>0.22.1.27</AssemblyVersion>
+    <FileVersion>0.22.1.27</FileVersion>
+    <Version>0.22.1.27</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
     <Copyright>Copyright © Legend 2020</Copyright>
@@ -31,12 +31,8 @@
       <Private>False</Private>
       <Aliases>PathfinderKingmaker</Aliases>
     </Reference>
-    <Reference Include="0Harmony-1.2">
-      <HintPath>..\lib\0Harmony-1.2.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="0Harmony12">
-      <HintPath>..\lib\0Harmony12.dll</HintPath>
+    <Reference Include="0Harmony">
+      <HintPath>..\lib\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="dnlib">

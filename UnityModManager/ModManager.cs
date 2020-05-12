@@ -1,7 +1,5 @@
 ﻿using dnlib.DotNet;
 
-using Harmony12;
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -40,6 +38,8 @@ namespace UnityModManagerNet
         /// </summary>
         public static Version version { get; } = typeof(UnityModManager).Assembly.GetName().Version;
         internal static string modsPath { get; private set; }
+        [Obsolete("请使用modsPath！OldModsPath与0.13之前版本的mod兼容。")]
+        public static string OldModsPath = "";
         internal static Param Params { get; set; }
         internal static GameInfo Config { get; set; }
         /// <summary>
@@ -62,8 +62,7 @@ namespace UnityModManagerNet
 
         public static bool Initialize()
         {
-            if (initialized)
-                return true;
+            if (initialized) return true;
             initialized = true;
             Logger.Clear();
             Logger.Log("正在初始化数据……");
@@ -78,9 +77,10 @@ namespace UnityModManagerNet
             {
                 Debug.LogException(e);
             }
-
             unityVersion = ParseVersion(Application.unityVersion);
             Logger.Log($"Unity引擎版本：{unityVersion}。");
+            if (!Assembly.GetExecutingAssembly().Location.Contains($"Managed{Path.DirectorySeparatorChar}UnityModManager"))
+                Logger.Error(@"UnityModeManager文件夹只能位于\Game\*Data\Managed\目录中！此文件夹在安装后通过DearUnityModManager.exe自动创建。");
             Config = GameInfo.Load();
             if (Config == null) return false;
             Logger.Log($"游戏名称：{Config.Name}。");
@@ -88,7 +88,7 @@ namespace UnityModManagerNet
             modsPath = Path.Combine(Environment.CurrentDirectory, Config.ModsDirectory);
             if (!Directory.Exists(modsPath))
             {
-                var modsPath2 = Path.Combine(Path.GetDirectoryName(Environment.CurrentDirectory), Config.ModsDirectory);
+                var modsPath2 = Path.Combine(Path.GetDirectoryName(Environment.CurrentDirectory) ?? string.Empty, Config.ModsDirectory);
 
                 if (Directory.Exists(modsPath2))
                     modsPath = modsPath2;
@@ -96,6 +96,7 @@ namespace UnityModManagerNet
                     Directory.CreateDirectory(modsPath);
             }
             Logger.Log($"Mods路径：{modsPath}。");
+            OldModsPath = modsPath;
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             return true;
@@ -104,16 +105,32 @@ namespace UnityModManagerNet
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
-            if (assembly != null)
-                return assembly;
-            if (!args.Name.StartsWith("0Harmony,")) return null;
-            var regex = new Regex(@"Version=(\d+\.\d+)");
-            var match = regex.Match(args.Name);
-            if (!match.Success) return null;
-            var ver = match.Groups[1].Value;
-            var filepath = Path.Combine(Path.GetDirectoryName(typeof(UnityModManager).Assembly.Location),
-                $"0Harmony-{ver}.dll");
+            if (assembly != null) return assembly;
+
+            string filename = null;
+            switch (args.Name)
+            {
+                case "0Harmony12, Version=1.2.0.1, Culture=neutral, PublicKeyToken=null":
+                    filename = "0Harmony12.dll";
+                    break;
+                case "0Harmony-1.2, Version=1.2.0.1, Culture=neutral, PublicKeyToken=null":
+                    filename = "0Harmony-1.2.dll";
+                    break;
+                default:
+                    {
+                        if (args.Name.StartsWith("0Harmony, Version=2."))
+                        {
+                            filename = "0Harmony.dll";
+                        }
+
+                        break;
+                    }
+            }
+
+            if (filename == null) return null;
+            var filepath = Path.Combine(Path.GetDirectoryName(typeof(UnityModManager).Assembly.Location) ?? string.Empty, filename);
             if (!File.Exists(filepath)) return null;
+
             try
             {
                 return Assembly.LoadFile(filepath);
@@ -264,7 +281,7 @@ namespace UnityModManagerNet
                 if (assemblies.Count() > 1)
                 {
                     Logger.Error($"检测到UnityModManager.dll的额外副本！");
-                    foreach(var ass in assemblies)
+                    foreach (var ass in assemblies)
                     {
                         Logger.Log($"- {ass.CodeBase}");
                     }
@@ -747,22 +764,28 @@ namespace UnityModManagerNet
                             Logger.Log($"依赖的MOD“{id}”已被禁用！");
                     }
 
-                if (ErrorOnLoading)
-                    return false;
+                if (ErrorOnLoading) return false;
+
                 var assemblyPath = System.IO.Path.Combine(Path, Info.AssemblyName);
+                var pdbPath = assemblyPath.Replace(".dll", ".pdb");
+
                 if (File.Exists(assemblyPath))
                 {
                     try
                     {
                         var assemblyCachePath = assemblyPath;
+                        var pdbCachePath = pdbPath;
                         var cacheExists = false;
+
                         if (mFirstLoading)
                         {
                             var fi = new FileInfo(assemblyPath);
                             var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + version.GetHashCode() +
                                                  ManagerVersion.GetHashCode()).GetHashCode();
                             assemblyCachePath = $"{assemblyPath}.{hash}.cache";
+                            pdbCachePath = assemblyCachePath + ".pdb";
                             cacheExists = File.Exists(assemblyCachePath);
+
                             if (!cacheExists)
                                 foreach (var filepath in Directory.GetFiles(Path, "*.cache"))
                                     try
@@ -778,7 +801,10 @@ namespace UnityModManagerNet
                         {
                             if (mFirstLoading)
                             {
-                                if (!cacheExists) File.Copy(assemblyPath, assemblyCachePath, true);
+                                if (!cacheExists)
+                                    File.Copy(assemblyPath, assemblyCachePath, true);
+                                if (File.Exists(pdbPath))
+                                    File.Copy(pdbPath, pdbCachePath, true);
                                 Assembly = Assembly.LoadFile(assemblyCachePath);
                                 foreach (var type in Assembly.GetTypes())
                                 {
@@ -790,7 +816,7 @@ namespace UnityModManagerNet
                             }
                             else
                             {
-                                Assembly = Assembly.Load(File.ReadAllBytes(assemblyPath));
+                                Assembly = File.Exists(pdbPath) ? Assembly.Load(File.ReadAllBytes(assemblyPath), File.ReadAllBytes(pdbPath)) : Assembly.Load(File.ReadAllBytes(assemblyPath));
                             }
                         }
                         else
@@ -801,6 +827,9 @@ namespace UnityModManagerNet
                                 foreach (var item in modDef.GetTypeRefs())
                                     if (item.FullName == "UnityModManagerNet.UnityModManager")
                                         item.ResolutionScope = new AssemblyRefUser(thisModuleDef.Assembly);
+                                foreach (var item in modDef.GetMemberRefs().Where(member => member.IsFieldRef))
+                                    if (item.Name == "modsPath" && item.Class.FullName == "UnityModManagerNet.UnityModManager")
+                                        item.Name = "OldModsPath";
                                 modDef.Write(assemblyCachePath);
                             }
 
@@ -891,10 +920,8 @@ namespace UnityModManagerNet
                     if (!Active && (OnUnload == null || OnUnload.Invoke(this)))
                     {
                         mCache.Clear();
-                        typeof(Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic)
-                            ?.SetValue(null, new AccessCache());
-                        typeof(Harmony.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic)
-                            ?.SetValue(null, new Harmony.AccessCache());
+                        var accessCacheType = typeof(HarmonyLib.Traverse).Assembly.GetType("HarmonyLib.AccessCache");
+                        typeof(HarmonyLib.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic)?.SetValue(null, Activator.CreateInstance(accessCacheType));
                         var oldAssembly = Assembly;
                         Assembly = null;
                         Started = false;
@@ -1027,7 +1054,7 @@ namespace UnityModManagerNet
                     UnityModManager.Logger.Error($"不能找到方法“{namespaceClassnameMethodname}”，MOD“{Info.Id}”未加载！");
                 }
 
-                Exit:
+            Exit:
                 mCache[key] = methodInfo;
                 return methodInfo;
             }

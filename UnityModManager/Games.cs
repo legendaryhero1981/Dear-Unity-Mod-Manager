@@ -103,7 +103,7 @@ namespace UnityModManagerNet
                     {
                         if (_escMode) return;
                         KM.Game.Instance.StopMode(KM.GameModes.GameModeType.EscMode);
-                        Logger.Log($"已解冻游戏UI，当前游戏模式为{KM.Game.Instance.CurrentMode.ToString()}！");
+                        Logger.Log($"已解冻游戏UI，当前游戏模式为{KM.Game.Instance.CurrentMode}！");
                     };
                 }
             }
