@@ -14,6 +14,7 @@
     <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
     <OldPatchTarget>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</OldPatchTarget>
     <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
+    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="缺氧">
     <GameName>Oxygen Not Included</GameName>
@@ -25,6 +26,7 @@
     <StartingPoint>[Assembly-CSharp-firstpass.dll]App.Awake:After</StartingPoint>
     <OldPatchTarget>[Assembly-CSharp-firstpass.dll]App.Awake:After</OldPatchTarget>
     <GameVersionPoint>[Assembly-CSharp.dll]KleiVersion.ChangeList</GameVersionPoint>
+    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="双点医院">
     <GameName>Two Point Hospital</GameName>
@@ -35,6 +37,7 @@
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</StartingPoint>
     <OldPatchTarget>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</OldPatchTarget>
+    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="汽车修理工模拟2018">
     <GameName>Car Mechanic Simulator 2018</GameName>
@@ -44,6 +47,7 @@
     <GameExe>cms2018.exe</GameExe>
     <EntryPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.12.2</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="花园瓜子">
     <GameName>Garden Paws</GameName>
@@ -51,6 +55,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <EntryPoint>[Assembly-CSharp.dll]GPLauncher.Awake:After</EntryPoint>
+    <MinimalManagerVersion>0.12.4</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="一起玩农场">
     <GameName>Farm Together</GameName>
@@ -58,6 +63,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <EntryPoint>[Assembly-CSharp.dll]BaseGameInit.Awake:After</EntryPoint>
+    <MinimalManagerVersion>0.12.5</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="滑板XL">
     <GameName>Skater XL</GameName>
@@ -65,6 +71,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <EntryPoint>[Assembly-CSharp.dll]TitleScreen.Start:After</EntryPoint>
+    <MinimalManagerVersion>0.12.5</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="波西亚时光">
     <GameName>My Time At Portia</GameName>
@@ -76,6 +83,7 @@
     <StartingPoint>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</StartingPoint>
     <OldPatchTarget>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</OldPatchTarget>
     <GameVersionPoint>[Assembly-CSharp.dll]Pathea.Version.GetString</GameVersionPoint>
+    <MinimalManagerVersion>0.12.6</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="人类的黎明">
     <GameName>Dawn of Man</GameName>
@@ -85,6 +93,7 @@
     <GameExe>DawnOfMan.exe</GameExe>
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]DawnOfMan.TitleStateMain.init:After</StartingPoint>
+    <MinimalManagerVersion>0.13.1</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="脱轨的山谷">
     <GameName>Derail Valley</GameName>
@@ -94,6 +103,7 @@
     <GameExe>DerailValley.exe</GameExe>
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Bootstrap.StartGame:After</StartingPoint>
+    <MinimalManagerVersion>0.14.1</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="东方之茵">
     <GameName>Eastshade</GameName>
@@ -103,6 +113,7 @@
     <GameExe>Eastshade.exe</GameExe>
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]GameManager.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.15.0</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="雨中冒险2">
     <GameName>Risk of Rain 2</GameName>
@@ -113,8 +124,179 @@
     <GameExe>Risk of Rain 2.exe</GameExe>
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]RoR2.RoR2Application.Awake:After</StartingPoint>
-    <Comment>You need to download mscorlib.dll file and copy it to the "Risk of Rain 2_Data\Managed" folder. 
-Save the old file if you want to delete the UMM.
-4.4.2019 - https://bit.ly/2IpuREb</Comment>
+    <Comment>您需要下载mscorlib.dll文件并将其复制到“Risk of Rain 2\*_Data\Managed”文件夹。</Comment>
   </GameInfo>
+    <GameInfo Name="赛车经理">
+        <GameName>Motorsport Manager</GameName>
+        <Folder>Motorsport Manager</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>MM.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]App.Awake:After</StartingPoint>
+        <UIStartingPoint>[Assembly-CSharp.dll]CreditsScreen.OnStart:After</UIStartingPoint>
+        <MinimalManagerVersion>0.18.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="工业小镇">
+        <GameName>Factory Town</GameName>
+        <Folder>Factory Town</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>Factory Town.exe</GameExe>
+        <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]Platform.Awake:After</StartingPoint>
+        <MinimalManagerVersion>0.18.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="终极钓鱼模拟器 ">
+        <GameName>Ultimate Fishing Simulator</GameName>
+        <Folder>Ultimate Fishing Simulator</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>UltimateFishing*.exe</GameExe>
+        <EntryPoint>[UnityEngine.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]MenuManager.Awake:After</StartingPoint>
+        <MinimalManagerVersion>0.18.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="怪物避难所">
+        <GameName>Monster Sanctuary</GameName>
+        <Folder>Monster Sanctuary</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>Monster Sanctuary.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:After</StartingPoint>
+        <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="深空遗物">
+        <GameName>Deep Sky Derelicts</GameName>
+        <Folder>Deep Sky Derelicts</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>Deep Sky Derelicts.exe</GameExe>
+        <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]Derelicts.MainMenu.Awake:After</StartingPoint>
+        <GameVersionPoint>[Assembly-CSharp.dll]Derelicts.MainMenu.buildVersion</GameVersionPoint>
+        <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="松树">
+        <GameName>Pine</GameName>
+        <Folder>Pine</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>pine.exe</GameExe>
+        <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:Before</StartingPoint>
+        <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="自由人：游击战争">
+        <GameName>Freeman Guerrilla Warfare</GameName>
+        <Folder>Freeman Guerrilla Warfare</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>StartFGW.exe</GameExe>
+        <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]RM.Awake:Before</StartingPoint>
+        <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="星际公司：联结">
+        <GameName>Starcom Nexus</GameName>
+        <Folder>Starcom Nexus</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>StarcomNexus.exe</GameExe>
+        <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]MainScreen.Start:Before</StartingPoint>
+        <MinimalManagerVersion>0.21.3</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="金属单元">
+        <GameName>Metal Unit</GameName>
+        <Folder>Metal Unit</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>MetalUnit.exe</GameExe>
+        <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]TitleMenuController.Awake:After</StartingPoint>
+        <MinimalManagerVersion>0.21.4</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="圣女战旗">
+        <GameName>Banner of the Maid</GameName>
+        <Folder>Banner of the Maid</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>banner.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]Game.Client.UITitleMenu.Awake:Before</StartingPoint>
+        <MinimalManagerVersion>0.21.4</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="瘟疫公司：进化">
+        <GameName>Plague Inc: Evolved</GameName>
+       <Folder>Plague Inc Evolved</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>PlagueIncEvolved.exe</GameExe>
+        <EntryPoint>[UnityEngine.dll]UnityEngine.Graphics.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]CMainMenuScreen.Initialise:After</StartingPoint>
+        <MinimalManagerVersion>0.21.5</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="终极提督：航海时代">
+        <GameName>Ultimate Admiral Age of Sea</GameName>
+        <Folder>Ultimate Admiral Age of Sea</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>build.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]UltimateAdmiral.UI.MainMenuController.Init:Before</StartingPoint>
+        <MinimalManagerVersion>0.21.5</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="核爆RPG">
+        <GameName>ATOM RPG</GameName>
+        <Folder>ATOM RPG Post-apocalyptic indie game</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>AtomRPG_x64.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[AtomGame.dll]MainMenu.Start:After</StartingPoint>
+        <MinimalManagerVersion>0.21.7</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="丛林地狱">
+        <GameName>Green Hell</GameName>
+        <Folder>Green Hell</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>GH.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]GreenHellGame.Initialize:Before</StartingPoint>
+        <MinimalManagerVersion>0.21.7</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="骷髅：英雄杀手">
+        <GameName>Skul: The Hero Slayer</GameName>
+        <Folder>Skul</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>Skul.exe</GameExe>
+        <EntryPoint>[Assembly-CSharp.dll]Scenes.Main.Awake:Before</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]Scenes.Main.Awake:After</StartingPoint>
+        <MinimalManagerVersion>0.21.8</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="逃脱者2">
+        <GameName>The Escapists 2</GameName>
+        <Folder>The Escapists 2</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>TheEscapists2.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]MainFrontendMenu.Show:After</StartingPoint>
+        <MinimalManagerVersion>0.21.8</MinimalManagerVersion>
+    </GameInfo>
+    <GameInfo Name="永恒之柱2：死火">
+        <GameName>Pillars of Eternity II: Deadfire</GameName>
+        <Folder>Pillars of Eternity II Deadfire</Folder>
+        <ModsDirectory>Mods</ModsDirectory>
+        <ModInfo>Info.json</ModInfo>
+        <GameExe>PillarsOfEternityII.exe</GameExe>
+        <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+        <StartingPoint>[Assembly-CSharp.dll]Game.GameState.Awake:After</StartingPoint>
+        <UIStartingPoint>[Assembly-CSharp.dll]Game.UI.UIMainMenuManager.OnyxStart:After</UIStartingPoint>
+        <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
+    </GameInfo>
 </Config>

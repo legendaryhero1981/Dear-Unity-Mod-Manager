@@ -82,7 +82,6 @@ namespace UnityModManagerNet.Installer
 
         internal static bool TryParseEntryPoint(string str, out string assembly)
         {
-            assembly = string.Empty;
             return TryParseEntryPoint(str, out assembly, out _, out _, out _);
         }
 
@@ -169,36 +168,37 @@ namespace UnityModManagerNet.Installer
             }
 
             foundMethod = targetClass.Methods.FirstOrDefault(x => x.Name == methodName);
-            if (foundMethod == null)
+            if (foundMethod != null) return true;
+            if (createConstructor && methodName == ".cctor")
             {
-                if (createConstructor && methodName == ".cctor")
+                //var m = new MethodDefUser(".cctor", assemblyDef.CorLibTypes.Void, MethodAttributes.Private | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.Static);
+                var typeDef = ModuleDefMD.Load(typeof(Utils).Module).Types.FirstOrDefault(x => x.FullName == typeof(Utils).FullName);
+                var method = typeDef.Methods.FirstOrDefault(x => x.Name == ".cctor");
+                if (method != null)
                 {
-                    //var m = new MethodDefUser(".cctor", assemblyDef.CorLibTypes.Void, MethodAttributes.Private | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.Static);
-                    var typeDef = ModuleDefMD.Load(typeof(Utils).Module).Types.FirstOrDefault(x => x.FullName == typeof(Utils).FullName);
-                    var method = typeDef.Methods.FirstOrDefault(x => x.Name == ".cctor");
-                    if (method != null)
-                    {
-                        typeDef.Methods.Remove(method);
-                        targetClass.Methods.Add(method);
-                        foundMethod = method;
+                    typeDef.Methods.Remove(method);
+                    targetClass.Methods.Add(method);
+                    foundMethod = method;
 
-                        return true;
-                    }
+                    return true;
                 }
-                Log.Print($"找不到方法名称“{methodName}”！");
-                return false;
             }
-
-            return true;
+            Log.Print($"找不到方法名称“{methodName}”！");
+            return false;
         }
 
         internal static string ResolveOSXFileUrl(string url)
         {
-            var p = new Process();
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.FileName = "osascript";
-            p.StartInfo.Arguments = $"-e \"获取posix文件的路径 \\\"{url}\\\"\"";
+            var p = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    FileName = "osascript",
+                    Arguments = $"-e \"获取posix文件的路径 \\\"{url}\\\"\""
+                }
+            };
             p.Start();
             var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
@@ -241,16 +241,13 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        internal static bool MakeBackup(string[] arr)
+        internal static bool MakeBackup(List<string> arr)
         {
             try
             {
-                foreach (var path in arr)
+                foreach (var path in arr.Where(File.Exists))
                 {
-                    if (File.Exists(path))
-                    {
-                        File.Copy(path, $"{path}{FileSuffixBak}", true);
-                    }
+                    File.Copy(path, $"{path}{FileSuffixBak}", true);
                 }
             }
             catch (Exception e)
@@ -281,7 +278,7 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        internal static bool RestoreBackup(string[] arr)
+        internal static bool RestoreBackup(List<string> arr)
         {
             try
             {
@@ -322,18 +319,12 @@ namespace UnityModManagerNet.Installer
             return true;
         }
 
-        internal static bool DeleteBackup(string[] arr)
+        internal static bool DeleteBackup(List<string> arr)
         {
             try
             {
-                foreach (var path in arr)
-                {
-                    var backup = $"{path}{FileSuffixBak}";
-                    if (File.Exists(backup))
-                    {
-                        File.Delete(backup);
-                    }
-                }
+                foreach (var backup in arr.Select(path => $"{path}{FileSuffixBak}").Where(File.Exists))
+                    File.Delete(backup);
             }
             catch (Exception e)
             {
@@ -374,7 +365,6 @@ namespace UnityModManagerNet.Installer
             // Offset to PE header is always at 0x3C.
             // The PE header starts with "PE\0\0" =  0x50 0x45 0x00 0x00,
             // followed by a 2-byte machine type field (see the document above for the enum).
-            //
             var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
             var br = new BinaryReader(fs);
             fs.Seek(0x3c, SeekOrigin.Begin);

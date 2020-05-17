@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace UnityModManagerNet.Installer
 {
@@ -65,12 +65,9 @@ namespace UnityModManagerNet.Installer
         public string GameVersionPoint;
         public string GameScriptName;
         public string OldPatchTarget;
-         /// <summary>
-        /// [0.21.8.26]
-        /// </summary>
-       public string Comment;
+        public string Comment;
         public string FixBlackUI;
-        //public string MachineConfig;
+        public string MinimalManagerVersion;
 
         public override string ToString()
         {

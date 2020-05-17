@@ -3,12 +3,13 @@
 
 #
 # 目前版本
-# v0.22.1.27
+# v0.22.3.28
 
 #
 # 此项目使用到的第三方类库有：
 - [unity-mod-manager](https://github.com/newman55/unity-mod-manager)
 - [Harmony](https://github.com/pardeike/Harmony)
+- [HarmonyProxy](https://github.com/spacehamster/HarmonyProxy)
 - [UnityDoorstop](https://github.com/NeighTools/UnityDoorstop)
 - [dnlib](https://github.com/0xd4d/dnlib)
 - [Json.NET](https://github.com/JamesNK/Newtonsoft.Json)

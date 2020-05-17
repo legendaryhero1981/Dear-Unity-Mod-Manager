@@ -13,14 +13,16 @@ namespace UnityModManagerNet
         public static void OpenUnityFileLog()
         {
             var folders = new[] { Application.persistentDataPath, Application.dataPath };
+            var files = new[] { "Player.log", "output_log.txt" };
             foreach (var folder in folders)
-            {
-                var filepath = Path.Combine(folder, "output_log.txt");
-                if (!File.Exists(filepath)) continue;
-                Thread.Sleep(500);
-                Application.OpenURL(filepath);
-                return;
-            }
+                foreach (var file in files)
+                {
+                    var filepath = Path.Combine(folder, file);
+                    if (!File.Exists(filepath)) continue;
+                    Thread.Sleep(500);
+                    Application.OpenURL(filepath);
+                    return;
+                }
         }
 
         public static Version ParseVersion(string str)
@@ -54,7 +56,7 @@ namespace UnityModManagerNet
             var p = (int)Environment.OSVersion.Platform;
             return p == 4 || p == 6 || p == 128;
         }
- 
+
         public static bool IsMacPlatform()
         {
             var p = (int)Environment.OSVersion.Platform;

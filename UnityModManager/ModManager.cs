@@ -108,24 +108,12 @@ namespace UnityModManagerNet
             if (assembly != null) return assembly;
 
             string filename = null;
-            switch (args.Name)
-            {
-                case "0Harmony12, Version=1.2.0.1, Culture=neutral, PublicKeyToken=null":
-                    filename = "0Harmony12.dll";
-                    break;
-                case "0Harmony-1.2, Version=1.2.0.1, Culture=neutral, PublicKeyToken=null":
-                    filename = "0Harmony-1.2.dll";
-                    break;
-                default:
-                    {
-                        if (args.Name.StartsWith("0Harmony, Version=2."))
-                        {
-                            filename = "0Harmony.dll";
-                        }
-
-                        break;
-                    }
-            }
+            if (args.Name.StartsWith("0Harmony12"))
+                filename = "0Harmony12.dll";
+            else if (args.Name.StartsWith("0Harmony, Version=1.") || args.Name.StartsWith("0Harmony-1.2"))
+                filename = "0Harmony-1.2.dll";
+            else if (args.Name.StartsWith("0Harmony, Version=2."))
+                filename = "0Harmony.dll";
 
             if (filename == null) return null;
             var filepath = Path.Combine(Path.GetDirectoryName(typeof(UnityModManager).Assembly.Location) ?? string.Empty, filename);
@@ -613,7 +601,7 @@ namespace UnityModManagerNet
                 Logger = new ModLogger(Info.Id);
                 Version = ParseVersion(info.Version);
                 ManagerVersion = !string.IsNullOrEmpty(info.ManagerVersion)
-                    ? ParseVersion(info.ManagerVersion)
+                    ? ParseVersion(info.ManagerVersion) : !string.IsNullOrEmpty(Config.MinimalManagerVersion) ? ParseVersion(Config.MinimalManagerVersion)
                     : new Version();
                 GameVersion = !string.IsNullOrEmpty(info.GameVersion) ? ParseVersion(info.GameVersion) : new Version();
 
@@ -787,7 +775,7 @@ namespace UnityModManagerNet
                             cacheExists = File.Exists(assemblyCachePath);
 
                             if (!cacheExists)
-                                foreach (var filepath in Directory.GetFiles(Path, "*.cache"))
+                                foreach (var filepath in Directory.GetFiles(Path, "*.cache*"))
                                     try
                                     {
                                         File.Delete(filepath);
@@ -802,9 +790,22 @@ namespace UnityModManagerNet
                             if (mFirstLoading)
                             {
                                 if (!cacheExists)
-                                    File.Copy(assemblyPath, assemblyCachePath, true);
-                                if (File.Exists(pdbPath))
-                                    File.Copy(pdbPath, pdbCachePath, true);
+                                {
+                                    var hasChanges = false;
+                                    var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
+                                    foreach (var item in modDef.GetAssemblyRefs())
+                                    {
+                                        if (!item.FullName.StartsWith("0Harmony, Version=1.")) continue;
+                                        item.Name = "0Harmony-1.2";
+                                        hasChanges = true;
+                                    }
+                                    if (hasChanges)
+                                        modDef.Write(assemblyCachePath);
+                                    else
+                                        File.Copy(assemblyPath, assemblyCachePath, true);
+                                    if (File.Exists(pdbPath))
+                                        File.Copy(pdbPath, pdbCachePath, true);
+                                }
                                 Assembly = Assembly.LoadFile(assemblyCachePath);
                                 foreach (var type in Assembly.GetTypes())
                                 {
@@ -815,22 +816,36 @@ namespace UnityModManagerNet
                                 }
                             }
                             else
-                            {
                                 Assembly = File.Exists(pdbPath) ? Assembly.Load(File.ReadAllBytes(assemblyPath), File.ReadAllBytes(pdbPath)) : Assembly.Load(File.ReadAllBytes(assemblyPath));
-                            }
                         }
                         else
                         {
                             if (!cacheExists)
                             {
+                                var hasChanges = false;
                                 var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
                                 foreach (var item in modDef.GetTypeRefs())
                                     if (item.FullName == "UnityModManagerNet.UnityModManager")
+                                    {
                                         item.ResolutionScope = new AssemblyRefUser(thisModuleDef.Assembly);
+                                        hasChanges = true;
+                                    }
                                 foreach (var item in modDef.GetMemberRefs().Where(member => member.IsFieldRef))
                                     if (item.Name == "modsPath" && item.Class.FullName == "UnityModManagerNet.UnityModManager")
+                                    {
                                         item.Name = "OldModsPath";
-                                modDef.Write(assemblyCachePath);
+                                        hasChanges = true;
+                                    }
+                                foreach (var item in modDef.GetAssemblyRefs())
+                                {
+                                    if (!item.FullName.StartsWith("0Harmony, Version=1.")) continue;
+                                    item.Name = "0Harmony-1.2";
+                                    hasChanges = true;
+                                }
+                                if (hasChanges)
+                                    modDef.Write(assemblyCachePath);
+                                else
+                                    File.Copy(assemblyPath, assemblyCachePath, true);
                             }
 
                             Assembly = Assembly.LoadFile(assemblyCachePath);

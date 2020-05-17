@@ -25,10 +25,9 @@ namespace UnityModManagerNet
             public float WindowWidth;
             public float WindowHeight;
             public float UIScale = 1f;
-
             public List<Mod> ModParams = new List<Mod>();
 
-            static readonly string filepath = Path.Combine(Path.GetDirectoryName(typeof(Param).Assembly.Location), "Params.xml");
+            private static readonly string Filepath = Path.Combine(Path.GetDirectoryName(typeof(Param).Assembly.Location) ?? string.Empty, "Params.xml");
 
             public void Save()
             {
@@ -39,38 +38,33 @@ namespace UnityModManagerNet
                     {
                         ModParams.Add(new Mod { Id = mod.Info.Id, Enabled = mod.Enabled });
                     }
-                    using (var writer = new StreamWriter(filepath))
-                    {
-                        var serializer = new XmlSerializer(typeof(Param));
-                        serializer.Serialize(writer, this);
-                    }
+
+                    using var writer = new StreamWriter(Filepath);
+                    var serializer = new XmlSerializer(typeof(Param));
+                    serializer.Serialize(writer, this);
                 }
                 catch (Exception e)
                 {
-                    Logger.Error($"写入文件“{filepath}”失败！");
+                    Logger.Error($"写入文件“{Filepath}”失败！");
                     Debug.LogException(e);
                 }
             }
 
             public static Param Load()
             {
-                if (File.Exists(filepath))
+                if (!File.Exists(Filepath)) return new Param();
+                try
                 {
-                    try
-                    {
-                        using (var stream = File.OpenRead(filepath))
-                        {
-                            var serializer = new XmlSerializer(typeof(Param));
-                            var result = serializer.Deserialize(stream) as Param;
-                            
-                            return result;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error($"读取文件“{filepath}”失败！");
-                        Debug.LogException(e);
-                    }
+                    using var stream = File.OpenRead(Filepath);
+                    var serializer = new XmlSerializer(typeof(Param));
+                    var result = serializer.Deserialize(stream) as Param;
+
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"读取文件“{Filepath}”失败！");
+                    Debug.LogException(e);
                 }
                 return new Param();
             }
@@ -104,21 +98,20 @@ namespace UnityModManagerNet
             public string GameVersionPoint;
             public string GameScriptName;
             public string FixBlackUI;
+            public string MinimalManagerVersion;
 
-            static readonly string filepath = Path.Combine(Path.GetDirectoryName(typeof(GameInfo).Assembly.Location), "Config.xml");
+            private static readonly string Filepath = Path.Combine(Path.GetDirectoryName(typeof(GameInfo).Assembly.Location) ?? string.Empty, "Config.xml");
 
             public static GameInfo Load()
             {
                 try
                 {
-                    using (var stream = File.OpenRead(filepath))
-                    {
-                        return new XmlSerializer(typeof(GameInfo)).Deserialize(stream) as GameInfo;
-                    }
+                    using var stream = File.OpenRead(Filepath);
+                    return new XmlSerializer(typeof(GameInfo)).Deserialize(stream) as GameInfo;
                 }
                 catch (Exception e)
                 {
-                    Logger.Error($"读取文件“{filepath}”失败！");
+                    Logger.Error($"读取文件“{Filepath}”失败！");
                     Debug.LogException(e);
                     return null;
                 }

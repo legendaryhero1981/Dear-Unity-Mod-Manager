@@ -20,20 +20,25 @@ namespace UnityModManagerNet.Installer
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil _autoSizeFormControlUtil;
 
-        private static readonly string[] LibraryFiles = {
-            //"UnityModManager.xml",
-            "background.jpg",
-            "0Harmony.dll",
-            "0Harmony12.dll",
-            "0Harmony-1.2.dll",
-            "dnlib.dll",
-            "System.Xml.dll",
-            "UnityModManager.dll"
+        private static readonly Version VER_0_13 = new Version(0, 13);
+        private static readonly Version VER_0_22 = new Version(0, 22);
+
+        [Flags]
+        enum LibIncParam { Normal = 0, Minimal_lt_0_22 = 1 }
+
+        private static readonly Dictionary<string, LibIncParam> libraryFiles = new Dictionary<string, LibIncParam>
+        {
+            { "0Harmony.dll", LibIncParam.Normal },
+            { "0Harmony12.dll", LibIncParam.Minimal_lt_0_22 },
+            { "0Harmony-1.2.dll", LibIncParam.Minimal_lt_0_22 },
+            { "dnlib.dll", LibIncParam.Normal },
+            { "System.Xml.dll", LibIncParam.Normal },
+            { nameof(UnityModManager) + ".dll", LibIncParam.Normal }
         };
 
         public static UnityModManagerForm instance = null;
 
-        static string[] libraryPaths;
+        static List<string> libraryPaths;
         static Config config = null;
         static Param param = null;
         static Version version = null;
@@ -228,6 +233,7 @@ namespace UnityModManagerNet.Installer
                 nameof(GameInfo.UIStartingPoint),
                 nameof(GameInfo.OldPatchTarget),
                 nameof(GameInfo.Comment),
+                nameof(GameInfo.MinimalManagerVersion),
                 nameof(GameInfo.FixBlackUI)
             };
 
@@ -304,7 +310,10 @@ namespace UnityModManagerNet.Installer
             managerDef = null;
             doorstopPath = Path.Combine(gamePath, doorstopFilename);
             doorstopConfigPath = Path.Combine(gamePath, doorstopConfigFilename);
-            libraryPaths = new string[LibraryFiles.Length];
+            libraryPaths = new List<string>();
+
+            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || Utils.ParseVersion(selectedGame.MinimalManagerVersion) < VER_0_22))
+                libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
             {
@@ -315,9 +324,6 @@ namespace UnityModManagerNet.Installer
             }
             else
                 gameExePath = string.Empty;
-
-            for (var i = 0; i < LibraryFiles.Length; i++)
-                libraryPaths[i] = Path.Combine(managerPath, LibraryFiles[i]);
 
             var path = new DirectoryInfo(Application.StartupPath).FullName;
             if (path.StartsWith(gamePath))
@@ -970,10 +976,9 @@ namespace UnityModManagerNet.Installer
         {
             Log.Print(action == Actions.Install ? $"正在安装管理器模块到游戏……" : $"正在从游戏卸载管理器模块……");
 
-            for (var i = 0; i < libraryPaths.Length; i++)
+            foreach (var path in libraryPaths)
             {
-                var filename = LibraryFiles[i];
-                var path = libraryPaths[i];
+                var filename = Path.GetFileName(path);
                 if (action == Actions.Install)
                 {
                     if (File.Exists(path))
