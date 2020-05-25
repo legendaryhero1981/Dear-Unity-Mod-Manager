@@ -54,9 +54,9 @@ namespace UnityModManagerNet.Installer
 
         static string gameExePath = null;
 
-        static string doorstopFilename = "winhttp.dll";
-        static string doorstopFilenameX86 = "winhttp_x86.dll";
-        static string doorstopFilenameX64 = "winhttp_x64.dll";
+        static string doorstopFilename = "version.dll";
+        static string doorstopFilenameX86 = "version_x86.dll";
+        static string doorstopFilenameX64 = "version_x64.dll";
         static string doorstopConfigFilename = "doorstop_config.ini";
         static string doorstopPath = null;
         static string doorstopConfigPath = null;
