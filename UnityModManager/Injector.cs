@@ -8,8 +8,6 @@ namespace UnityModManagerNet
 {
     public class Injector
     {
-        static bool usePrefix = false;
-
         public static void Run(bool doorstop = false)
         {
             try
@@ -45,11 +43,11 @@ namespace UnityModManagerNet
                 {
                     if (TryGetEntryPoint(UnityModManager.Config.StartingPoint, out var @class, out var method, out var place))
                     {
-                        usePrefix = (place == "before");
+                        var usePrefix = (place == "before");
                         var harmony = new Harmony(nameof(UnityModManager));
                         var prefix = typeof(Injector).GetMethod(nameof(Prefix_Start), BindingFlags.Static | BindingFlags.NonPublic);
                         var postfix = typeof(Injector).GetMethod(nameof(Postfix_Start), BindingFlags.Static | BindingFlags.NonPublic);
-                        harmony.Patch(method, new HarmonyMethod(prefix), new HarmonyMethod(postfix));
+                        harmony.Patch(method, usePrefix ? new HarmonyMethod(prefix) : null, !usePrefix ? new HarmonyMethod(postfix) : null);
                         UnityModManager.Logger.Log("注入成功！");
                     }
                     else
@@ -61,54 +59,53 @@ namespace UnityModManagerNet
                 }
             }
             else
-            {
                 UnityModManager.Start();
-            }
 
             if (!string.IsNullOrEmpty(UnityModManager.Config.UIStartingPoint))
             {
                 if (TryGetEntryPoint(UnityModManager.Config.UIStartingPoint, out var @class, out var method, out var place))
                 {
-                    usePrefix = (place == "before");
+                    var usePrefix = (place == "before");
                     var harmony = new Harmony(nameof(UnityModManager));
                     var prefix = typeof(Injector).GetMethod(nameof(Prefix_Show), BindingFlags.Static | BindingFlags.NonPublic);
                     var postfix = typeof(Injector).GetMethod(nameof(Postfix_Show), BindingFlags.Static | BindingFlags.NonPublic);
-                    harmony.Patch(method, new HarmonyMethod(prefix), new HarmonyMethod(postfix));
+                    harmony.Patch(method, usePrefix ? new HarmonyMethod(prefix) : null, !usePrefix ? new HarmonyMethod(postfix) : null);
                 }
                 else
-                {
                     UnityModManager.OpenUnityFileLog();
-                    return;
-                }
             }
             else if (UnityModManager.UI.Instance)
-            {
                 UnityModManager.UI.Instance.FirstLaunch();
-            }
         }
 
         static void Prefix_Start()
         {
-            if (usePrefix)
-                UnityModManager.Start();
+            UnityModManager.Start();
         }
 
         static void Postfix_Start()
         {
-            if (!usePrefix)
-                UnityModManager.Start();
+            UnityModManager.Start();
         }
 
         static void Prefix_Show()
         {
-            if (usePrefix && UnityModManager.UI.Instance)
-                UnityModManager.UI.Instance.FirstLaunch();
+            if (!UnityModManager.UI.Instance)
+            {
+                UnityModManager.Logger.Error("类 UnityModManager.UI 不存在！");
+                return;
+            }
+            UnityModManager.UI.Instance.FirstLaunch();
         }
 
         static void Postfix_Show()
         {
-            if (!usePrefix && UnityModManager.UI.Instance)
-                UnityModManager.UI.Instance.FirstLaunch();
+            if (!UnityModManager.UI.Instance)
+            {
+                UnityModManager.Logger.Error("类 UnityModManager.UI 不存在！");
+                return;
+            }
+            UnityModManager.UI.Instance.FirstLaunch();
         }
 
         internal static bool TryGetEntryPoint(string str, out Type foundClass, out MethodInfo foundMethod, out string insertionPlace)

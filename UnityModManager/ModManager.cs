@@ -37,7 +37,7 @@ namespace UnityModManagerNet
         ///     Contains version of UMM
         /// </summary>
         public static Version version { get; } = typeof(UnityModManager).Assembly.GetName().Version;
-        internal static string modsPath { get; private set; }
+        public static string modsPath { get; private set; }
         [Obsolete("请使用modsPath！OldModsPath与0.13之前版本的mod兼容。")]
         public static string OldModsPath = "";
         internal static Param Params { get; set; }
@@ -533,6 +533,7 @@ namespace UnityModManagerNet
             private readonly Dictionary<long, MethodInfo> mCache = new Dictionary<long, MethodInfo>();
 
             private bool mFirstLoading = true;
+            int mReloaderCount = 0;
 
             /// <summary>
             ///     Not used
@@ -816,7 +817,13 @@ namespace UnityModManagerNet
                                 }
                             }
                             else
-                                Assembly = File.Exists(pdbPath) ? Assembly.Load(File.ReadAllBytes(assemblyPath), File.ReadAllBytes(pdbPath)) : Assembly.Load(File.ReadAllBytes(assemblyPath));
+                            {
+                                var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
+                                modDef.Assembly.Name += ++mReloaderCount;
+                                using var buf = new MemoryStream();
+                                modDef.Write(buf);
+                                Assembly = File.Exists(pdbPath) ? Assembly.Load(buf.ToArray(), File.ReadAllBytes(pdbPath)) : Assembly.Load(buf.ToArray());
+                            }
                         }
                         else
                         {
@@ -898,26 +905,11 @@ namespace UnityModManagerNet
 
             internal void Reload()
             {
-                if (!Started || !CanReload)
-                    return;
-                try
-                {
-                    var assemblyPath = System.IO.Path.Combine(Path, Info.AssemblyName);
-                    var reflAssembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(assemblyPath));
-                    if (reflAssembly.GetName().Version == Assembly.GetName().Version)
-                    {
-                        Logger.Log("不需要重载，此版本与前一版本完全相同！");
-                        return;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e.ToString());
-                    return;
-                }
+                if (!Started || !CanReload) return;
 
                 OnSaveGUI?.Invoke(this);
                 Logger.Log("重载中……");
+
                 if (Toggleable)
                 {
                     var b = forbidDisableMods;
@@ -926,9 +918,7 @@ namespace UnityModManagerNet
                     forbidDisableMods = b;
                 }
                 else
-                {
                     mActive = false;
-                }
 
                 try
                 {

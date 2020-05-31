@@ -35,16 +35,24 @@ namespace UnityModManagerNet
             /// [0.20.0.17] 新增多种自定义GUIStyle样式
             /// </summary>
             public static GS WindowStyle;
-            public static GS ButtonStyle;
-            public static GS ToggleStyle;
-            public static GS HSliderStyle;
-            public static GS HSliderThumbStyle;
-            public static GS IconStyle;
             public static GS H1FontStyle;
             public static GS H2FontStyle;
             public static GS BoldFontStyle;
+            public static GS ButtonStyle;
+            public static GS IconStyle;
+            public static GS ToggleStyle;
+            public static GS HSliderStyle;
+            public static GS HSliderThumbStyle;
             public static GS CenterFontStyle;
             public static GS NormalFontStyle;
+            /// <summary>
+            /// [0.22.4.30] 新增UMM的GUIStyle样式，以便支持UMM相关Mod调用。
+            /// </summary>
+            public static GS window;
+            public static GS h1;
+            public static GS h2;
+            public static GS bold;
+            public static GS button;
 
             private static readonly string[] MCheckUpdateStrings = { "从不", "自动" };
             private static readonly string[] MShowOnStartStrings = { "否", "是" };
@@ -316,7 +324,7 @@ namespace UnityModManagerNet
 
             private static void PrepareGui()
             {
-                WindowStyle = new GS()
+                WindowStyle = window = new GS()
                 {
                     name = "umm window",
                     normal = { textColor = Color.white, background = _mBackground },
@@ -328,6 +336,41 @@ namespace UnityModManagerNet
                     wordWrap = true
                 };
                 WindowStyle.normal.background.wrapMode = TextureWrapMode.Repeat;
+                H1FontStyle = h1 = new GS(GUI.skin.label)
+                {
+                    name = "umm h1",
+                    normal = { textColor = Color.white },
+                    fontSize = H1FontSize,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    padding = RectOffset(GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize / 4),
+                    wordWrap = true
+                };
+                H2FontStyle = h2 = new GS(H1FontStyle) { name = "umm h2", fontSize = H2FontSize };
+                CenterFontStyle = new GS(H2FontStyle) { name = "umm center", fontSize = GlobalFontSize };
+                BoldFontStyle = bold = new GS(CenterFontStyle) { name = "umm bold", alignment = TextAnchor.MiddleLeft };
+                NormalFontStyle = new GS(BoldFontStyle) { name = "umm normal", fontStyle = FontStyle.Normal };
+                ButtonStyle = button = new GS(GUI.skin.button)
+                {
+                    name = "umm button",
+                    normal = { textColor = Color.white },
+                    fontSize = GlobalFontSize,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.UpperCenter,
+                    padding = new RectOffset(GlobalFontSize / 4, GlobalFontSize / 2, GlobalFontSize / 4, GlobalFontSize / 2),
+                    margin = RectOffset(GlobalFontSize / 4),
+                    wordWrap = false
+                };
+                IconStyle = new GS(GUI.skin.box)
+                {
+                    name = "umm icon",
+                    alignment = TextAnchor.MiddleCenter,
+                    padding = RectOffset(0),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2),
+                    stretchHeight = true,
+                    stretchWidth = true,
+                };
                 HSliderStyle = new GS(GUI.skin.horizontalSlider)
                 {
                     fixedHeight = GlobalFontSize,
@@ -339,41 +382,6 @@ namespace UnityModManagerNet
                     fixedHeight = GlobalFontSize,
                     padding = RectOffset(GlobalFontSize / 2, 0),
                     margin = RectOffset(0)
-                };
-                H1FontStyle = new GS(GUI.skin.label)
-                {
-                    name = "umm h1",
-                    normal = { textColor = Color.white },
-                    fontSize = H1FontSize,
-                    fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(GlobalFontSize / 4),
-                    margin = RectOffset(GlobalFontSize / 4),
-                    wordWrap = true
-                };
-                H2FontStyle = new GS(H1FontStyle) { name = "umm h2", fontSize = H2FontSize };
-                CenterFontStyle = new GS(H2FontStyle) { name = "umm center", fontSize = GlobalFontSize };
-                BoldFontStyle = new GS(CenterFontStyle) { name = "umm bold", alignment = TextAnchor.MiddleLeft };
-                NormalFontStyle = new GS(BoldFontStyle) { name = "umm normal", fontStyle = FontStyle.Normal };
-                IconStyle = new GS(GUI.skin.box)
-                {
-                    name = "umm icon",
-                    alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(0),
-                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2),
-                    stretchHeight = true,
-                    stretchWidth = true,
-                };
-                ButtonStyle = new GS(GUI.skin.button)
-                {
-                    name = "umm button",
-                    normal = { textColor = Color.white },
-                    fontSize = GlobalFontSize,
-                    fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.UpperCenter,
-                    padding = new RectOffset(GlobalFontSize / 4, GlobalFontSize / 2, GlobalFontSize / 4, GlobalFontSize / 2),
-                    margin = RectOffset(GlobalFontSize / 4),
-                    wordWrap = false
                 };
                 ToggleStyle = new GS(GUI.skin.toggle)
                 {
