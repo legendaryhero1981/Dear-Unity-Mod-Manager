@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace UnityModManagerNet.Installer
 {
     public enum ModStatus { NotInstalled, Installed }
-    public enum InstallType { DoorstopProxy, Assembly, /*Config,*/ Count }
+    public enum InstallType { DoorstopProxy, Assembly, Count }
 
     public class ModInfo : UnityModManager.ModInfo
     {
@@ -80,10 +80,8 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                using (var writer = new StreamWriter(filepathInGame))
-                {
-                    new XmlSerializer(typeof(GameInfo)).Serialize(writer, this);
-                }
+                using var writer = new StreamWriter(filepathInGame);
+                new XmlSerializer(typeof(GameInfo)).Serialize(writer, this);
             }
             catch (Exception e)
             {
@@ -96,10 +94,8 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                using (var stream = File.OpenRead(filepathInGame))
-                {
-                    return new XmlSerializer(typeof(GameInfo)).Deserialize(stream) as GameInfo;
-                }
+                using var stream = File.OpenRead(filepathInGame);
+                return new XmlSerializer(typeof(GameInfo)).Deserialize(stream) as GameInfo;
             }
             catch (Exception e)
             {
@@ -159,13 +155,11 @@ namespace UnityModManagerNet.Installer
             {
                 try
                 {
-                    using (var stream = File.OpenRead(filename))
-                    {
-                        var serializer = new XmlSerializer(typeof(Config));
-                        var result = serializer.Deserialize(stream) as Config;
-                        OnDeserialize(result);
-                        return result;
-                    }
+                    using var stream = File.OpenRead(filename);
+                    var serializer = new XmlSerializer(typeof(Config));
+                    var result = serializer.Deserialize(stream) as Config;
+                    OnDeserialize(result);
+                    return result;
                 }
                 catch (Exception e)
                 {
@@ -218,7 +212,7 @@ namespace UnityModManagerNet.Installer
 
         public void Sync(GameInfo[] gameInfos)
         {
-            int i = 0;
+            var i = 0;
             while (i < GameParams.Count)
             {
                 if (gameInfos.Any(x => x.Name == GameParams[i].Name))
@@ -237,12 +231,10 @@ namespace UnityModManagerNet.Installer
             var path = Path.Combine(Application.LocalUserAppDataPath, filename);
             try
             {
-                using (var writer = new StreamWriter(path))
-                {
-                    Log.Print($"已保存参数文件“{path}”！");
-                    var serializer = new XmlSerializer(typeof(Param));
-                    serializer.Serialize(writer, this);
-                }
+                using var writer = new StreamWriter(path);
+                Log.Print($"已保存参数文件“{path}”！");
+                var serializer = new XmlSerializer(typeof(Param));
+                serializer.Serialize(writer, this);
             }
             catch (Exception e)
             {
@@ -253,21 +245,17 @@ namespace UnityModManagerNet.Installer
         public static Param Load()
         {
             var path = Path.Combine(Application.LocalUserAppDataPath, filename);
-            if (File.Exists(path))
+            if (!File.Exists(path)) return new Param();
+            try
             {
-                try
-                {
-                    using (var stream = File.OpenRead(path))
-                    {
-                        Log.Print($"已读取参数文件“{path}”！");
-                        var serializer = new XmlSerializer(typeof(Param));
-                        return serializer.Deserialize(stream) as Param;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Print(e.ToString() + Environment.NewLine + path);
-                }
+                using var stream = File.OpenRead(path);
+                Log.Print($"已读取参数文件“{path}”！");
+                var serializer = new XmlSerializer(typeof(Param));
+                return serializer.Deserialize(stream) as Param;
+            }
+            catch (Exception e)
+            {
+                Log.Print(e.ToString() + Environment.NewLine + path);
             }
             return new Param();
         }

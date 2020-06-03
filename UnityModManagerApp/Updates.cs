@@ -9,31 +9,22 @@ using System.Windows.Forms;
 
 namespace UnityModManagerNet.Installer
 {
-    public partial class UnityModManagerForm : Form
+    public partial class UnityModManagerForm
     {
-        private readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> repositories = new Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>>();
+        private readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> _repositories = new Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>>();
         private const string RepositoryUrl = "raw.githubusercontent.com";
 
         private void CheckModUpdates()
         {
-            if (selectedGame == null)
-                return;
+            if (selectedGame == null || !HasNetworkConnection()) return;
 
-            if (!HasNetworkConnection())
-            {
-                return;
-            }
-
-            if (!repositories.ContainsKey(selectedGame))
-                repositories.Add(selectedGame, new HashSet<UnityModManager.Repository.Release>());
+            if (!_repositories.ContainsKey(selectedGame))
+                _repositories.Add(selectedGame, new HashSet<UnityModManager.Repository.Release>());
 
             var urls = new HashSet<string>();
-            foreach (var mod in mods)
+            foreach (var mod in _mods.Where(mod => !string.IsNullOrEmpty(mod.Repository)))
             {
-                if (!string.IsNullOrEmpty(mod.Repository))
-                {
-                    urls.Add(mod.Repository);
-                }
+                urls.Add(mod.Repository);
             }
 
             if (urls.Count <= 0) return;
@@ -41,12 +32,9 @@ namespace UnityModManagerNet.Installer
             {
                 try
                 {
-                    using (var wc = new WebClient())
-                    {
-                        wc.Encoding = System.Text.Encoding.UTF8;
-                        wc.DownloadStringCompleted += (sender, e) => { ModUpdates_DownloadStringCompleted(sender, e, selectedGame, url); };
-                        wc.DownloadStringAsync(new Uri(url));
-                    }
+                    using var wc = new WebClient {Encoding = System.Text.Encoding.UTF8};
+                    wc.DownloadStringCompleted += (sender, e) => { ModUpdates_DownloadStringCompleted(sender, e, selectedGame, url); };
+                    wc.DownloadStringAsync(new Uri(url));
                 }
                 catch (Exception e)
                 {
@@ -64,7 +52,7 @@ namespace UnityModManagerNet.Installer
                 return;
             }
 
-            if (e.Cancelled || string.IsNullOrEmpty(e.Result) || !repositories.ContainsKey(game)) return;
+            if (e.Cancelled || string.IsNullOrEmpty(e.Result) || !_repositories.ContainsKey(game)) return;
             try
             {
                 var repository = JsonConvert.DeserializeObject<UnityModManager.Repository>(e.Result);
@@ -75,7 +63,7 @@ namespace UnityModManagerNet.Installer
                 {
                     foreach (var v in repository.Releases)
                     {
-                        repositories[game].Add(v);
+                        _repositories[game].Add(v);
                     }
                     if (selectedGame == game)
                         RefreshModList();
@@ -103,12 +91,9 @@ namespace UnityModManagerNet.Installer
 
             try
             {
-                using (var wc = new WebClient())
-                {
-                    wc.Encoding = System.Text.Encoding.UTF8;
-                    wc.DownloadStringCompleted += LastVersion_DownloadStringCompleted;
-                    wc.DownloadStringAsync(new Uri(config.Repository));
-                }
+                using var wc = new WebClient {Encoding = System.Text.Encoding.UTF8};
+                wc.DownloadStringCompleted += LastVersion_DownloadStringCompleted;
+                wc.DownloadStringAsync(new Uri(config.Repository));
             }
             catch (Exception e)
             {
@@ -129,21 +114,18 @@ namespace UnityModManagerNet.Installer
             try
             {
                 var repository = JsonConvert.DeserializeObject<UnityModManager.Repository>(e.Result);
-                if (repository == null || repository.Releases == null || repository.Releases.Length == 0)
-                    return;
+                if (repository?.Releases == null || repository.Releases.Length == 0) return;
 
                 var release = repository.Releases.FirstOrDefault(x => x.Id == nameof(UnityModManager));
                 if (release == null || string.IsNullOrEmpty(release.Version)) return;
+
                 var ver = Utils.ParseVersion(release.Version);
                 if (version < ver)
                 {
-                    btnDownloadUpdate.Text = $"下载v{release.Version}";
+                    btnDownloadUpdate.Text = $@"下载V{release.Version}";
                     Log.Print($"有可用的新版本。");
                 }
-                else
-                {
-                    Log.Print($"没有可用的新版本。");
-                }
+                else Log.Print($"没有可用的新版本。");
             }
             catch (Exception ex)
             {
@@ -156,11 +138,9 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                using (var ping = new Ping())
-                {
-                    var reply = ping.Send(RepositoryUrl, 1000);
-                    return reply?.Status == IPStatus.Success;
-                }
+                using var ping = new Ping();
+                var reply = ping.Send(RepositoryUrl, 3000);
+                return reply?.Status == IPStatus.Success;
             }
             catch (Exception e)
             {

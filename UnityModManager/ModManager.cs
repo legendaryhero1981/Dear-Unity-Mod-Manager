@@ -288,6 +288,7 @@ namespace UnityModManagerNet
         {
             if (ModEntries.Any(m => m.Info.Id == id)) return;
             foreach (var req in mods[id].Requirements.Keys.Where(mods.ContainsKey)) DFS(req, mods);
+            foreach (var req in mods[id].LoadAfter.Where(mods.ContainsKey)) DFS(req, mods);
             ModEntries.Add(mods[id]);
         }
 
@@ -309,9 +310,8 @@ namespace UnityModManagerNet
         public static void SaveSettingsAndParams()
         {
             Params.Save();
-            foreach (var mod in ModEntries)
+            foreach (var mod in ModEntries.Where(mod => mod.Active && mod.OnSaveGUI != null))
             {
-                if (!mod.Active || mod.OnSaveGUI == null) continue;
                 try
                 {
                     mod.OnSaveGUI(mod);
@@ -378,11 +378,9 @@ namespace UnityModManagerNet
                 var filepath = data.GetPath(modEntry);
                 try
                 {
-                    using (var writer = new StreamWriter(filepath))
-                    {
-                        var serializer = new XmlSerializer(typeof(T), attributes);
-                        serializer.Serialize(writer, data);
-                    }
+                    using var writer = new StreamWriter(filepath);
+                    var serializer = new XmlSerializer(typeof(T), attributes);
+                    serializer.Serialize(writer, data);
                 }
                 catch (Exception e)
                 {
@@ -395,21 +393,19 @@ namespace UnityModManagerNet
             {
                 var t = new T();
                 var filepath = t.GetPath(modEntry);
-                if (File.Exists(filepath))
-                    try
-                    {
-                        using (var stream = File.OpenRead(filepath))
-                        {
-                            var serializer = new XmlSerializer(typeof(T));
-                            var result = (T)serializer.Deserialize(stream);
-                            return result;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        modEntry.Logger.Error($"读取文件“{filepath}”失败！");
-                        modEntry.Logger.LogException(e);
-                    }
+                if (!File.Exists(filepath)) return t;
+                try
+                {
+                    using var stream = File.OpenRead(filepath);
+                    var serializer = new XmlSerializer(typeof(T));
+                    var result = (T)serializer.Deserialize(stream);
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    modEntry.Logger.Error($"读取文件“{filepath}”失败！");
+                    modEntry.Logger.LogException(e);
+                }
                 return t;
             }
 
@@ -420,12 +416,10 @@ namespace UnityModManagerNet
                 if (!File.Exists(filepath)) return t;
                 try
                 {
-                    using (var stream = File.OpenRead(filepath))
-                    {
-                        var serializer = new XmlSerializer(typeof(T), attributes);
-                        var result = (T)serializer.Deserialize(stream);
-                        return result;
-                    }
+                    using var stream = File.OpenRead(filepath);
+                    var serializer = new XmlSerializer(typeof(T), attributes);
+                    var result = (T)serializer.Deserialize(stream);
+                    return result;
                 }
                 catch (Exception e)
                 {
@@ -458,10 +452,14 @@ namespace UnityModManagerNet
             ///  [0.20.0.15]
             /// </summary>
             public string FreezeUI;
+            /// <summary>
+            ///  [0.22.5.31]
+            /// </summary>
+            public string[] LoadAfter;
 
             public bool Equals(ModInfo other)
             {
-                return Id.Equals(other.Id);
+                return Id.Equals(other?.Id);
             }
 
             public static implicit operator bool(ModInfo exists)
@@ -483,117 +481,110 @@ namespace UnityModManagerNet
 
         public partial class ModEntry
         {
-            /// <summary>
-            ///     Required game version [0.15.0]
-            /// </summary>
-            public readonly Version GameVersion;
-
             public readonly ModInfo Info;
-
             public readonly ModLogger Logger;
-
-            /// <summary>
-            ///     Required UMM version
-            /// </summary>
-            public readonly Version ManagerVersion;
-
+            private readonly Dictionary<long, MethodInfo> _mCache = new Dictionary<long, MethodInfo>();
             /// <summary>
             ///     Path to mod folder
             /// </summary>
             public readonly string Path;
-
-            /// <summary>
-            ///     Required mods
-            /// </summary>
-            public readonly Dictionary<string, Version> Requirements = new Dictionary<string, Version>();
-
             /// <summary>
             ///     Version of a mod
             /// </summary>
             public readonly Version Version;
-
+            /// <summary>
+            ///     Newest version  of a mod
+            /// </summary>
+            public Version NewestVersion;
+            /// <summary>
+            ///     Required UMM version
+            /// </summary>
+            public readonly Version ManagerVersion;
+            /// <summary>
+            ///     Required game version [0.15.0]
+            /// </summary>
+            public readonly Version GameVersion;
+            /// <summary>
+            ///     Required mods
+            /// </summary>
+            public readonly Dictionary<string, Version> Requirements = new Dictionary<string, Version>();
             /// <summary>
             ///     Displayed in UMM UI. Add <color></color> tag to change colors. Can be used when custom verification game version
             ///     [0.15.0]
             /// </summary>
             public string CustomRequirements = string.Empty;
-
             /// <summary>
             ///     UI checkbox
             /// </summary>
             public bool Enabled = true;
-
-            /// <summary>
-            ///     Not used
-            /// </summary>
-            public bool HasUpdate = false;
-
-            private bool mActive;
-
-            private readonly Dictionary<long, MethodInfo> mCache = new Dictionary<long, MethodInfo>();
-
-            private bool mFirstLoading = true;
-            int mReloaderCount = 0;
-
-            /// <summary>
-            ///     Not used
-            /// </summary>
-            public Version NewestVersion;
-
             /// <summary>
             ///     [0.20.0.11]
             /// </summary>
             public readonly ConcurrentStack<Action<ModEntry>> OnModActions = new ConcurrentStack<Action<ModEntry>>();
-
             /// <summary>
             ///     Called by MonoBehaviour.FixedUpdate [0.13.0]
             /// </summary>
             public Action<ModEntry, float> OnFixedUpdate;
-
             /// <summary>
             /// Called by MonoBehaviour.OnGUI when mod options are visible.
             /// </summary>
             public Action<ModEntry> OnGUI;
-
             /// <summary>
             /// Called by MonoBehaviour.OnGUI, always [0.21.0]
             /// </summary>
             public Action<ModEntry> OnFixedGUI;
-
             /// <summary>
             ///     Called when closing mod GUI [0.16.0]
             /// </summary>
             public Action<ModEntry> OnHideGUI;
-
             /// <summary>
             ///     Called by MonoBehaviour.LateUpdate [0.13.0]
             /// </summary>
             public Action<ModEntry, float> OnLateUpdate;
-
             /// <summary>
             ///     Called when the game closes
             /// </summary>
             public Action<ModEntry> OnSaveGUI;
-
             /// <summary>
             ///     Called when opening mod GUI [0.16.0]
             /// </summary>
             public Action<ModEntry> OnShowGUI;
-
             /// <summary>
             ///     Called to activate / deactivate the mod
             /// </summary>
             public Func<ModEntry, bool, bool> OnToggle;
-
             /// <summary>
             ///     Called to unload old data for reloading mod [0.14.0]
             /// </summary>
             public Func<ModEntry, bool> OnUnload;
-
             /// <summary>
             ///     Called by MonoBehaviour.Update [0.13.0]
             /// </summary>
             public Action<ModEntry, float> OnUpdate;
+            public Assembly Assembly { get; private set; }
+            //public ModSettings Settings = null;
+            /// <summary>
+            ///     Show button to reload the mod [0.14.0]
+            /// </summary>
+            public bool CanReload { get; private set; }
+            public bool Started { get; private set; }
+            public bool ErrorOnLoading { get; private set; }
+            /// <summary>
+            ///     If OnToggle exists
+            /// </summary>
+            public bool Toggleable => OnToggle != null;
+            /// <summary>
+            ///     If Assembly is loaded [0.13.1]
+            /// </summary>
+            public bool Loaded => Assembly != null;
+            /// <summary>
+            /// List of mods after which this mod should be loaded [0.22.5.31]
+            /// </summary>
+            public readonly List<string> LoadAfter = new List<string>();
+
+            public bool HasUpdate = false;
+            private bool _mFirstLoading = true;
+            private int _mReloaderCount;
 
             public ModEntry(ModInfo info, string path)
             {
@@ -603,11 +594,12 @@ namespace UnityModManagerNet
                 Version = ParseVersion(info.Version);
                 ManagerVersion = !string.IsNullOrEmpty(info.ManagerVersion)
                     ? ParseVersion(info.ManagerVersion) : !string.IsNullOrEmpty(Config.MinimalManagerVersion) ? ParseVersion(Config.MinimalManagerVersion)
-                    : new Version();
+                        : new Version();
                 GameVersion = !string.IsNullOrEmpty(info.GameVersion) ? ParseVersion(info.GameVersion) : new Version();
 
                 if (info.Requirements == null || info.Requirements.Length <= 0) return;
-                var regex = new Regex(@"(.*)-(\d\.\d\.\d).*");
+
+                var regex = new Regex(@"(.*)-(\d+\.\d+\.\d+).*");
                 foreach (var id in info.Requirements)
                 {
                     var match = regex.Match(id);
@@ -616,39 +608,16 @@ namespace UnityModManagerNet
                         Requirements.Add(match.Groups[1].Value, ParseVersion(match.Groups[2].Value));
                         continue;
                     }
-
-                    if (!Requirements.ContainsKey(id))
-                        Requirements.Add(id, null);
+                    if (!Requirements.ContainsKey(id)) Requirements.Add(id, null);
                 }
+
+                if (info.LoadAfter != null && info.LoadAfter.Length > 0) LoadAfter.AddRange(info.LoadAfter);
             }
 
-            public Assembly Assembly { get; private set; }
-
-            //public ModSettings Settings = null;
-
-            /// <summary>
-            ///     Show button to reload the mod [0.14.0]
-            /// </summary>
-            public bool CanReload { get; private set; }
-
-            public bool Started { get; private set; }
-
-            public bool ErrorOnLoading { get; private set; }
-            //public bool Enabled => Enabled;
-
-            /// <summary>
-            ///     If OnToggle exists
-            /// </summary>
-            public bool Toggleable => OnToggle != null;
-
-            /// <summary>
-            ///     If Assembly is loaded [0.13.1]
-            /// </summary>
-            public bool Loaded => Assembly != null;
-
+            private bool _mActive;
             public bool Active
             {
-                get => mActive;
+                get => _mActive;
                 set
                 {
                     if (value && !Loaded)
@@ -665,25 +634,25 @@ namespace UnityModManagerNet
                     {
                         if (value)
                         {
-                            if (mActive)
+                            if (_mActive)
                                 return;
 
                             if (OnToggle == null || OnToggle(this, true))
                             {
-                                mActive = true;
-                                Logger.Log("已启用MOD！");
+                                _mActive = true;
+                                Logger.Log("已激活MOD！");
                                 GameScripts.OnModToggle(this, true);
                             }
                             else
                             {
-                                Logger.Log("启用MOD失败！");
+                                Logger.Log("激活MOD失败！");
                             }
                         }
                         else if (!forbidDisableMods)
                         {
-                            if (!mActive || OnToggle == null || !OnToggle(this, false))
+                            if (!_mActive || OnToggle == null || !OnToggle(this, false))
                                 return;
-                            mActive = false;
+                            _mActive = false;
                             Logger.Log("已禁用MOD！");
                             GameScripts.OnModToggle(this, false);
                         }
@@ -697,10 +666,11 @@ namespace UnityModManagerNet
 
             public bool Load()
             {
-                if (Loaded)
-                    return !ErrorOnLoading;
+                if (Loaded) return !ErrorOnLoading;
+
                 ErrorOnLoading = false;
                 Logger.Log($"MOD版本“{Info.Version}”已加载！");
+
                 if (string.IsNullOrEmpty(Info.AssemblyName))
                 {
                     ErrorOnLoading = true;
@@ -732,6 +702,7 @@ namespace UnityModManagerNet
                     {
                         var id = item.Key;
                         var mod = FindMod(id);
+
                         if (mod == null)
                         {
                             ErrorOnLoading = true;
@@ -749,8 +720,22 @@ namespace UnityModManagerNet
                         if (mod.Active) continue;
                         mod.Enabled = true;
                         mod.Active = true;
-                        if (!mod.Active)
-                            Logger.Log($"依赖的MOD“{id}”已被禁用！");
+                        if (!mod.Active) Logger.Log($"依赖的MOD“{id}”已被禁用！");
+                    }
+
+                if (LoadAfter.Count > 0)
+                    foreach (var id in LoadAfter)
+                    {
+                        var mod = FindMod(id);
+                        if (mod == null)
+                        {
+                            Logger.Log($"可选的MOD“{id}”不存在。");
+                            continue;
+                        }
+
+                        if (mod.Active || !mod.Enabled) continue;
+                        mod.Active = true;
+                        if (!mod.Active) Logger.Log($"可选的MOD“{id}”已启用，但未激活。");
                     }
 
                 if (ErrorOnLoading) return false;
@@ -766,7 +751,7 @@ namespace UnityModManagerNet
                         var pdbCachePath = pdbPath;
                         var cacheExists = false;
 
-                        if (mFirstLoading)
+                        if (_mFirstLoading)
                         {
                             var fi = new FileInfo(assemblyPath);
                             var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + version.GetHashCode() +
@@ -788,7 +773,7 @@ namespace UnityModManagerNet
 
                         if (ManagerVersion >= VER_0_13)
                         {
-                            if (mFirstLoading)
+                            if (_mFirstLoading)
                             {
                                 if (!cacheExists)
                                 {
@@ -819,7 +804,7 @@ namespace UnityModManagerNet
                             else
                             {
                                 var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
-                                modDef.Assembly.Name += ++mReloaderCount;
+                                modDef.Assembly.Name += ++_mReloaderCount;
                                 using var buf = new MemoryStream();
                                 modDef.Write(buf);
                                 Assembly = File.Exists(pdbPath) ? Assembly.Load(buf.ToArray(), File.ReadAllBytes(pdbPath)) : Assembly.Load(buf.ToArray());
@@ -858,7 +843,7 @@ namespace UnityModManagerNet
                             Assembly = Assembly.LoadFile(assemblyCachePath);
                         }
 
-                        mFirstLoading = false;
+                        _mFirstLoading = false;
                     }
                     catch (Exception exception)
                     {
@@ -918,13 +903,13 @@ namespace UnityModManagerNet
                     forbidDisableMods = b;
                 }
                 else
-                    mActive = false;
+                    _mActive = false;
 
                 try
                 {
                     if (!Active && (OnUnload == null || OnUnload.Invoke(this)))
                     {
-                        mCache.Clear();
+                        _mCache.Clear();
                         var accessCacheType = typeof(HarmonyLib.Traverse).Assembly.GetType("HarmonyLib.AccessCache");
                         typeof(HarmonyLib.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic)?.SetValue(null, Activator.CreateInstance(accessCacheType));
                         var oldAssembly = Assembly;
@@ -1016,7 +1001,7 @@ namespace UnityModManagerNet
                 long key = namespaceClassnameMethodname.GetHashCode();
                 if (types != null) key = types.Aggregate(key, (current, val) => current + val.GetHashCode());
 
-                if (mCache.TryGetValue(key, out var methodInfo)) return methodInfo;
+                if (_mCache.TryGetValue(key, out var methodInfo)) return methodInfo;
                 if (Assembly != null)
                 {
                     string classString = null;
@@ -1060,7 +1045,7 @@ namespace UnityModManagerNet
                 }
 
             Exit:
-                mCache[key] = methodInfo;
+                _mCache[key] = methodInfo;
                 return methodInfo;
             }
         }

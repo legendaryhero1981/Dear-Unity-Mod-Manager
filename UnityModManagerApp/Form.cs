@@ -1,6 +1,4 @@
-﻿using dnlib.DotNet;
-using dnlib.DotNet.Emit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,8 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
+using dnlib.DotNet;
+using dnlib.DotNet.Emit;
+using UnityModManagerNet.Injection;
 using UnityModManagerNet.Installer.Properties;
+using UnityModManagerNet.Marks;
 using UnityModManagerNet.UI.Utils;
+using FileAttributes = System.IO.FileAttributes;
 
 namespace UnityModManagerNet.Installer
 {
@@ -36,38 +39,38 @@ namespace UnityModManagerNet.Installer
             { nameof(UnityModManager) + ".dll", LibIncParam.Normal }
         };
 
-        public static UnityModManagerForm instance = null;
+        public static UnityModManagerForm instance;
 
         static List<string> libraryPaths;
-        static Config config = null;
-        static Param param = null;
-        static Version version = null;
+        static Config config;
+        static Param param;
+        static Version version;
 
-        static string gamePath = null;
-        static string managedPath = null;
-        static string managerPath = null;
-        static string entryAssemblyPath = null;
-        static string injectedEntryAssemblyPath = null;
-        static string managerAssemblyPath = null;
-        static string entryPoint = null;
-        static string injectedEntryPoint = null;
+        static string gamePath;
+        static string managedPath;
+        static string managerPath;
+        static string entryAssemblyPath;
+        static string injectedEntryAssemblyPath;
+        static string managerAssemblyPath;
+        static string entryPoint;
+        static string injectedEntryPoint;
 
-        static string gameExePath = null;
+        static string gameExePath;
 
         static string doorstopFilename = "version.dll";
         static string doorstopFilenameX86 = "version_x86.dll";
         static string doorstopFilenameX64 = "version_x64.dll";
         static string doorstopConfigFilename = "doorstop_config.ini";
-        static string doorstopPath = null;
-        static string doorstopConfigPath = null;
+        static string doorstopPath;
+        static string doorstopConfigPath;
 
-        static ModuleDefMD assemblyDef = null;
-        static ModuleDefMD injectedAssemblyDef = null;
-        static ModuleDefMD managerDef = null;
+        static ModuleDefMD assemblyDef;
+        static ModuleDefMD injectedAssemblyDef;
+        static ModuleDefMD managerDef;
 
         GameInfo selectedGame => (GameInfo)gameList.SelectedItem;
-        Param.GameParam selectedGameParams = null;
-        ModInfo selectedMod => listMods.SelectedItems.Count > 0 ? mods.Find(x => x.DisplayName == listMods.SelectedItems[0].Text) : null;
+        Param.GameParam selectedGameParams;
+        ModInfo selectedMod => listMods.SelectedItems.Count > 0 ? _mods.Find(x => x.DisplayName == listMods.SelectedItems[0].Text) : null;
 
         public UnityModManagerForm()
         {
@@ -90,7 +93,7 @@ namespace UnityModManagerNet.Installer
             skinSetBox.DisplayMember = "Key";
             skinSetBox.ValueMember = "Value";
             _autoSizeFormControlUtil = new AutoSizeFormControlUtil(this);
-            _autoSizeFormControlUtil.RefreshControlsInfo(this.Controls[0]);
+            _autoSizeFormControlUtil.RefreshControlsInfo(Controls[0]);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             instance = this;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -340,7 +343,7 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 InactiveForm();
-                Log.Print(e.ToString() + Environment.NewLine + entryAssemblyPath);
+                Log.Print(e + Environment.NewLine + entryAssemblyPath);
                 return;
             }
 
@@ -379,14 +382,14 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 InactiveForm();
-                Log.Print(e.ToString() + Environment.NewLine + injectedEntryAssemblyPath + Environment.NewLine + managerAssemblyPath);
+                Log.Print(e + Environment.NewLine + injectedEntryAssemblyPath + Environment.NewLine + managerAssemblyPath);
                 return;
             }
 
             var disabledMethods = new List<InstallType>();
             var unavailableMethods = new List<InstallType>();
             var managerType = typeof(UnityModManager);
-            var starterType = typeof(Injection.UnityModManagerStarter);
+            var starterType = typeof(UnityModManagerStarter);
 
         Rescan:
             var v0_12_Installed = injectedAssemblyDef.Types.FirstOrDefault(x => x.Name == managerType.Name);
@@ -519,7 +522,7 @@ namespace UnityModManagerNet.Installer
 
             foreach (var di in new DirectoryInfo(path).GetDirectories())
             {
-                if ((di.Attributes & System.IO.FileAttributes.ReparsePoint) != 0)
+                if ((di.Attributes & FileAttributes.ReparsePoint) != 0)
                     continue;
 
                 var dir = di.FullName;
@@ -640,7 +643,7 @@ namespace UnityModManagerNet.Installer
         {
             Install,
             Remove
-        };
+        }
 
         private bool InstallDoorstop(Actions action, bool write = true)
         {
@@ -667,7 +670,7 @@ namespace UnityModManagerNet.Installer
                             goto EXIT;
                         }
 
-                        Log.Print($"正在复制文件到游戏……");
+                        Log.Print("正在复制文件到游戏……");
                         var arch = Utils.UnmanagedDllIs64Bit(gameExePath);
                         var filename = arch == true ? doorstopFilenameX64 : doorstopFilenameX86;
                         Log.Print($"  '{filename}'");
@@ -707,7 +710,7 @@ namespace UnityModManagerNet.Installer
                             Utils.MakeBackup(libraryPaths);
                         }
 
-                        Log.Print($"正在从游戏目录删除文件……");
+                        Log.Print("正在从游戏目录删除文件……");
                         Log.Print($"  '{doorstopFilename}'");
                         File.Delete(doorstopPath);
                         Log.Print($"  '{doorstopConfigFilename}'");
@@ -750,7 +753,7 @@ namespace UnityModManagerNet.Installer
         private bool InjectAssembly(Actions action, ModuleDefMD assemblyDef, bool write = true)
         {
             var managerType = typeof(UnityModManager);
-            var starterType = typeof(Injection.UnityModManagerStarter);
+            var starterType = typeof(UnityModManagerStarter);
             var gameConfigPath = GameInfo.filepathInGame;
 
             var assemblyPath = Path.Combine(managedPath, assemblyDef.Name);
@@ -796,7 +799,7 @@ namespace UnityModManagerNet.Installer
                             starterDef.Types.Remove(starter);
                             assemblyDef.Types.Add(starter);
 
-                            var instr = OpCodes.Call.ToInstruction(starter.Methods.First(x => x.Name == nameof(Injection.UnityModManagerStarter.Start)));
+                            var instr = OpCodes.Call.ToInstruction(starter.Methods.First(x => x.Name == nameof(UnityModManagerStarter.Start)));
                             if (insertionPlace == "before")
                             {
                                 methodDef.Body.Instructions.Insert(0, instr);
@@ -853,7 +856,7 @@ namespace UnityModManagerNet.Installer
 
                                 if (newWayInstalled != null)
                                 {
-                                    instr = OpCodes.Call.ToInstruction(newWayInstalled.Methods.First(x => x.Name == nameof(Injection.UnityModManagerStarter.Start)));
+                                    instr = OpCodes.Call.ToInstruction(newWayInstalled.Methods.First(x => x.Name == nameof(UnityModManagerStarter.Start)));
                                 }
                                 else if (v0_12_Installed != null)
                                 {
@@ -922,13 +925,13 @@ namespace UnityModManagerNet.Installer
 
         private static bool IsDirty(ModuleDefMD assembly)
         {
-            return assembly.Types.FirstOrDefault(x => x.FullName == typeof(Marks.IsDirty).FullName || x.Name == typeof(UnityModManager).Name) != null;
+            return assembly.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName || x.Name == typeof(UnityModManager).Name) != null;
         }
 
         private static void MakeDirty(ModuleDefMD assembly)
         {
-            var moduleDef = ModuleDefMD.Load(typeof(Marks.IsDirty).Module);
-            var typeDef = moduleDef.Types.FirstOrDefault(x => x.FullName == typeof(Marks.IsDirty).FullName);
+            var moduleDef = ModuleDefMD.Load(typeof(IsDirty).Module);
+            var typeDef = moduleDef.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName);
             moduleDef.Types.Remove(typeDef);
             assembly.Types.Add(typeDef);
         }
@@ -974,7 +977,7 @@ namespace UnityModManagerNet.Installer
 
         private static void DoactionLibraries(Actions action)
         {
-            Log.Print(action == Actions.Install ? $"正在安装管理器模块到游戏……" : $"正在从游戏卸载管理器模块……");
+            Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
 
             foreach (var path in libraryPaths)
             {
@@ -1005,12 +1008,12 @@ namespace UnityModManagerNet.Installer
         {
             if (action == Actions.Install)
             {
-                Log.Print($"已创建配置文件“Config.xml”。");
+                Log.Print("已创建配置文件“Config.xml”。");
                 selectedGame.ExportToGame();
             }
             else if (File.Exists(GameInfo.filepathInGame))
             {
-                Log.Print($"已删除配置文件“Config.xml”。");
+                Log.Print("已删除配置文件“Config.xml”。");
                 File.Delete(GameInfo.filepathInGame);
             }
         }
@@ -1026,7 +1029,7 @@ namespace UnityModManagerNet.Installer
                 case 1: // Mods
                     ReloadMods();
                     RefreshModList();
-                    if (!repositories.ContainsKey(selectedGame))
+                    if (!_repositories.ContainsKey(selectedGame))
                         CheckModUpdates();
                     break;
             }

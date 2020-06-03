@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ionic.Zip;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,8 +11,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using Ionic.Zip;
-using Newtonsoft.Json;
 
 namespace UnityModManagerNet.Updater
 {
@@ -41,12 +41,11 @@ namespace UnityModManagerNet.Updater
 
         public void DoFormClosed()
         {
-            foreach (var file in _updaterFiles)
-                if (File.Exists(file.Key))
-                {
-                    File.Copy(file.Key, file.Value, true);
-                    File.Delete(file.Key);
-                }
+            foreach (var file in _updaterFiles.Where(file => File.Exists(file.Key)))
+            {
+                File.Copy(file.Key, file.Value, true);
+                File.Delete(file.Key);
+            }
         }
 
         public void Start()
@@ -55,7 +54,7 @@ namespace UnityModManagerNet.Updater
 
             if (!Utils.HasNetworkConnection())
             {
-                status.Text = $"无网络连接！";
+                status.Text = @"无网络连接！";
                 return;
             }
             try
@@ -68,7 +67,7 @@ namespace UnityModManagerNet.Updater
                 }
                 if (config == null || string.IsNullOrEmpty(config.Repository))
                 {
-                    status.Text = $"解析配置文件“{ConfigFile}”失败！";
+                    status.Text = $@"解析配置文件“{ConfigFile}”失败！";
                     return;
                 }
                 if (File.Exists(UpdateZipFile))
@@ -84,7 +83,7 @@ namespace UnityModManagerNet.Updater
                 var repository = JsonConvert.DeserializeObject<Repository>(result);
                 if (repository == null || repository.Releases.Length == 0)
                 {
-                    status.Text = $"解析仓库配置文件“{config.Repository}”失败！";
+                    status.Text = $@"解析仓库配置文件“{config.Repository}”失败！";
                     return;
                 }
                 var release = repository.Releases.FirstOrDefault(x => x.Id == ManagerName);
@@ -93,17 +92,17 @@ namespace UnityModManagerNet.Updater
                     var managerAssembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(ManagerFile));
                     if (Utils.ParseVersion(release?.Version) <= managerAssembly.GetName().Version)
                     {
-                        status.Text = $"无可用的更新。";
+                        status.Text = @"无可用的更新。";
                         return;
                     }
                 }
-                status.Text = $"正在下载新版本v{release?.Version}……";
+                status.Text = $@"正在下载新版本v{release?.Version}……";
                 using (var wc = new WebClient())
                 {
                     wc.Encoding = Encoding.UTF8;
                     wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
                     wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
-                    wc.DownloadFileAsync(new Uri(release?.DownloadUrl), UpdateZipFile);
+                    wc.DownloadFileAsync(new Uri(release?.DownloadUrl ?? string.Empty), UpdateZipFile);
                 }
             }
             catch (Exception e)
@@ -130,7 +129,7 @@ namespace UnityModManagerNet.Updater
             {
                 foreach (var p in Process.GetProcessesByName(ManagerAppName))
                 {
-                    status.Text = "正在等待MOD管理器关闭……";
+                    status.Text = @"正在等待MOD管理器关闭……";
                     p.CloseMainWindow();
                     p.WaitForExit();
                 }
@@ -146,21 +145,20 @@ namespace UnityModManagerNet.Updater
                         else
                         {
                             var path = Path.Combine(root, entry.FileName);
-                            Directory.CreateDirectory(Path.GetDirectoryName(path));
+                            Directory.CreateDirectory(Path.GetDirectoryName(path) ?? string.Empty);
                             var name = Path.GetFileName(entry.FileName);
                             if (_updaterFileNames.Contains(name))
                             {
                                 _updaterFiles[path += CacheFilePostfix] = path;
                                 continue;
                             }
-                            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                            {
-                                entry.Extract(fs);
-                            }
+
+                            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+                            entry.Extract(fs);
                         }
                     }
                 }
-                status.Text = "已完成。";
+                status.Text = @"已完成。";
                 success = true;
             }
             catch (Exception ex)
@@ -172,13 +170,8 @@ namespace UnityModManagerNet.Updater
                 File.Delete(UpdateZipFile);
             }
             if (!success) return;
-            if (!Utils.IsUnixPlatform() && Process.GetProcessesByName(ManagerAppName).Length == 0)
-            {
-                if (File.Exists(ManagerAppFile))
-                {
-                    SetForegroundWindow(Process.Start(ManagerAppFile).MainWindowHandle);
-                }
-            }
+            if (!Utils.IsUnixPlatform() && Process.GetProcessesByName(ManagerAppName).Length == 0 && File.Exists(ManagerAppFile))
+                SetForegroundWindow(Process.Start(ManagerAppFile).MainWindowHandle);
             Application.Exit();
         }
 

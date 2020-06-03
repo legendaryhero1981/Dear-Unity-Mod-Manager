@@ -29,20 +29,15 @@ namespace UnityModManagerNet.Installer
             try
             {
                 var dir = Path.Combine(Path.GetTempPath(), "DearUnityModManager");
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
+
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
                 TempFilepath = Path.Combine(dir, $"{Release.Id}.zip");
-
-                status.Text = $"正在下载 {Release.Id} {Release.Version} ……";
-
-                using (var wc = new WebClient())
-                {
-                    wc.Encoding = Encoding.UTF8;
-                    wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
-                    wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
-                    wc.DownloadFileAsync(new Uri(Release.DownloadUrl), TempFilepath);
-                }
+                status.Text = $@"正在下载 {Release.Id} {Release.Version} ……";
+                using var wc = new WebClient {Encoding = Encoding.UTF8};
+                wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
+                wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
+                wc.DownloadFileAsync(new Uri(Release.DownloadUrl), TempFilepath);
             }
             catch (Exception e)
             {

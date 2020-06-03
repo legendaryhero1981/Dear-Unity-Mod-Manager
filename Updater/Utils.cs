@@ -7,7 +7,7 @@ namespace UnityModManagerNet.Updater
 {
     internal static class Utils
     {
-        private static readonly string _repositoryUrl = "raw.githubusercontent.com";
+        private const string RepositoryUrl = "raw.githubusercontent.com";
         /// <summary>
         /// 执行内部命令（cmd.exe 中的命令）
         /// </summary>
@@ -15,23 +15,26 @@ namespace UnityModManagerNet.Updater
         /// <returns>执行结果</returns>
         public static string ExecuteInCmd(string cmd)
         {
-            using (var process = new Process())
+            using var process = new Process
             {
-                process.StartInfo.FileName = "cmd.exe";
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.CreateNoWindow = true;
-                process.Start();
-                process.StandardInput.AutoFlush = true;
-                process.StandardInput.WriteLine(cmd + "&exit");
-                //获取cmd窗口的输出信息  
-                var output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-                process.Close();
-                return output;
-            }
+                StartInfo =
+                {
+                    FileName = "cmd.exe",
+                    UseShellExecute = false,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+            process.StandardInput.AutoFlush = true;
+            process.StandardInput.WriteLine(cmd + "&exit");
+            //获取cmd窗口的输出信息  
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            process.Close();
+            return output;
         }
         /// <summary>
         /// 执行外部命令
@@ -41,24 +44,27 @@ namespace UnityModManagerNet.Updater
         /// <returns>执行结果</returns>
         public static string ExecuteOutCmd(string param, string path)
         {
-            using (var process = new Process())
+            using var process = new Process
             {
-                process.StartInfo.Arguments = param;
-                process.StartInfo.FileName = path;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.CreateNoWindow = true;
-                process.Start();
-                process.StandardInput.AutoFlush = true;
-                process.StandardInput.WriteLine("exit");
-                //获取cmd窗口的输出信息  
-                var output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-                process.Close();
-                return output;
-            }
+                StartInfo =
+                {
+                    Arguments = param,
+                    FileName = path,
+                    UseShellExecute = false,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+            process.StandardInput.AutoFlush = true;
+            process.StandardInput.WriteLine("exit");
+            //获取cmd窗口的输出信息  
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            process.Close();
+            return output;
         }
 
         public static Version ParseVersion(string str)
@@ -73,10 +79,8 @@ namespace UnityModManagerNet.Updater
         {
             try
             {
-                using (var ping = new Ping())
-                {
-                    return ping.Send(_repositoryUrl, 1000)?.Status == IPStatus.Success;
-                }
+                using var ping = new Ping();
+                return ping.Send(RepositoryUrl, 3000)?.Status == IPStatus.Success;
             }
             catch
             {

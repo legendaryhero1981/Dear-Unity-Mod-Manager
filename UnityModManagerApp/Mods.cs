@@ -8,16 +8,16 @@ using Ionic.Zip;
 
 namespace UnityModManagerNet.Installer
 {
-    public partial class UnityModManagerForm : Form
+    public partial class UnityModManagerForm
     {
-        private readonly List<ModInfo> mods = new List<ModInfo>();
+        private readonly List<ModInfo> _mods = new List<ModInfo>();
         private const string ZipFilePostfix = ".zip";
 
         private void InitPageMods()
         {
             splitContainerModsInstall.Panel2.AllowDrop = true;
-            splitContainerModsInstall.Panel2.DragEnter += new DragEventHandler(Mods_DragEnter);
-            splitContainerModsInstall.Panel2.DragDrop += new DragEventHandler(Mods_DragDrop);
+            splitContainerModsInstall.Panel2.DragEnter += Mods_DragEnter;
+            splitContainerModsInstall.Panel2.DragDrop += Mods_DragDrop;
         }
 
         private void btnModInstall_Click(object sender, EventArgs e)
@@ -60,21 +60,19 @@ namespace UnityModManagerNet.Installer
                 {
                     if (ZipFilePostfix.Equals(Path.GetExtension(filepath)?.ToLower()))
                     {
-                        using (var zip = ZipFile.Read(filepath))
+                        using var zip = ZipFile.Read(filepath);
+                        InstallMod(zip, false);
+                        var modInfo = ReadModInfoFromZip(zip);
+                        if (!modInfo) continue;
+                        newMods.Add(modInfo);
+                        var dir = Path.Combine(programModsPath, modInfo.Id);
+                        if (!Directory.Exists(dir))
                         {
-                            InstallMod(zip, false);
-                            var modInfo = ReadModInfoFromZip(zip);
-                            if (!modInfo) continue;
-                            newMods.Add(modInfo);
-                            var dir = Path.Combine(programModsPath, modInfo.Id);
-                            if (!Directory.Exists(dir))
-                            {
-                                Directory.CreateDirectory(dir);
-                            }
-                            var target = Path.Combine(dir, $"{modInfo.Id}-{modInfo.Version.Replace('.', '-')}{ZipFilePostfix}");
-                            if (filepath != target)
-                                File.Copy(filepath, target, true);
+                            Directory.CreateDirectory(dir);
                         }
+                        var target = Path.Combine(dir, $"{modInfo.Id}-{modInfo.Version.Replace('.', '-')}{ZipFilePostfix}");
+                        if (filepath != target)
+                            File.Copy(filepath, target, true);
                     }
                     else
                     {
@@ -89,10 +87,8 @@ namespace UnityModManagerNet.Installer
 
             // delete old zip files if count > 2
             if (newMods.Count <= 0) return;
-            foreach (var modInfo in newMods)
+            foreach (var tempList in newMods.Select(modInfo => Directory.GetFiles(Path.Combine(programModsPath, modInfo.Id), $"*{ZipFilePostfix}", SearchOption.AllDirectories).Select(ReadModInfoFromZip).Where(mod => mod && !mod.EqualsVersion(modInfo)).ToList()).Select(tempList => tempList.OrderBy(x => x.ParsedVersion).ToList()))
             {
-                var tempList = Directory.GetFiles(Path.Combine(programModsPath, modInfo.Id), $"*{ZipFilePostfix}", SearchOption.AllDirectories).Select(ReadModInfoFromZip).Where(mod => mod && !mod.EqualsVersion(modInfo)).ToList();
-                tempList = tempList.OrderBy(x => x.ParsedVersion).ToList();
                 while (tempList.Count > 2)
                 {
                     var item = tempList.First();
@@ -158,10 +154,8 @@ namespace UnityModManagerNet.Installer
             }
             try
             {
-                using (var zip = ZipFile.Read(filepath))
-                {
-                    InstallMod(zip);
-                }
+                using var zip = ZipFile.Read(filepath);
+                InstallMod(zip);
             }
             catch (Exception e)
             {
@@ -206,11 +200,9 @@ namespace UnityModManagerNet.Installer
                     }
                     else
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(modsPath, entry.FileName)));
-                        using (var fs = new FileStream(Path.Combine(modsPath, entry.FileName), FileMode.Create, FileAccess.Write))
-                        {
-                            entry.Extract(fs);
-                        }
+                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(modsPath, entry.FileName)) ?? string.Empty);
+                        using var fs = new FileStream(Path.Combine(modsPath, entry.FileName), FileMode.Create, FileAccess.Write);
+                        entry.Extract(fs);
                     }
                 }
                 Log.Print($"解压缩文件“{Path.GetFileName(zip.Name)}”成功！");
@@ -229,7 +221,7 @@ namespace UnityModManagerNet.Installer
 
         private void ReloadMods()
         {
-            mods.Clear();
+            _mods.Clear();
             if (selectedGame == null) return;
 
             var modsPath = Path.Combine(gamePath, selectedGame.ModsDirectory);
@@ -249,7 +241,7 @@ namespace UnityModManagerNet.Installer
                         {
                             modInfo.Path = dir;
                             modInfo.Status = ModStatus.Installed;
-                            mods.Add(modInfo);
+                            _mods.Add(modInfo);
                         }
                     }
                     catch (Exception e)
@@ -277,17 +269,17 @@ namespace UnityModManagerNet.Installer
 
                 if (!modInfo) continue;
 
-                var index = mods.FindIndex(m => m.Id == modInfo.Id);
+                var index = _mods.FindIndex(m => m.Id == modInfo.Id);
 
                 if (index == -1)
                 {
                     modInfo.Status = ModStatus.NotInstalled;
                     modInfo.AvailableVersions.Add(modInfo.ParsedVersion, filepath);
-                    mods.Add(modInfo);
+                    _mods.Add(modInfo);
                 }
-                else if (!mods[index].AvailableVersions.ContainsKey(modInfo.ParsedVersion))
+                else if (!_mods[index].AvailableVersions.ContainsKey(modInfo.ParsedVersion))
                 {
-                    mods[index].AvailableVersions.Add(modInfo.ParsedVersion, filepath);
+                    _mods[index].AvailableVersions.Add(modInfo.ParsedVersion, filepath);
                 }
             }
         }
@@ -296,17 +288,17 @@ namespace UnityModManagerNet.Installer
         {
             listMods.Items.Clear();
 
-            if (selectedGame == null || mods.Count == 0 || tabControl.SelectedIndex != 1) return;
+            if (selectedGame == null || _mods.Count == 0 || tabControl.SelectedIndex != 1) return;
 
-            mods.Sort((x, y) => string.Compare(x.DisplayName, y.DisplayName, StringComparison.OrdinalIgnoreCase));
+            _mods.Sort((x, y) => string.Compare(x.DisplayName, y.DisplayName, StringComparison.OrdinalIgnoreCase));
 
-            foreach (var modInfo in mods)
+            foreach (var modInfo in _mods)
             {
                 var status = "";
 
                 if (ModStatus.Installed.Equals(modInfo.Status))
                 {
-                    var release = repositories.ContainsKey(selectedGame) ? repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id) : null;
+                    var release = _repositories.ContainsKey(selectedGame) ? _repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id) : null;
                     var web = !string.IsNullOrEmpty(release?.Version) ? Utils.ParseVersion(release.Version) : new Version();
                     var local = modInfo.AvailableVersions.Keys.Max(x => x) ?? new Version();
 
@@ -358,10 +350,8 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                using (var zip = ZipFile.Read(filepath))
-                {
-                    return ReadModInfoFromZip(zip);
-                }
+                using var zip = ZipFile.Read(filepath);
+                return ReadModInfoFromZip(zip);
             }
             catch (Exception e)
             {
@@ -379,15 +369,14 @@ namespace UnityModManagerNet.Installer
                 foreach (var e in zip)
                 {
                     if (!e.FileName.EndsWith(selectedGame.ModInfo, StringComparison.InvariantCultureIgnoreCase)) continue;
-                    using (var s = new StreamReader(e.OpenReader()))
+                    using var s = new StreamReader(e.OpenReader());
+                    var modInfo = JsonConvert.DeserializeObject<ModInfo>(s.ReadToEnd());
+                    if (modInfo.IsValid())
                     {
-                        var modInfo = JsonConvert.DeserializeObject<ModInfo>(s.ReadToEnd());
-                        if (modInfo.IsValid())
-                        {
-                            modInfo.Path = zip.Name;
-                            return modInfo;
-                        }
+                        modInfo.Path = zip.Name;
+                        return modInfo;
                     }
+
                     break;
                 }
             }
@@ -422,16 +411,16 @@ namespace UnityModManagerNet.Installer
                         uninstallToolStripMenuItem.Visible = true;
 
                         var inRepository = new Version();
-                        if (repositories.ContainsKey(selectedGame))
+                        if (_repositories.ContainsKey(selectedGame))
                         {
-                            var release = repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id);
+                            var release = _repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id);
                             if (release != null && !string.IsNullOrEmpty(release.DownloadUrl) && !string.IsNullOrEmpty(release.Version))
                             {
                                 var ver = Utils.ParseVersion(release.Version);
                                 if (modInfo.ParsedVersion < ver)
                                 {
                                     inRepository = ver;
-                                    updateToolStripMenuItem.Text = $"更新到v{release.Version}";
+                                    updateToolStripMenuItem.Text = $@"更新到v{release.Version}";
                                     updateToolStripMenuItem.Visible = true;
                                 }
                             }
@@ -440,13 +429,13 @@ namespace UnityModManagerNet.Installer
                         var newest = modInfo.AvailableVersions.Keys.Max(x => x);
                         if (newest != null && newest > modInfo.ParsedVersion && inRepository <= newest)
                         {
-                            updateToolStripMenuItem.Text = $"更新到v{newest}";
+                            updateToolStripMenuItem.Text = $@"更新到v{newest}";
                             updateToolStripMenuItem.Visible = true;
                         }
                         var previous = modInfo.AvailableVersions.Keys.Where(x => x < modInfo.ParsedVersion).Max(x => x);
                         if (previous != null)
                         {
-                            revertToolStripMenuItem.Text = $"还原到v{previous}";
+                            revertToolStripMenuItem.Text = $@"还原到v{previous}";
                             revertToolStripMenuItem.Visible = true;
                         }
 
@@ -479,9 +468,9 @@ namespace UnityModManagerNet.Installer
         {
             var modInfo = selectedMod;
             if (!modInfo) return;
-            if (repositories.ContainsKey(selectedGame))
+            if (_repositories.ContainsKey(selectedGame))
             {
-                var release = repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id);
+                var release = _repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id);
                 if (release != null && !string.IsNullOrEmpty(release.DownloadUrl) && !string.IsNullOrEmpty(release.Version) && modInfo.AvailableVersions.All(x => x.Key < Utils.ParseVersion(release.Version)))
                 {
                     var downloadForm = new DownloadForm(release);

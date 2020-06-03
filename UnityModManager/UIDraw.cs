@@ -236,8 +236,7 @@ namespace UnityModManagerNet
                 params GUILayoutOption[] option)
             {
                 var changed = false;
-                if (key == null)
-                    key = new KeyBinding();
+                key ??= new KeyBinding();
                 GUILayout.BeginHorizontal();
                 var modifiersValue = new byte[] { 1, 2, 4 };
                 var modifiersStr = new[] { "Ctrl", "Shift", "Alt" };
