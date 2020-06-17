@@ -911,7 +911,13 @@ namespace UnityModManagerNet
                     {
                         _mCache.Clear();
                         var accessCacheType = typeof(HarmonyLib.Traverse).Assembly.GetType("HarmonyLib.AccessCache");
-                        typeof(HarmonyLib.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic)?.SetValue(null, Activator.CreateInstance(accessCacheType));
+                        var accessCache = typeof(HarmonyLib.Traverse).GetField("Cache", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null);
+                        string[] fields = { "declaredFields", "declaredProperties", "declaredMethods", "inheritedFields", "inheritedProperties", "inheritedMethods" };
+                        foreach (var field in fields)
+                        {
+                            var accessCacheDict = (System.Collections.IDictionary)accessCacheType.GetField(field, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(accessCache);
+                            accessCacheDict?.Clear();
+                        }
                         var oldAssembly = Assembly;
                         Assembly = null;
                         Started = false;

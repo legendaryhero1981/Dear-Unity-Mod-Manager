@@ -313,9 +313,10 @@ namespace UnityModManagerNet.Installer
             managerDef = null;
             doorstopPath = Path.Combine(gamePath, doorstopFilename);
             doorstopConfigPath = Path.Combine(gamePath, doorstopConfigFilename);
-            libraryPaths = new List<string>();
 
-            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || Utils.ParseVersion(selectedGame.MinimalManagerVersion) < VER_0_22))
+            libraryPaths = new List<string>();
+            var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
+            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22))
                 libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
