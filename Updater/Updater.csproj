@@ -41,9 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Form.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Form.cs" />
     <Compile Update="Form.Designer.cs">
       <DependentUpon>Form.cs</DependentUpon>
     </Compile>
