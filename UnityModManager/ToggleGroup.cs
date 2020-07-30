@@ -181,17 +181,8 @@ namespace UnityModManagerNet
                     selected = 0;
                     needInvoke = true;
                 }
-                PopupToggleGroup_GUI obj = null;
-                foreach (var item in PopupToggleGroup_GUI.mList)
-                {
-                    if (!item.values.SequenceEqual(values)) continue;
-                    obj = item;
-                    break;
-                }
-                if (obj == null)
-                {
-                    obj = new PopupToggleGroup_GUI(values);
-                }
+                var obj = PopupToggleGroup_GUI.mList.FirstOrDefault(item => item.values.SequenceEqual(values) && item.title == title);
+                obj ??= new PopupToggleGroup_GUI(values) {title = title};
                 if (obj.newSelected != null && selected != obj.newSelected.Value && obj.newSelected.Value < values.Length)
                 {
                     selected = obj.newSelected.Value;

@@ -638,7 +638,7 @@ namespace UnityModManagerNet
                             GL.BeginVertical("box");
                             GL.BeginHorizontal();
                             GL.Label("热键（默认Ctrl+F10）", GL.ExpandWidth(false));
-                            DrawKeybinding(ref Params.Hotkey, null, GL.ExpandWidth(false));
+                            DrawKeybinding(ref Params.Hotkey, "DUMM热键设置", null, GL.ExpandWidth(false));
                             GL.EndHorizontal();
                             GL.BeginHorizontal();
                             GL.Label("检查更新", GL.ExpandWidth(false));

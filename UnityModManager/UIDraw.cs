@@ -218,22 +218,23 @@ namespace UnityModManagerNet
 
             private static readonly Type[] sliderTypes = { typeof(int), typeof(long), typeof(float), typeof(double) };
             private static readonly Type[] toggleTypes = { typeof(bool) };
-
-            private static readonly Type[] specialTypes =
-                {typeof(Vector2), typeof(Vector3), typeof(Vector4), typeof(Color), typeof(KeyBinding)};
-
+            private static readonly Type[] specialTypes = { typeof(Vector2), typeof(Vector3), typeof(Vector4), typeof(Color), typeof(KeyBinding) };
             private static readonly float drawHeight = 22;
-
             private static readonly List<int> collapsibleStates = new List<int>();
 
+            [Obsolete("使用带标题的新版本。")]
+            public static bool DrawKeybinding(ref KeyBinding key, GUIStyle style = null, params GUILayoutOption[] option)
+            {
+                return DrawKeybinding(ref key, null, style, option);
+            }
+
             /// <summary>
-            ///     [0.20.0]
+            ///     [0.20.8]
             /// </summary>
             /// <returns>
             ///     Returns true if the value has changed.
             /// </returns>
-            public static bool DrawKeybinding(ref KeyBinding key, GUIStyle style = null,
-                params GUILayoutOption[] option)
+            public static bool DrawKeybinding(ref KeyBinding key, string title, GUIStyle style = null, params GUILayoutOption[] option)
             {
                 var changed = false;
                 key ??= new KeyBinding();
@@ -248,7 +249,7 @@ namespace UnityModManagerNet
                     else if ((modifiers & modifiersValue[i]) != 0) modifiers ^= modifiersValue[i];
                 GUILayout.Label(" + ", GUILayout.ExpandWidth(false));
                 var val = key.Index;
-                if (PopupToggleGroup(ref val, KeyBinding.KeyCodeNames, style, option))
+                if (PopupToggleGroup(ref val, KeyBinding.KeyCodeNames, title, style, option))
                 {
                     key.Change((KeyCode)Enum.Parse(typeof(KeyCode), KeyBinding.KeyCodeNames[val]), modifiers);
                     changed = true;
@@ -1073,7 +1074,7 @@ namespace UnityModManagerNet
                                 if (!a.Vertical)
                                     GUILayout.Space(Scale(5));
                                 var key = (KeyBinding)f.GetValue(container);
-                                if (DrawKeybinding(ref key, null, options.ToArray()))
+                                if (DrawKeybinding(ref key, fieldName, null, options.ToArray()))
                                 {
                                     f.SetValue(container, key);
                                     changed = true;

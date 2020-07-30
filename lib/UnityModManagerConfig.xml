@@ -299,4 +299,69 @@
         <UIStartingPoint>[Assembly-CSharp.dll]Game.UI.UIMainMenuManager.OnyxStart:After</UIStartingPoint>
         <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
     </GameInfo>
+	<GameInfo Name="暴君">
+		<Folder>Tyranny</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Tyranny.exe</GameExe>
+		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]Game.GameState.Awake:After</StartingPoint>
+		<MinimalManagerVersion>0.22.4</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="人民游乐场">
+		<Folder>People Playground</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>People Playground.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]MenuController.Awake:Before</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]MenuController.Awake:After</UIStartingPoint>
+		<MinimalManagerVersion>0.22.5</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="可执行突击2">
+		<Folder>Executive Assault 2</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>ExecutiveAssault2.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]MainMenu_MenuControls.Start:Before</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]MainMenu_MenuControls.Start:After</UIStartingPoint>
+		<MinimalManagerVersion>0.22.6</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="木筏">
+		<Folder>Raft</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Raft.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]StartMenuScreen.Start:After</StartingPoint>
+		<MinimalManagerVersion>0.22.6</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="机器人殖民地">
+		<Folder>Autonauts</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Autonauts.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]BaseMenu.Awake:Before</StartingPoint>
+		<MinimalManagerVersion>0.22.6</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="信仰">
+		<Folder>Hue</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Hue.exe</GameExe>
+		<EntryPoint>[Assembly-CSharp.dll]GameManager.Awake:After</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]GameManager.Awake:After</StartingPoint>
+		<MinimalManagerVersion>0.22.7</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="自动化帝国">
+		<Folder>Automation Empire</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>AutomationEmpire.exe</GameExe>
+		<EntryPoint>[Assembly-CSharp.dll]SceneLoader.Awake:After</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]SceneLoader.Awake:After</StartingPoint>
+		<MinimalManagerVersion>0.22.8</MinimalManagerVersion>
+	</GameInfo>
 </Config>

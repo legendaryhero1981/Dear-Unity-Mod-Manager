@@ -54,8 +54,7 @@ namespace UnityModManagerNet
 
         private static void OnLoad(object sender, AssemblyLoadEventArgs args)
         {
-            if (args.LoadedAssembly.FullName !=
-                "Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null") return;
+            if (args.LoadedAssembly.GetName().Name != "Assembly-CSharp") return;
             AppDomain.CurrentDomain.AssemblyLoad -= OnLoad;
             Injector.Run(true);
         }
