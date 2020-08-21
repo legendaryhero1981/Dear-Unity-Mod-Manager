@@ -35,6 +35,7 @@ namespace UnityModManagerNet
             /// [0.20.0.17] 新增多种自定义GUIStyle样式
             /// </summary>
             public static GS WindowStyle;
+            public static GS BoxStyle;
             public static GS H1FontStyle;
             public static GS H2FontStyle;
             public static GS BoldFontStyle;
@@ -336,6 +337,12 @@ namespace UnityModManagerNet
                     wordWrap = true
                 };
                 WindowStyle.normal.background.wrapMode = TextureWrapMode.Repeat;
+                BoxStyle = new GS(GUI.skin.box)
+                {
+                    name = "umm box",
+                    alignment = TextAnchor.MiddleCenter,
+                    clipping = TextClipping.Clip
+                };
                 H1FontStyle = h1 = new GS(GUI.skin.label)
                 {
                     name = "umm h1",
@@ -360,6 +367,7 @@ namespace UnityModManagerNet
                     alignment = TextAnchor.UpperCenter,
                     padding = new RectOffset(GlobalFontSize / 4, GlobalFontSize / 2, GlobalFontSize / 4, GlobalFontSize / 2),
                     margin = RectOffset(GlobalFontSize / 4),
+                    clipping = TextClipping.Clip,
                     wordWrap = false
                 };
                 IconStyle = new GS(GUI.skin.box)
@@ -501,8 +509,8 @@ namespace UnityModManagerNet
                             var expandWidth = _mColumns.Where(x => x.Expand && !x.Skip).Sum(x => x.Width);
                             var mods = ModEntries;
                             var colWidth = _mColumns.Select(x => x.Expand ? GL.Width(x.Width / expandWidth * (_mWindowSize.x + expandWidth - amountWidth - GlobalFontSize * 4)) : GL.Width(x.Width)).ToArray();
-                            GL.BeginVertical("box");
-                            GL.BeginHorizontal("box");
+                            GL.BeginVertical(BoxStyle);
+                            GL.BeginHorizontal(BoxStyle);
                             for (var i = 0; i < _mColumns.Count; i++)
                             {
                                 if (_mColumns[i].Skip) continue;
@@ -511,7 +519,7 @@ namespace UnityModManagerNet
                             GL.EndHorizontal();
                             for (int i = 0, j = 0, c = mods.Count; i < c; i++, j = 0)
                             {
-                                GL.BeginVertical("box");
+                                GL.BeginVertical(BoxStyle);
                                 GL.BeginHorizontal();
                                 GL.BeginHorizontal(colWidth[j++]);
                                 if (mods[i].OnGUI != null || mods[i].CanReload)
@@ -594,7 +602,7 @@ namespace UnityModManagerNet
                             }
                             GL.EndVertical();
                             GL.EndScrollView();
-                            GL.BeginVertical("box");
+                            GL.BeginVertical(BoxStyle);
                             GL.BeginHorizontal();
                             GL.Box(Textures.SettingsNormal, IconStyle);
                             GL.Label("选项", BoldFontStyle);
@@ -620,7 +628,7 @@ namespace UnityModManagerNet
                     case "日志":
                         {
                             MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
-                            GL.BeginVertical("box");
+                            GL.BeginVertical(BoxStyle);
                             for (int c = Logger.History.Count, i = Mathf.Max(0, c - Logger.HistoryCapacity); i < c; i++)
                                 GL.Label(Logger.History[i]);
                             GL.EndVertical();
@@ -635,7 +643,7 @@ namespace UnityModManagerNet
                     case "设置":
                         {
                             MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
-                            GL.BeginVertical("box");
+                            GL.BeginVertical(BoxStyle);
                             GL.BeginHorizontal();
                             GL.Label("热键（默认Ctrl+F10）", GL.ExpandWidth(false));
                             DrawKeybinding(ref Params.Hotkey, "DUMM热键设置", null, GL.ExpandWidth(false));
@@ -648,7 +656,7 @@ namespace UnityModManagerNet
                             GL.Label("游戏启动时自动显示MOD管理器窗口", GL.ExpandWidth(false));
                             ToggleGroup(Params.ShowOnStart, MShowOnStartStrings, i => { Params.ShowOnStart = i; }, null, GL.ExpandWidth(false));
                             GL.EndHorizontal();
-                            GL.BeginVertical("box");
+                            GL.BeginVertical(BoxStyle);
                             GL.Label("窗口大小", BoldFontStyle, GL.ExpandWidth(false));
                             GL.BeginHorizontal();
                             GL.Label("宽度", GL.ExpandWidth(false));
@@ -676,7 +684,7 @@ namespace UnityModManagerNet
                             }
                             GL.EndHorizontal();
                             GL.EndVertical();
-                            GL.BeginVertical("box");
+                            GL.BeginVertical(BoxStyle);
                             GL.Label("UI", BoldFontStyle, GL.ExpandWidth(false));
                             GL.BeginHorizontal();
                             GL.Label("缩放", GL.ExpandWidth(false));

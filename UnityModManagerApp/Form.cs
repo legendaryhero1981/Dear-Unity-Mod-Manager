@@ -31,6 +31,7 @@ namespace UnityModManagerNet.Installer
 
         private static readonly Dictionary<string, LibIncParam> libraryFiles = new Dictionary<string, LibIncParam>
         {
+            {"background.jpg", LibIncParam.Normal},
             { "0Harmony.dll", LibIncParam.Normal },
             { "0Harmony12.dll", LibIncParam.Minimal_lt_0_22 },
             { "0Harmony-1.2.dll", LibIncParam.Minimal_lt_0_22 },
