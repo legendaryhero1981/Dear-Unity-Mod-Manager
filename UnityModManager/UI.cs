@@ -193,42 +193,40 @@ namespace UnityModManagerNet
             }
 
             /// <summary>
-            /// [0.21.4.24] 使用独立的协程异步高效地执行来自各Mod的Actions
+            /// [0.22.8.35] 使用独立的协程异步高效地执行来自各Mod的Actions
             /// </summary>
+            private const float WaitTime = 5f;
+            private static readonly WaitForSecondsRealtime WaitForSecondsRealtime = new WaitForSecondsRealtime(WaitTime);
             private static IEnumerator<object> DoActionsFromMods
             {
                 get
                 {
                     Logger.Log($"已启动协程 {typeof(UI).FullName}.DoActionsFromMods！");
-                    var waitUntil = new WaitUntil(() => DoActionsAsync().IsCompleted);
-                    var waitSeconds = new WaitForSecondsRealtime(1f);
                     while (true)
                     {
-                        yield return waitUntil;
-                        yield return waitSeconds;
+                        yield return WaitForSecondsRealtime;
+                        var count = 0;
+                        ModEntries.FindAll(m => 0 < m.OnModActions.Count).ForEach(m =>
+                        {
+                            while (0 < m.OnModActions.Count)
+                            {
+                                m.OnModActions.TryPop(out var action);
+                                try
+                                {
+                                    action(m);
+                                    Logger.Log($"异步任务 {action?.Method.FullDescription()} 执行完毕！");
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Log(@$"异步任务 {action?.Method.FullDescription()} 执行时出错：\n{e}");
+                                }
+                                count++;
+                            }
+                        });
+                        if (0 < count)
+                            Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoActionsAsync 本次扫描共执行了{count}个任务！");
                     }
                 }
-            }
-
-            private static async Task<int> DoActionsAsync()
-            {
-                return await Task.Run(() =>
-                {
-                    var count = 0;
-                    ModEntries.FindAll(m => 0 < m.OnModActions.Count).ForEach(m =>
-                    {
-                        while (0 < m.OnModActions.Count)
-                        {
-                            m.OnModActions.TryPop(out var action);
-                            action(m);
-                            Logger.Log($"异步任务 {action?.Method.FullDescription()} 执行完毕！");
-                            count++;
-                        }
-                    });
-                    if (0 < count)
-                        Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoActionsAsync 本次扫描共执行了{count}个任务！");
-                    return count;
-                });
             }
 
             private void Awake()
@@ -334,6 +332,7 @@ namespace UnityModManagerNet
                     alignment = TextAnchor.UpperCenter,
                     padding = RectOffset(0),
                     margin = RectOffset(0),
+                    clipping = TextClipping.Overflow,
                     wordWrap = true
                 };
                 WindowStyle.normal.background.wrapMode = TextureWrapMode.Repeat;
@@ -341,7 +340,8 @@ namespace UnityModManagerNet
                 {
                     name = "umm box",
                     alignment = TextAnchor.MiddleCenter,
-                    clipping = TextClipping.Clip
+                    clipping = TextClipping.Overflow,
+                    wordWrap = true
                 };
                 H1FontStyle = h1 = new GS(GUI.skin.label)
                 {
@@ -352,6 +352,7 @@ namespace UnityModManagerNet
                     alignment = TextAnchor.MiddleCenter,
                     padding = RectOffset(GlobalFontSize / 4),
                     margin = RectOffset(GlobalFontSize / 4),
+                    clipping = TextClipping.Overflow,
                     wordWrap = true
                 };
                 H2FontStyle = h2 = new GS(H1FontStyle) { name = "umm h2", fontSize = H2FontSize };
@@ -367,7 +368,7 @@ namespace UnityModManagerNet
                     alignment = TextAnchor.UpperCenter,
                     padding = new RectOffset(GlobalFontSize / 4, GlobalFontSize / 2, GlobalFontSize / 4, GlobalFontSize / 2),
                     margin = RectOffset(GlobalFontSize / 4),
-                    clipping = TextClipping.Clip,
+                    clipping = TextClipping.Overflow,
                     wordWrap = false
                 };
                 IconStyle = new GS(GUI.skin.box)
@@ -399,6 +400,7 @@ namespace UnityModManagerNet
                     alignment = TextAnchor.MiddleCenter,
                     padding = RectOffset(GlobalFontSize / 2, GlobalFontSize / 4),
                     margin = RectOffset(GlobalFontSize / 4),
+                    clipping = TextClipping.Overflow,
                     wordWrap = true
                 };
             }
