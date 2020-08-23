@@ -183,6 +183,7 @@ namespace UnityModManagerNet
                 try
                 {
                     var gameObject = new GameObject(typeof(UI).FullName, typeof(UI));
+                    DontDestroyOnLoad(gameObject);
                     return true;
                 }
                 catch (Exception e)
@@ -197,6 +198,7 @@ namespace UnityModManagerNet
             /// </summary>
             private const float WaitTime = 5f;
             private static readonly WaitForSecondsRealtime WaitForSecondsRealtime = new WaitForSecondsRealtime(WaitTime);
+
             private static IEnumerator<object> DoActionsFromMods
             {
                 get
@@ -205,28 +207,27 @@ namespace UnityModManagerNet
                     while (true)
                     {
                         yield return WaitForSecondsRealtime;
-                        var count = 0;
-                        ModEntries.FindAll(m => 0 < m.OnModActions.Count).ForEach(m =>
-                        {
-                            while (0 < m.OnModActions.Count)
-                            {
-                                m.OnModActions.TryPop(out var action);
-                                try
-                                {
-                                    action(m);
-                                    Logger.Log($"异步任务 {action?.Method.FullDescription()} 执行完毕！");
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.Log(@$"异步任务 {action?.Method.FullDescription()} 执行时出错：\n{e}");
-                                }
-                                count++;
-                            }
-                        });
-                        if (0 < count)
-                            Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoActionsAsync 本次扫描共执行了{count}个任务！");
+                        yield return DoActionsAsync();
                     }
                 }
+            }
+
+            private static int DoActionsAsync()
+            {
+                var count = 0;
+                ModEntries.FindAll(m => 0 < m.OnModActions.Count).ForEach(m =>
+                {
+                    while (0 < m.OnModActions.Count)
+                    {
+                        m.OnModActions.TryPop(out var action);
+                        action?.Invoke(m);
+                        Logger.Log($"异步任务 {action?.Method.FullDescription()} 执行完毕！");
+                        count++;
+                    }
+                });
+                if (0 < count)
+                    Logger.Log($"异步任务执行器 {typeof(UI).FullName}.DoActionsAsync 本次扫描共执行了{count}个任务！");
+                return count;
             }
 
             private void Awake()
@@ -245,7 +246,7 @@ namespace UnityModManagerNet
                     if (null == _mBackground)
                         _mBackground = "1".Equals(Config.FixBlackUI) || "true".Equals(Config.FixBlackUI?.ToLower()) ? Textures.WindowLighter : Textures.Window;
                 }
-                StartCoroutine(DoActionsFromMods);
+                DelayToInvoke.StartCoroutine(DoActionsFromMods);
             }
 
             private void Start()
@@ -258,7 +259,7 @@ namespace UnityModManagerNet
             private void OnDestroy()
             {
                 Logger.Log($"已关闭协程 {typeof(UI).FullName}.DoActionsFromMods！");
-                StopCoroutine(DoActionsFromMods);
+                DelayToInvoke.StopCoroutine(DoActionsFromMods);
                 SaveSettingsAndParams();
                 Logger.WriteBuffers();
             }

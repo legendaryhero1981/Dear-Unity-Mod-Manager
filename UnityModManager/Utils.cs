@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace UnityModManagerNet
 {
@@ -69,7 +71,166 @@ namespace UnityModManagerNet
             return (p == 4) || (p == 128);
         }
     }
+    /// <summary>
+    /// [0.22.8.35] 给没用继承MonoBehaviour的类方法中执行协程和延迟执行方法提供支持
+    /// </summary>
+    public class DelayToInvoke
+    {
+        private class TaskBehaviour : MonoBehaviour
+        {
+        }
 
+        private static TaskBehaviour taskBehaviour;
+
+        //静态构造函数
+        static DelayToInvoke()
+        {
+            var gameObject = new GameObject(typeof(DelayToInvoke).FullName, typeof(DelayToInvoke));
+            Object.DontDestroyOnLoad(gameObject);
+            taskBehaviour = gameObject.AddComponent<TaskBehaviour>();
+        }
+
+        public static Coroutine StartCoroutine(IEnumerator routine)
+        {
+            return taskBehaviour.StartCoroutine(routine);
+        }
+
+        public static void StopCoroutine(IEnumerator routine)
+        {
+            taskBehaviour.StopCoroutine(routine);
+        }
+
+        public static void StopCoroutine(ref Coroutine routine)
+        {
+            taskBehaviour.StopCoroutine(routine);
+        }
+
+        public static Coroutine DelayToInvokeBySecond(Action action, float delaySeconds)
+        {
+            return taskBehaviour.StartCoroutine(StartDelayToInvokeBySecond(action, delaySeconds));
+        }
+
+        public static Coroutine DelayToInvokeByFrame(Action action, int delayFrames)
+        {
+            return taskBehaviour.StartCoroutine(StartDelayToInvokeByFrame(action, delayFrames));
+        }
+
+        public static Coroutine ActionLoopByTime(float duration, float interval, Action action)
+        {
+            if (action == null || duration <= 0 || interval <= 0 || duration < interval) return null;
+            return taskBehaviour.StartCoroutine(StartActionLoopByTime(duration, interval, action));
+        }
+
+        public static Coroutine ActionLoopByCount(int loopCount, float interval, Action action)
+        {
+            if (action == null || loopCount <= 0 || interval <= 0) return null;
+            return taskBehaviour.StartCoroutine(StartActionLoopByCount(loopCount, interval, action));
+        }
+
+        private static IEnumerator StartDelayToInvokeBySecond(Action action, float delaySeconds)
+        {
+            if (delaySeconds > 0) yield return new WaitForSeconds(delaySeconds);
+            else yield return null;
+            action?.Invoke();
+        }
+
+        private static IEnumerator StartDelayToInvokeByFrame(Action action, int delayFrames)
+        {
+            if (delayFrames > 1)
+                for (var i = 0; i < delayFrames; i++)
+                    yield return null;
+            else yield return null;
+            action?.Invoke();
+        }
+
+        private static IEnumerator StartActionLoopByTime(float duration, float interval, Action action)
+        {
+            yield return new CustomActionLoopByTime(duration, interval, action);
+        }
+
+        private static IEnumerator StartActionLoopByCount(int loopCount, float interval, Action action)
+        {
+            yield return new CustomActionLoopByCount(loopCount, interval, action);
+        }
+
+        private class CustomActionLoopByTime : CustomYieldInstruction
+        {
+            private Action callback;
+            private float startTime;
+            private float lastTime;
+            private float interval;
+            private float duration;
+
+            public CustomActionLoopByTime(float _duration, float _interval, Action _callback)
+            {
+                //记录开始时间
+                startTime = Time.time;
+                //记录上一次间隔时间
+                lastTime = Time.time;
+                //记录间隔调用时间
+                interval = _interval;
+                //记录总时间
+                duration = _duration;
+                //间隔回调
+                callback = _callback;
+            }
+
+            //保持协程暂停返回true。让coroutine继续执行返回 false。
+            //在MonoBehaviour.Update之后、MonoBehaviour.LateUpdate之前，每帧都会查询keepWaiting属性。
+            public override bool keepWaiting
+            {
+                get
+                {
+                    //此方法返回false表示协程结束
+                    if (Time.time - startTime >= duration) return false;
+                    if (Time.time - lastTime >= interval)
+                    {
+                        //更新上一次间隔时间
+                        lastTime = Time.time;
+                        callback?.Invoke();
+                    }
+                    return true;
+                }
+            }
+        }
+
+        private class CustomActionLoopByCount : CustomYieldInstruction
+        {
+            private Action callback;
+            private float lastTime;
+            private float interval;
+            private int curCount;
+            private int loopCount;
+
+            public CustomActionLoopByCount(int _loopCount, float _interval, Action _callback)
+            {
+                lastTime = Time.time;
+                interval = _interval;
+                curCount = 0;
+                loopCount = _loopCount;
+                callback = _callback;
+            }
+
+            public override bool keepWaiting
+            {
+                get
+                {
+                    if (curCount > loopCount)
+                    {
+                        return false;
+                    }
+                    else if (Time.time - lastTime >= interval)
+                    {
+                        //更新上一次间隔时间
+                        lastTime = Time.time;
+                        curCount++;
+                        callback?.Invoke();
+                    }
+                    return true;
+                }
+            }
+        }
+    }
     /// <summary>
     ///     [0.18.0]
     /// </summary>
