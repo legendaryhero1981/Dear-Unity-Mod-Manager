@@ -156,6 +156,10 @@
       <HintPath>E:\Decompile\Code\lib\Unity2018.4\UnityEngine.TerrainPhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>E:\Decompile\Code\lib\Unity2018.4\UnityEngine.TestRunner.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.TextCoreModule">
       <HintPath>E:\Decompile\Code\lib\Unity2018.4\UnityEngine.TextCoreModule.dll</HintPath>
       <Private>False</Private>
