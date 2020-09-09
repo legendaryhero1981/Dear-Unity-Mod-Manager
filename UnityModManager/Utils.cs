@@ -105,6 +105,11 @@ namespace UnityModManagerNet
             taskBehaviour.StopCoroutine(routine);
         }
 
+        public static void StopAllCoroutines()
+        {
+            taskBehaviour.StopAllCoroutines();
+        }
+
         public static Coroutine DelayToInvokeBySecond(Action action, float delaySeconds)
         {
             return taskBehaviour.StartCoroutine(StartDelayToInvokeBySecond(action, delaySeconds));
