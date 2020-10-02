@@ -36,7 +36,7 @@ namespace UnityModManagerNet
         /// <summary>
         ///     Contains version of UMM
         /// </summary>
-        public static Version version { get; } = typeof(UnityModManager).Assembly.GetName().Version;
+        public static Version Version { get; } = typeof(UnityModManager).Assembly.GetName().Version;
         public static string modsPath { get; private set; }
         [Obsolete("请使用modsPath！OldModsPath与0.13之前版本的mod兼容。")]
         public static string OldModsPath = "";
@@ -65,7 +65,7 @@ namespace UnityModManagerNet
             initialized = true;
             Logger.Clear();
             Logger.Log("正在初始化数据……");
-            Logger.Log($"版本：{version}。");
+            Logger.Log($"版本：{Version}。");
             try
             {
                 Logger.Log(
@@ -159,59 +159,10 @@ namespace UnityModManagerNet
             }
 
             started = true;
-            if (!string.IsNullOrEmpty(Config.GameVersionPoint))
-                try
-                {
-                    Logger.Log("正在解析游戏版本……");
-                    if (Injector.TryParseEntryPoint(Config.GameVersionPoint, out var assembly, out var className,
-                        out var methodName, out _))
-                    {
-                        var asm = Assembly.Load(assembly);
-                        if (asm == null)
-                        {
-                            Logger.Error($"找不到Assembly文件“{assembly}”！");
-                            goto Next;
-                        }
-
-                        var foundClass = asm.GetType(className);
-                        if (foundClass == null)
-                        {
-                            Logger.Error($"找不到类名称“{className}”！");
-                            goto Next;
-                        }
-
-                        var foundMethod = foundClass.GetMethod(methodName,
-                            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                        if (foundMethod == null)
-                        {
-                            var foundField = foundClass.GetField(methodName,
-                                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                            if (foundField != null)
-                            {
-                                gameVersion = ParseVersion(foundField.GetValue(null).ToString());
-                                Logger.Log($"已检测游戏版本“{gameVersion}”！");
-                            }
-                            else
-                            {
-                                Logger.Error($"找不到方法名称“{methodName}”！");
-                            }
-
-                            goto Next;
-                        }
-
-                        gameVersion = ParseVersion(foundMethod.Invoke(null, null).ToString());
-                        Logger.Log($"已检测游戏版本“{gameVersion}”！");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                    OpenUnityFileLog();
-                }
-
-            Next:
+            ParseGameVersion();
             GameScripts.Init(ModEntries);
             GameScripts.OnBeforeLoadMods();
+
             if (Directory.Exists(modsPath))
             {
                 Logger.Log("正在解析Mods……");
@@ -279,8 +230,134 @@ namespace UnityModManagerNet
             {
                 Logger.Log($"目录“{modsPath}”不存在！");
             }
+
             GameScripts.OnAfterLoadMods();
             if (!UI.Load()) Logger.Error("不能加载UI！");
+        }
+
+        private static void ParseGameVersion()
+        {
+            if (string.IsNullOrEmpty(Config.GameVersionPoint)) return;
+
+            try
+            {
+                Logger.Log("正在解析游戏版本……");
+
+                var version = TryGetValueFromDllPoint(Config.GameVersionPoint)?.ToString();
+                if (version == null) return;
+
+                Logger.Log($"已找到游戏版本字符串为“{version}”！");
+
+                gameVersion = ParseVersion(version);
+                Logger.Log($"已检测游戏版本为“{gameVersion}”！");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                OpenUnityFileLog();
+            }
+        }
+
+        private static object TryGetValueFromDllPoint(string point)
+        {
+            var regex = new Regex(@"^\[(.+\.dll)\](\w+)((?:\.\w+(?:\(\))?)+)$", RegexOptions.IgnoreCase);
+            var match = regex.Match(point);
+
+            if (!match.Success)
+            {
+                Logger.Error($"DLL入口点格式错误：“{point}”！");
+                return null;
+            }
+
+            var dll = match.Groups[1].Value;
+            var path = match.Groups[2].Value;
+            var subpaths = match.Groups[3].Value.Trim('.').Split('.');
+
+            var asm = Assembly.Load(dll);
+            if (asm == null)
+            {
+                Logger.Error($"找不到动态链接库文件“{dll}”！");
+                return null;
+            }
+
+            var cls = asm.GetType(path);
+            var i = 0;
+
+            for (; i < subpaths.Length; i++)
+            {
+                var pathElement = subpaths[i];
+
+                if (pathElement.EndsWith("()")) break;
+
+                path += "." + pathElement;
+                var newCls = asm.GetType(path);
+                if (newCls != null) cls = newCls;
+                else if (cls != null) break;
+            }
+
+            if (cls == null)
+            {
+                Logger.Error($"找不到类“{path}”！");
+                return null;
+            }
+            else if (i == subpaths.Length)
+            {
+                Logger.Error($"无法提供值，因为“{path}”是类型！");
+                return null;
+            }
+
+            object instance = null;
+
+            for (var first = i; i < subpaths.Length; i++)
+            {
+                var pathElement = subpaths[i];
+
+                if (pathElement.EndsWith("()"))
+                {
+                    pathElement = pathElement.Substring(0, pathElement.Length - 2);
+                }
+
+                if (!GetValueFromMember(cls, ref instance, pathElement, i == first)) return null;
+
+                if (instance == null)
+                {
+                    Logger.Error($"“{cls.FullName}.{pathElement}”返回了空引用！");
+                    return null;
+                }
+
+                cls = instance.GetType();
+            }
+
+            return instance;
+        }
+
+        private static bool GetValueFromMember(Type cls, ref object instance, string name, bool _static)
+        {
+            var flags = BindingFlags.Public | BindingFlags.NonPublic | (_static ? BindingFlags.Static : BindingFlags.FlattenHierarchy | BindingFlags.Instance);
+
+            var field = cls.GetField(name, flags);
+            if (field != null)
+            {
+                instance = field.GetValue(instance);
+                return true;
+            }
+
+            var property = cls.GetProperty(name, flags);
+            if (property != null)
+            {
+                instance = property.GetValue(instance, null);
+                return true;
+            }
+
+            var method = cls.GetMethod(name, flags, null, Type.EmptyTypes, null);
+            if (method != null)
+            {
+                instance = method.Invoke(instance, null);
+                return true;
+            }
+
+            Logger.Error($"类“{cls.FullName}”中不包含{(_static ? "静态" : "非静态")}成员“{name}”");
+            return false;
         }
 
         private static void DFS(string id, IReadOnlyDictionary<string, ModEntry> mods)
@@ -303,7 +380,7 @@ namespace UnityModManagerNet
 
         public static Version GetVersion()
         {
-            return version;
+            return Version;
         }
 
         public static void SaveSettingsAndParams()
@@ -753,7 +830,7 @@ namespace UnityModManagerNet
                         if (_mFirstLoading)
                         {
                             var fi = new FileInfo(assemblyPath);
-                            var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + version.GetHashCode() +
+                            var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + UnityModManager.Version.GetHashCode() +
                                                  ManagerVersion.GetHashCode()).GetHashCode();
                             assemblyCachePath = $"{assemblyPath}.{hash}.cache";
                             pdbCachePath = assemblyCachePath + ".pdb";

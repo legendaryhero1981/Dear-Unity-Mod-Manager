@@ -54,8 +54,8 @@ namespace UnityModManagerNet
             public static GS bold;
             public static GS button;
 
-            private static readonly string[] MCheckUpdateStrings = { "从不", "自动" };
-            private static readonly string[] MShowOnStartStrings = { "否", "是" };
+            private static readonly string[] MCheckUpdateStrings = { " 从不", " 自动" };
+            private static readonly string[] MShowOnStartStrings = { " 否", " 是" };
 
             private static int _mLastWindowId;
             private readonly List<Column> _mColumns = new List<Column>();
@@ -461,7 +461,7 @@ namespace UnityModManagerNet
                         _mUiScaleChanged = false;
                         ScaleGui();
                     }
-                    _mWindowRect = GL.Window(0, _mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(_mWindowSize.x), GL.Height(_mWindowSize.y));
+                    _mWindowRect = GL.Window(0, _mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{Version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(_mWindowSize.x), GL.Height(_mWindowSize.y));
                 }
 
                 foreach (var mod in ModEntries)

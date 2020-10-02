@@ -38,8 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2
 		lib\Newtonsoft.Json.dll = lib\Newtonsoft.Json.dll
 		lib\System.Xml.dll = lib\System.Xml.dll
 		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
-		lib\winhttp_x64.dll = lib\winhttp_x64.dll
-		lib\winhttp_x86.dll = lib\winhttp_x86.dll
+		lib\winhttp.dll = lib\winhttp.dll
 	EndProjectSection
 EndProject
 Global

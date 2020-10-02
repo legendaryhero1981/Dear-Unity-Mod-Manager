@@ -58,9 +58,9 @@ namespace UnityModManagerNet.Installer
 
         static string gameExePath;
 
-        static string doorstopFilename = "version.dll";
-        static string doorstopFilenameX86 = "version_x86.dll";
-        static string doorstopFilenameX64 = "version_x64.dll";
+        static string doorstopFilename = "winhttp.dll";
+        //static string doorstopFilenameX86 = "winhttp_x86.dll";
+        //static string doorstopFilenameX64 = "winhttp_x64.dll";
         static string doorstopConfigFilename = "doorstop_config.ini";
         static string doorstopPath;
         static string doorstopConfigPath;
@@ -461,7 +461,7 @@ namespace UnityModManagerNet.Installer
 
                 if (v0_12_Installed != null)
                 {
-                    var versionString = managerInstalled.Fields.First(x => x.Name == nameof(UnityModManager.version)).Constant.Value.ToString();
+                    var versionString = managerInstalled.Fields.First(x => x.Name == nameof(UnityModManager.Version)).Constant.Value.ToString();
                     version2 = Utils.ParseVersion(versionString);
                 }
                 else
@@ -673,11 +673,11 @@ namespace UnityModManagerNet.Installer
                         }
 
                         Log.Print("正在复制文件到游戏……");
-                        var arch = Utils.UnmanagedDllIs64Bit(gameExePath);
-                        var filename = arch == true ? doorstopFilenameX64 : doorstopFilenameX86;
-                        Log.Print($"  '{filename}'");
-                        File.Copy(filename, doorstopPath, true);
-                        Log.Print($"  '{doorstopConfigFilename}'");
+                        //var arch = Utils.UnmanagedDllIs64Bit(gameExePath);
+                        //var filename = arch == true ? doorstopFilenameX64 : doorstopFilenameX86;
+                        Log.Print($"“{doorstopFilename}”");
+                        File.Copy(doorstopFilename, doorstopPath, true);
+                        Log.Print($"“{doorstopConfigFilename}”");
                         File.WriteAllText(doorstopConfigPath, $@"[UnityDoorstop]{Environment.NewLine}enabled = true{Environment.NewLine}targetAssembly = {managerAssemblyPath}");
                         DoactionLibraries(Actions.Install);
                         DoactionGameConfig(Actions.Install);

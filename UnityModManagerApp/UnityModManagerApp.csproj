@@ -101,6 +101,6 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup>
     <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
-    <PostBuildEvent>D:\games\exe4j\file -cd!~ "(?i)(`.ssk`|`.jpg`|`.xml`|`system.xml.dll`|`version_x86.dll`|`version_x64.dll`)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\file -cd!~::-m!~ "(?i)(?&lt;!assembly-csharp.*`.dll`)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
   </PropertyGroup>
 </Project>

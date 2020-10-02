@@ -77,7 +77,13 @@ namespace UnityModManagerNet
         public int Height;
 
         /// <summary>
-        ///     Becomes invisible if a field value matches. Use format "FieldName,Value". Supports only string, primitive and enum
+        ///     Becomes visible if a field value matches. Use format "FieldName|Value". Supports only string, primitive and enum
+        ///     types.
+        /// </summary>
+        public string VisibleOn;
+
+        /// <summary>
+        ///     Becomes invisible if a field value matches. Use format "FieldName|Value". Supports only string, primitive and enum
         ///     types.
         /// </summary>
         public string InvisibleOn;
@@ -101,12 +107,6 @@ namespace UnityModManagerNet
 
         public DrawType Type = DrawType.Auto;
         public bool Vertical;
-
-        /// <summary>
-        ///     Becomes visible if a field value matches. Use format "FieldName,Value". Supports only string, primitive and enum
-        ///     types.
-        /// </summary>
-        public string VisibleOn;
 
         public int Width;
 
@@ -240,7 +240,7 @@ namespace UnityModManagerNet
                 key ??= new KeyBinding();
                 GUILayout.BeginHorizontal();
                 var modifiersValue = new byte[] { 1, 2, 4 };
-                var modifiersStr = new[] { "Ctrl", "Shift", "Alt" };
+                var modifiersStr = new[] { " Ctrl", " Shift", " Alt" };
                 var modifiers = key.modifiers;
                 for (var i = 0; i < modifiersValue.Length; i++)
                     if (GUILayout.Toggle((modifiers & modifiersValue[i]) != 0, modifiersStr[i],
@@ -401,7 +401,7 @@ namespace UnityModManagerNet
                     }
                     else
                     {
-                        if (float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var num))
+                        if (float.TryParse(str, NumberStyles.Any, NumberFormatInfo.CurrentInfo, out var num))
                             result[i] = num;
                         else
                             result[i] = 0;
@@ -432,7 +432,7 @@ namespace UnityModManagerNet
                 }
                 else
                 {
-                    if (float.TryParse(str, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out var num))
+                    if (float.TryParse(str, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out var num))
                         value = num;
                     else
                         value = 0;
@@ -466,7 +466,7 @@ namespace UnityModManagerNet
                 if (string.IsNullOrEmpty(str))
                     value = 0;
                 else
-                    value = int.TryParse(str, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out var num)
+                    value = int.TryParse(str, NumberStyles.Integer, NumberFormatInfo.CurrentInfo, out var num)
                         ? num
                         : 0;
 
@@ -857,7 +857,7 @@ namespace UnityModManagerNet
                                         {
                                             var val = values[i].ToString();
                                             if (a.Precision >= 0 && isFloat)
-                                                if (double.TryParse(val, NumberStyles.Float, NumberFormatInfo.InvariantInfo,
+                                                if (double.TryParse(val, NumberStyles.Float, NumberFormatInfo.CurrentInfo,
                                                     out var num))
                                                     val = num.ToString($"f{a.Precision}");
                                             if (f.FieldType.IsArray)
@@ -879,7 +879,7 @@ namespace UnityModManagerNet
                                             else
                                             {
                                                 if (double.TryParse(result, NumberStyles.Float,
-                                                    NumberFormatInfo.InvariantInfo, out var num))
+                                                    NumberFormatInfo.CurrentInfo, out var num))
                                                 {
                                                     num = Math.Max(num, a.Min);
                                                     num = Math.Min(num, a.Max);
@@ -941,7 +941,7 @@ namespace UnityModManagerNet
                                 if (!a.Vertical)
                                     GUILayout.Space(Scale(5));
                                 var val = f.GetValue(container).ToString();
-                                if (!double.TryParse(val, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out var num))
+                                if (!double.TryParse(val, NumberStyles.Float, NumberFormatInfo.CurrentInfo, out var num))
                                     num = 0;
                                 if (a.Vertical)
                                     GUILayout.BeginHorizontal();
