@@ -257,8 +257,8 @@ namespace UnityModManagerNet
 
             private void OnDestroy()
             {
-                Logger.Log($"已关闭协程 {typeof(UI).FullName}.DoActionsFromMods！");
                 DelayToInvoke.StopCoroutine(DoActionsFromMods);
+                Logger.Log($"已关闭协程 {typeof(UI).FullName}.DoActionsFromMods！");
                 SaveSettingsAndParams();
                 Logger.WriteBuffers();
             }
@@ -269,6 +269,15 @@ namespace UnityModManagerNet
                 {
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
+                }
+
+                try
+                {
+                    KeyBinding.BindKeyboard();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException("BindKeyboard", e);
                 }
 
                 var deltaTime = Time.deltaTime;
@@ -285,7 +294,7 @@ namespace UnityModManagerNet
                     }
                 }
 
-                if (Params.Hotkey.Up() || Input.GetKeyUp(KeyCode.F10) && KeyBinding.Ctrl() || Opened && Input.GetKey(KeyCode.Escape))
+                if (Params.Hotkey.Up() || Param.DefaultHotkey.Up() || Opened && Param.EscapeHotkey.Up())
                     ToggleWindow();
             }
 
@@ -355,10 +364,30 @@ namespace UnityModManagerNet
                     clipping = TextClipping.Overflow,
                     wordWrap = true
                 };
-                H2FontStyle = h2 = new GS(H1FontStyle) { name = "umm h2", fontSize = H2FontSize };
-                CenterFontStyle = new GS(H2FontStyle) { name = "umm center", fontSize = GlobalFontSize };
-                BoldFontStyle = bold = new GS(CenterFontStyle) { name = "umm bold", alignment = TextAnchor.MiddleLeft };
-                NormalFontStyle = new GS(BoldFontStyle) { name = "umm normal", fontStyle = FontStyle.Normal };
+                H2FontStyle = h2 = new GS(H1FontStyle)
+                {
+                    name = "umm h2",
+                    clipping = TextClipping.Overflow,
+                    fontSize = H2FontSize
+                };
+                CenterFontStyle = new GS(H2FontStyle)
+                {
+                    name = "umm center",
+                    clipping = TextClipping.Overflow,
+                    fontSize = GlobalFontSize
+                };
+                BoldFontStyle = bold = new GS(CenterFontStyle)
+                {
+                    name = "umm bold",
+                    clipping = TextClipping.Overflow,
+                    alignment = TextAnchor.MiddleLeft
+                };
+                NormalFontStyle = new GS(BoldFontStyle)
+                {
+                    name = "umm normal",
+                    clipping = TextClipping.Overflow,
+                    fontStyle = FontStyle.Normal
+                };
                 ButtonStyle = button = new GS(GUI.skin.button)
                 {
                     name = "umm button",
@@ -480,8 +509,7 @@ namespace UnityModManagerNet
 
             private void WindowFunction(int windowId)
             {
-                UnityAction buttons = () => { };
-                if (Input.GetKey(KeyCode.LeftControl)) GUI.DragWindow(_mWindowRect);
+                if (KeyBinding.Ctrl()) GUI.DragWindow(_mWindowRect);
                 else CorrectWindowPos();
                 GL.BeginVertical();
                 GL.Space(Scale(H1FontSize + GlobalFontSize));
@@ -489,6 +517,7 @@ namespace UnityModManagerNet
                 _tabId = GL.Toolbar(_tabId, Tabs, ButtonStyle, GL.ExpandWidth(false));
                 GL.FlexibleSpace();
                 GL.EndHorizontal();
+                UnityAction buttons = () => {};
                 DrawTab(_tabId, ref buttons);
                 GL.FlexibleSpace();
                 GL.BeginHorizontal();

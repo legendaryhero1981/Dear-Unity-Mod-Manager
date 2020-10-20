@@ -1053,5 +1053,10 @@ namespace UnityModManagerNet.Installer
         private void splitContainerModsInstall_Panel2_Paint(object sender, PaintEventArgs e)
         {
         }
+
+        private void installedVersion_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

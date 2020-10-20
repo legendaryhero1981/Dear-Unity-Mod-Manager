@@ -11,10 +11,10 @@
     <RootNamespace>UnityModManagerNet</RootNamespace>
     <AssemblyName>UnityModManager</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationVersion>0.22.11.37</ApplicationVersion>
-    <AssemblyVersion>0.22.11.37</AssemblyVersion>
-    <FileVersion>0.22.11.37</FileVersion>
-    <Version>0.22.11.37</Version>
+    <ApplicationVersion>0.22.12.38</ApplicationVersion>
+    <AssemblyVersion>0.22.12.38</AssemblyVersion>
+    <FileVersion>0.22.12.38</FileVersion>
+    <Version>0.22.12.38</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
     <Copyright>Copyright © Legend 2020</Copyright>
@@ -26,7 +26,7 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="Assembly-CSharp-PathfinderKingmaker">
       <HintPath>..\lib\Assembly-CSharp-PathfinderKingmaker.dll</HintPath>
       <Private>False</Private>
       <Aliases>PathfinderKingmaker</Aliases>

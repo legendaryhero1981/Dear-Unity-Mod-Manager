@@ -96,6 +96,7 @@ namespace UnityModManagerNet
             }
             Logger.Log($"Mods路径：{modsPath}。");
             OldModsPath = modsPath;
+            KeyBinding.Initialize();
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             return true;

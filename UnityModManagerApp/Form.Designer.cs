@@ -256,6 +256,7 @@ namespace UnityModManagerNet.Installer
             this.installedVersion.ForeColor = System.Drawing.Color.Green;
             this.installedVersion.Name = "installedVersion";
             this.installedVersion.Tag = "9999";
+            this.installedVersion.Click += new System.EventHandler(this.installedVersion_Click);
             // 
             // gameList
             // 

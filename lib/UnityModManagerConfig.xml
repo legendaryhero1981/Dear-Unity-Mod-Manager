@@ -422,4 +422,13 @@
     <GameVersionPoint>[Assembly-CSharp.dll]MiVersion.Version.ToFullString()</GameVersionPoint>
     <MinimalManagerVersion>0.22.10</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="恐鬼症">
+    <Folder>Phasmophobia</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Phasmophobia.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainManager.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.22.12</MinimalManagerVersion>
+  </GameInfo>
 </Config>
