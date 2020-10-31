@@ -134,7 +134,7 @@ namespace UnityModManagerNet
     /// <summary>
     ///     [0.18.0]
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field)]
     public class HorizontalAttribute : Attribute
     {
     }
@@ -528,7 +528,7 @@ namespace UnityModManagerNet
                             defaultMask = attr.Mask;
 
                         var box = a.Box || a.Collapsible && collapsibleStates.Exists(x => x == f.MetadataToken);
-                        var horizontal = f.GetCustomAttributes(typeof(HorizontalAttribute), false).Length > 0;
+                        var horizontal = f.GetCustomAttributes(typeof(HorizontalAttribute), false).Length > 0 || f.GetType().GetCustomAttributes(typeof(HorizontalAttribute), false).Length > 0;
                         if (horizontal)
                         {
                             GUILayout.BeginHorizontal(box ? "box" : "");
@@ -611,7 +611,7 @@ namespace UnityModManagerNet
                     {
                         case DrawType.Field
                             when !Array.Exists(fieldTypes, x => x == f.FieldType) && !f.FieldType.IsArray:
-                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.Field}");
+                            throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.Field}！");
                         case DrawType.Field:
                             {
                                 options.Add(a.Width != 0 ? GUILayout.Width(a.Width) : GUILayout.Width(Scale(100)));
@@ -860,7 +860,7 @@ namespace UnityModManagerNet
                             }
 
                         case DrawType.Slider when !Array.Exists(sliderTypes, x => x == f.FieldType):
-                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.Slider}");
+                            throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.Slider}！");
                         case DrawType.Slider:
                             {
                                 options.Add(a.Width != 0 ? GUILayout.Width(a.Width) : GUILayout.Width(Scale(200)));
@@ -904,7 +904,7 @@ namespace UnityModManagerNet
                             }
 
                         case DrawType.Toggle when !Array.Exists(toggleTypes, x => x == f.FieldType):
-                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.Toggle}");
+                            throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.Toggle}！");
                         case DrawType.Toggle:
                             {
                                 options.Add(GUILayout.ExpandWidth(false));
@@ -933,7 +933,7 @@ namespace UnityModManagerNet
 
                         case DrawType.ToggleGroup when !f.FieldType.IsEnum ||
                                                        f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0:
-                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.ToggleGroup}");
+                            throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.ToggleGroup}！");
                         case DrawType.ToggleGroup:
                             {
                                 options.Add(GUILayout.ExpandWidth(false));
@@ -966,7 +966,7 @@ namespace UnityModManagerNet
 
                         case DrawType.PopupList when !f.FieldType.IsEnum ||
                                                      f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0:
-                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.PopupList}");
+                            throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.PopupList}！");
                         case DrawType.PopupList:
                             {
                                 options.Add(GUILayout.ExpandWidth(false));
@@ -997,7 +997,7 @@ namespace UnityModManagerNet
                             }
 
                         case DrawType.KeyBinding when f.FieldType != typeof(KeyBinding):
-                            throw new Exception($"Type {f.FieldType} can't be drawed as {DrawType.KeyBinding}");
+                            throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.KeyBinding}！");
                         case DrawType.KeyBinding:
                             {
                                 if (a.Vertical)
