@@ -49,6 +49,15 @@
     <StartingPoint>[Assembly-CSharp-firstpass.dll]MainMenuManager.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.12.2</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="BMX街道管">
+    <GameName>BMX Streets Pipe</GameName>
+    <Folder>PIPE</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>PIPE.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]BikeLoadOut.Awake:After</EntryPoint>
+    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
+  </GameInfo>
   <GameInfo Name="花园瓜子">
     <GameName>Garden Paws</GameName>
     <Folder>Garden Paws</Folder>
