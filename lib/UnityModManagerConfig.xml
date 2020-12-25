@@ -432,6 +432,7 @@
     <MinimalManagerVersion>0.22.10</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="恐鬼症">
+    <GameName>Phasmophobia</GameName>
     <Folder>Phasmophobia</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -439,5 +440,27 @@
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainManager.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.22.12</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="冰与火之舞">
+    <GameName>A Dance of Fire and Ice</GameName>
+    <Folder>ADOFAI</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>A Dance of Fire and Ice.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]ADOStartup.Startup:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]ADOStartup.Startup:After</UIStartingPoint>
+    <MinimalManagerVersion>0.22.14</MinimalManagerVersion>
+    <Comment>需要游戏版本不低于1.11.3</Comment>
+  </GameInfo> 
+  <GameInfo Name="奇幻大陆的勇士">
+    <GameName>Phoenotopia Awakening Demo</GameName>
+    <Folder>Phoenotopia Awakening Demo</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>PhoenotopiaAwakeningDemo.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]PT2.Initialize:After</StartingPoint>
+    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
   </GameInfo>
 </Config>

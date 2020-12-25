@@ -42,6 +42,7 @@ namespace UnityModManagerNet
 
                 public readonly string[] values;
                 public string title;
+                public int unique;
 
                 public PopupToggleGroup_GUI(string[] values)
                 {
@@ -114,7 +115,6 @@ namespace UnityModManagerNet
                     mWindowRect = new Rect(-9000, 0, 0, 0);
                 }
             }
-
             /// <summary>
             /// [0.18.0]
             /// </summary>
@@ -129,7 +129,6 @@ namespace UnityModManagerNet
                 selected = newSelected;
                 return changed;
             }
-
             /// <summary>
             /// [0.18.0]
             /// </summary>
@@ -144,7 +143,20 @@ namespace UnityModManagerNet
                 selected = newSelected;
                 return changed;
             }
-
+            /// <summary>
+            /// [0.22.15]
+            /// </summary>
+            /// <returns>
+            /// Returns true if the value has changed.
+            /// </returns>
+            public static bool PopupToggleGroup(ref int selected, string[] values, string title, int unique, GUIStyle style = null, params GUILayoutOption[] buttonOption)
+            {
+                var changed = false;
+                var newSelected = selected;
+                PopupToggleGroup(selected, values, (i) => { changed = true; newSelected = i; }, title, unique, style, buttonOption);
+                selected = newSelected;
+                return changed;
+            }
             /// <summary>
             /// [0.16.0]
             /// </summary>
@@ -152,11 +164,17 @@ namespace UnityModManagerNet
             {
                 PopupToggleGroup(selected, values, onChange, null, style, buttonOption);
             }
-
             /// <summary>
             /// [0.16.0]
             /// </summary>
             public static void PopupToggleGroup(int selected, string[] values, Action<int> onChange, string title, GUIStyle style = null, params GUILayoutOption[] buttonOption)
+            {
+                PopupToggleGroup(selected, values, onChange, title, 0, style, buttonOption);
+            }
+            /// <summary>
+            /// [0.22.15]
+            /// </summary>
+            public static void PopupToggleGroup(int selected, string[] values, Action<int> onChange, string title, int unique, GUIStyle style = null, params GUILayoutOption[] buttonOption)
             {
                 if (values == null)
                 {
@@ -181,8 +199,9 @@ namespace UnityModManagerNet
                     selected = 0;
                     needInvoke = true;
                 }
-                var obj = PopupToggleGroup_GUI.mList.FirstOrDefault(item => item.values.SequenceEqual(values) && item.title == title);
+                var obj = PopupToggleGroup_GUI.mList.FirstOrDefault(item => unique == 0 && item.title == title && item.values.SequenceEqual(values) || unique != 0 && item.unique == unique && item.title == title);
                 obj ??= new PopupToggleGroup_GUI(values) {title = title};
+                obj.unique = unique;
                 if (obj.newSelected != null && selected != obj.newSelected.Value && obj.newSelected.Value < values.Length)
                 {
                     selected = obj.newSelected.Value;
@@ -190,7 +209,6 @@ namespace UnityModManagerNet
                 }
                 obj.selected = selected;
                 obj.newSelected = null;
-                obj.title = title;
                 obj.Button(null, style, buttonOption);
                 if (!needInvoke) return;
                 try

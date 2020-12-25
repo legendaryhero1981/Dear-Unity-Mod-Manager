@@ -19,7 +19,8 @@ namespace UnityModManagerNet.Installer
     [Serializable]
     public partial class UnityModManagerForm : Form
     {
-        const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
+        private const string DLL_IL2CPP = "GameAssembly.dll";
+        private const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil _autoSizeFormControlUtil;
 
@@ -302,6 +303,12 @@ namespace UnityModManagerNet.Installer
             btnOpenFolder.ForeColor = Color.Green;
             btnOpenFolder.Text = new DirectoryInfo(gamePath).Name;
             folderBrowserDialog.SelectedPath = gamePath;
+            if (File.Exists(Path.Combine(gamePath, DLL_IL2CPP)))
+            {
+                InactiveForm();
+                Log.Print("尚不支持使用IL2CPP编译的游戏版本！");
+                return;
+            }
             managedPath = FindManagedFolder(gamePath);
             managerPath = Path.Combine(managedPath, nameof(UnityModManager));
             entryAssemblyPath = Path.Combine(managedPath, assemblyName);
