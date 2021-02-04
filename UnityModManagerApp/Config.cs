@@ -109,6 +109,7 @@ namespace UnityModManagerNet.Installer
     public sealed class Config
     {
         public const string filename = "UnityModManagerConfig.xml";
+        public const string localFilename = "UnityModManagerConfigLocal.xml";
 
         public string Repository;
         public string HomePage;
@@ -158,6 +159,28 @@ namespace UnityModManagerNet.Installer
                     using var stream = File.OpenRead(filename);
                     var serializer = new XmlSerializer(typeof(Config));
                     var result = serializer.Deserialize(stream) as Config;
+                    if (File.Exists(localFilename))
+                    {
+                        try
+                        {
+                            using (var localStream = File.OpenRead(localFilename))
+                            {
+                                var localResult = serializer.Deserialize(localStream) as Config;
+                                var concatanatedArray = new GameInfo[result.GameInfo.Length + localResult.GameInfo.Length];
+                                result.GameInfo.CopyTo(concatanatedArray, 0);
+                                localResult.GameInfo.CopyTo(concatanatedArray, result.GameInfo.Length);
+                                result.GameInfo = concatanatedArray;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Print(e.ToString() + Environment.NewLine + localFilename);
+                        }
+                    }
+                    else
+                    {
+                        Log.Print($"本地配置文件“{localFilename}”不存在，已忽略。");
+                    }
                     OnDeserialize(result);
                     return result;
                 }
