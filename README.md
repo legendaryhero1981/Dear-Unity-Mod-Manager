@@ -13,6 +13,7 @@
 - [UnityDoorstop](https://github.com/NeighTools/UnityDoorstop)
 - [dnlib](https://github.com/0xd4d/dnlib)
 - [Json.NET](https://github.com/JamesNK/Newtonsoft.Json)
+- [TinyJson](https://github.com/zanders3/json)
 - [Ionic.Zip](https://archive.codeplex.com/?p=dotnetzip)
 
 #
