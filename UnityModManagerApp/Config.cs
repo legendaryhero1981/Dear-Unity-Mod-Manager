@@ -165,7 +165,7 @@ namespace UnityModManagerNet.Installer
                             {
                                 using var localStream = File.OpenRead(file.Name);
                                 var localResult = serializer.Deserialize(localStream) as Config;
-                                if (localResult?.GameInfo == null || result == null) continue;
+                                if (localResult?.GameInfo == null || result?.GameInfo == null) continue;
                                 var concatanatedArray = new GameInfo[result.GameInfo.Length + localResult.GameInfo.Length];
                                 result.GameInfo.CopyTo(concatanatedArray, 0);
                                 localResult.GameInfo.CopyTo(concatanatedArray, result.GameInfo.Length);
@@ -173,7 +173,7 @@ namespace UnityModManagerNet.Installer
                             }
                             catch (Exception e)
                             {
-                                Log.Print(e.ToString() + Environment.NewLine + file.Name);
+                                Log.Print(e + Environment.NewLine + file.Name);
                             }
                         }
                     OnDeserialize(result);
