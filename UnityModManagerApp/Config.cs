@@ -68,6 +68,7 @@ namespace UnityModManagerNet.Installer
         public string Comment;
         public string FixBlackUI;
         public string MinimalManagerVersion;
+        public string ExtraFilesUrl;
 
         public override string ToString()
         {

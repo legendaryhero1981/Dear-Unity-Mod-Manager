@@ -57,9 +57,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="DownloadForm.cs" />
-    <Compile Update="DownloadForm.Designer.cs">
-      <DependentUpon>DownloadForm.cs</DependentUpon>
+    <Compile Update="DownloadExtraFiles.cs" />
+    <Compile Update="DownloadExtraFiles.Designer.cs">
+      <DependentUpon>DownloadExtraFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Update="DownloadMod.cs" />
+    <Compile Update="DownloadMod.Designer.cs">
+      <DependentUpon>DownloadMod.cs</DependentUpon>
     </Compile>
     <Compile Update="Form.cs" />
     <Compile Update="Form.Designer.cs">
@@ -67,8 +71,11 @@
     </Compile>
     <Compile Update="Mods.cs" />
     <Compile Update="Updates.cs" />
-    <EmbeddedResource Include="DownloadForm.resx">
-      <DependentUpon>DownloadForm.cs</DependentUpon>
+    <EmbeddedResource Include="DownloadExtraFiles.resx">
+      <DependentUpon>DownloadExtraFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DownloadMod.resx">
+      <DependentUpon>DownloadMod.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form.resx">
       <DependentUpon>Form.cs</DependentUpon>

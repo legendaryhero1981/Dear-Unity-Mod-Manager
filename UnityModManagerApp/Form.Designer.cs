@@ -22,6 +22,7 @@ namespace UnityModManagerNet.Installer
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UnityModManagerForm));
             this.splitContainerMods = new System.Windows.Forms.SplitContainer();
+            this.btnModInstall = new System.Windows.Forms.Button();
             this.listMods = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -34,16 +35,20 @@ namespace UnityModManagerNet.Installer
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wwwToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerModsInstall = new System.Windows.Forms.SplitContainer();
-            this.btnModInstall = new System.Windows.Forms.Button();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.additionallyGroupBox = new System.Windows.Forms.GroupBox();
+            this.notesTextBox = new System.Windows.Forms.RichTextBox();
+            this.extraFilesGroupBox = new System.Windows.Forms.GroupBox();
+            this.extraFilesManualButton = new System.Windows.Forms.Button();
+            this.extraFilesAutoButton = new System.Windows.Forms.Button();
+            this.extraFilesTextBox = new System.Windows.Forms.RichTextBox();
             this.installedVersion = new System.Windows.Forms.Label();
             this.gameList = new System.Windows.Forms.ComboBox();
             this.currentVersion = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.additionallyGroupBox = new System.Windows.Forms.GroupBox();
-            this.notesTextBox = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.installTypeGroup = new System.Windows.Forms.GroupBox();
             this.btnRestore = new System.Windows.Forms.Button();
@@ -63,13 +68,14 @@ namespace UnityModManagerNet.Installer
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.modInstallFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.skinEngine = new Sunisoft.IrisSkin.SkinEngine();
+            this.gameName = new System.Windows.Forms.Label();
+            this.gameDir = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMods)).BeginInit();
             this.splitContainerMods.Panel1.SuspendLayout();
             this.splitContainerMods.Panel2.SuspendLayout();
             this.splitContainerMods.SuspendLayout();
             this.ModcontextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerModsInstall)).BeginInit();
-            this.splitContainerModsInstall.Panel1.SuspendLayout();
             this.splitContainerModsInstall.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -77,7 +83,9 @@ namespace UnityModManagerNet.Installer
             this.splitContainerMain.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.additionallyGroupBox.SuspendLayout();
+            this.extraFilesGroupBox.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -94,12 +102,21 @@ namespace UnityModManagerNet.Installer
             // 
             // splitContainerMods.Panel1
             // 
+            this.splitContainerMods.Panel1.Controls.Add(this.btnModInstall);
             this.splitContainerMods.Panel1.Controls.Add(this.listMods);
             // 
             // splitContainerMods.Panel2
             // 
             resources.ApplyResources(this.splitContainerMods.Panel2, "splitContainerMods.Panel2");
             this.splitContainerMods.Panel2.Controls.Add(this.splitContainerModsInstall);
+            // 
+            // btnModInstall
+            // 
+            resources.ApplyResources(this.btnModInstall, "btnModInstall");
+            this.btnModInstall.ForeColor = System.Drawing.Color.Green;
+            this.btnModInstall.Name = "btnModInstall";
+            this.btnModInstall.UseVisualStyleBackColor = true;
+            this.btnModInstall.Click += new System.EventHandler(this.btnModInstall_Click);
             // 
             // listMods
             // 
@@ -188,21 +205,13 @@ namespace UnityModManagerNet.Installer
             // 
             // splitContainerModsInstall.Panel1
             // 
-            this.splitContainerModsInstall.Panel1.Controls.Add(this.btnModInstall);
+            this.splitContainerModsInstall.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerModsInstall_Panel1_Paint);
             // 
             // splitContainerModsInstall.Panel2
             // 
             this.splitContainerModsInstall.Panel2.BackgroundImage = global::UnityModManagerNet.Installer.Properties.Resources.dragdropfiles;
             resources.ApplyResources(this.splitContainerModsInstall.Panel2, "splitContainerModsInstall.Panel2");
             this.splitContainerModsInstall.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainerModsInstall_Panel2_Paint);
-            // 
-            // btnModInstall
-            // 
-            resources.ApplyResources(this.btnModInstall, "btnModInstall");
-            this.btnModInstall.ForeColor = System.Drawing.Color.Green;
-            this.btnModInstall.Name = "btnModInstall";
-            this.btnModInstall.UseVisualStyleBackColor = true;
-            this.btnModInstall.Click += new System.EventHandler(this.btnModInstall_Click);
             // 
             // splitContainerMain
             // 
@@ -235,11 +244,13 @@ namespace UnityModManagerNet.Installer
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabPage1.Controls.Add(this.gameDir);
+            this.tabPage1.Controls.Add(this.gameName);
+            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.installedVersion);
             this.tabPage1.Controls.Add(this.gameList);
             this.tabPage1.Controls.Add(this.currentVersion);
             this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.additionallyGroupBox);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.installTypeGroup);
             this.tabPage1.Controls.Add(this.btnRestore);
@@ -250,44 +261,19 @@ namespace UnityModManagerNet.Installer
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             // 
-            // installedVersion
+            // panel1
             // 
-            resources.ApplyResources(this.installedVersion, "installedVersion");
-            this.installedVersion.ForeColor = System.Drawing.Color.Green;
-            this.installedVersion.Name = "installedVersion";
-            this.installedVersion.Tag = "9999";
-            this.installedVersion.Click += new System.EventHandler(this.installedVersion_Click);
-            // 
-            // gameList
-            // 
-            this.gameList.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.gameList.DropDownHeight = 460;
-            resources.ApplyResources(this.gameList, "gameList");
-            this.gameList.FormattingEnabled = true;
-            this.gameList.Name = "gameList";
-            this.gameList.Sorted = true;
-            this.gameList.Tag = "9999";
-            this.gameList.SelectedIndexChanged += new System.EventHandler(this.gameList_Changed);
-            // 
-            // currentVersion
-            // 
-            resources.ApplyResources(this.currentVersion, "currentVersion");
-            this.currentVersion.ForeColor = System.Drawing.Color.Green;
-            this.currentVersion.Name = "currentVersion";
-            this.currentVersion.Tag = "9999";
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.ForeColor = System.Drawing.Color.Green;
-            this.label2.Name = "label2";
-            this.label2.Tag = "9999";
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Controls.Add(this.additionallyGroupBox);
+            this.panel1.Controls.Add(this.extraFilesGroupBox);
+            this.panel1.Name = "panel1";
+            this.panel1.Tag = "9999";
             // 
             // additionallyGroupBox
             // 
-            resources.ApplyResources(this.additionallyGroupBox, "additionallyGroupBox");
             this.additionallyGroupBox.Controls.Add(this.notesTextBox);
             this.additionallyGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            resources.ApplyResources(this.additionallyGroupBox, "additionallyGroupBox");
             this.additionallyGroupBox.Name = "additionallyGroupBox";
             this.additionallyGroupBox.TabStop = false;
             this.additionallyGroupBox.Tag = "9999";
@@ -307,24 +293,122 @@ namespace UnityModManagerNet.Installer
             this.notesTextBox.Tag = "9999";
             this.notesTextBox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.notesTextBox_LinkClicked);
             // 
+            // extraFilesGroupBox
+            // 
+            this.extraFilesGroupBox.Controls.Add(this.extraFilesManualButton);
+            this.extraFilesGroupBox.Controls.Add(this.extraFilesAutoButton);
+            this.extraFilesGroupBox.Controls.Add(this.extraFilesTextBox);
+            this.extraFilesGroupBox.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.extraFilesGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.extraFilesGroupBox.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
+            resources.ApplyResources(this.extraFilesGroupBox, "extraFilesGroupBox");
+            this.extraFilesGroupBox.Name = "extraFilesGroupBox";
+            this.extraFilesGroupBox.TabStop = false;
+            this.extraFilesGroupBox.Tag = "9999";
+            this.extraFilesGroupBox.Enter += new System.EventHandler(this.extraFilesGroupBox_Enter);
+            // 
+            // extraFilesManualButton
+            // 
+            this.extraFilesManualButton.BackColor = System.Drawing.Color.Transparent;
+            this.extraFilesManualButton.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.extraFilesManualButton.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
+            this.extraFilesManualButton.ForeColor = System.Drawing.SystemColors.Highlight;
+            resources.ApplyResources(this.extraFilesManualButton, "extraFilesManualButton");
+            this.extraFilesManualButton.Name = "extraFilesManualButton";
+            this.extraFilesManualButton.UseMnemonic = false;
+            this.extraFilesManualButton.UseVisualStyleBackColor = false;
+            this.extraFilesManualButton.Click += new System.EventHandler(this.extraFilesManualButton_Click);
+            // 
+            // extraFilesAutoButton
+            // 
+            this.extraFilesAutoButton.BackColor = System.Drawing.Color.Transparent;
+            this.extraFilesAutoButton.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.extraFilesAutoButton.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
+            this.extraFilesAutoButton.ForeColor = System.Drawing.Color.Green;
+            resources.ApplyResources(this.extraFilesAutoButton, "extraFilesAutoButton");
+            this.extraFilesAutoButton.Name = "extraFilesAutoButton";
+            this.extraFilesAutoButton.UseMnemonic = false;
+            this.extraFilesAutoButton.UseVisualStyleBackColor = false;
+            this.extraFilesAutoButton.Click += new System.EventHandler(this.extraFilesAutoButton_Click);
+            // 
+            // extraFilesTextBox
+            // 
+            this.extraFilesTextBox.AcceptsTab = true;
+            this.extraFilesTextBox.AutoWordSelection = true;
+            this.extraFilesTextBox.BackColor = System.Drawing.Color.LightSalmon;
+            this.extraFilesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.extraFilesTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            resources.ApplyResources(this.extraFilesTextBox, "extraFilesTextBox");
+            this.extraFilesTextBox.Name = "extraFilesTextBox";
+            this.extraFilesTextBox.ReadOnly = true;
+            this.extraFilesTextBox.ShortcutsEnabled = false;
+            this.extraFilesTextBox.TabStop = false;
+            // 
+            // installedVersion
+            // 
+            resources.ApplyResources(this.installedVersion, "installedVersion");
+            this.installedVersion.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.installedVersion.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.installedVersion.ForeColor = System.Drawing.Color.Green;
+            this.installedVersion.Name = "installedVersion";
+            this.installedVersion.Tag = "9999";
+            this.installedVersion.Click += new System.EventHandler(this.installedVersion_Click);
+            // 
+            // gameList
+            // 
+            this.gameList.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.gameList.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.gameList.DropDownHeight = 460;
+            resources.ApplyResources(this.gameList, "gameList");
+            this.gameList.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.gameList.FormattingEnabled = true;
+            this.gameList.Name = "gameList";
+            this.gameList.Sorted = true;
+            this.gameList.Tag = "";
+            this.gameList.SelectedIndexChanged += new System.EventHandler(this.gameList_Changed);
+            // 
+            // currentVersion
+            // 
+            resources.ApplyResources(this.currentVersion, "currentVersion");
+            this.currentVersion.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.currentVersion.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.currentVersion.ForeColor = System.Drawing.Color.Green;
+            this.currentVersion.Name = "currentVersion";
+            this.currentVersion.Tag = "9999";
+            // 
+            // label2
+            // 
+            this.label2.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.label2.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.label2.ForeColor = System.Drawing.Color.Green;
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
+            this.label2.Tag = "9999";
+            // 
             // label3
             // 
             resources.ApplyResources(this.label3, "label3");
+            this.label3.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.label3.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
             this.label3.ForeColor = System.Drawing.Color.Green;
             this.label3.Name = "label3";
             this.label3.Tag = "9999";
             // 
             // installTypeGroup
             // 
-            resources.ApplyResources(this.installTypeGroup, "installTypeGroup");
+            this.installTypeGroup.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.installTypeGroup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.installTypeGroup.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
+            resources.ApplyResources(this.installTypeGroup, "installTypeGroup");
             this.installTypeGroup.Name = "installTypeGroup";
             this.installTypeGroup.TabStop = false;
             this.installTypeGroup.Tag = "9999";
             // 
             // btnRestore
             // 
+            this.btnRestore.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             resources.ApplyResources(this.btnRestore, "btnRestore");
+            this.btnRestore.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
             this.btnRestore.Name = "btnRestore";
             this.btnRestore.UseMnemonic = false;
             this.btnRestore.UseVisualStyleBackColor = true;
@@ -332,9 +416,11 @@ namespace UnityModManagerNet.Installer
             // 
             // btnDownloadUpdate
             // 
-            resources.ApplyResources(this.btnDownloadUpdate, "btnDownloadUpdate");
             this.btnDownloadUpdate.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnDownloadUpdate.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.btnDownloadUpdate.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
             this.btnDownloadUpdate.ForeColor = System.Drawing.Color.Green;
+            resources.ApplyResources(this.btnDownloadUpdate, "btnDownloadUpdate");
             this.btnDownloadUpdate.Name = "btnDownloadUpdate";
             this.btnDownloadUpdate.Tag = "";
             this.btnDownloadUpdate.UseMnemonic = false;
@@ -343,6 +429,8 @@ namespace UnityModManagerNet.Installer
             // 
             // btnRemove
             // 
+            this.btnRemove.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.btnRemove.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
             resources.ApplyResources(this.btnRemove, "btnRemove");
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.UseMnemonic = false;
@@ -351,9 +439,11 @@ namespace UnityModManagerNet.Installer
             // 
             // btnOpenFolder
             // 
-            resources.ApplyResources(this.btnOpenFolder, "btnOpenFolder");
             this.btnOpenFolder.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnOpenFolder.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.btnOpenFolder.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
             this.btnOpenFolder.ForeColor = System.Drawing.Color.Red;
+            resources.ApplyResources(this.btnOpenFolder, "btnOpenFolder");
             this.btnOpenFolder.Name = "btnOpenFolder";
             this.btnOpenFolder.Tag = "";
             this.btnOpenFolder.UseMnemonic = false;
@@ -362,6 +452,8 @@ namespace UnityModManagerNet.Installer
             // 
             // btnInstall
             // 
+            this.btnInstall.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "ButtonFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.btnInstall.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.ButtonFont;
             resources.ApplyResources(this.btnInstall, "btnInstall");
             this.btnInstall.Name = "btnInstall";
             this.btnInstall.UseMnemonic = false;
@@ -464,6 +556,24 @@ namespace UnityModManagerNet.Installer
             this.skinEngine.SkinFile = null;
             this.skinEngine.TitleFont = global::UnityModManagerNet.Installer.Properties.Settings.Default.TitleFont;
             // 
+            // gameName
+            // 
+            this.gameName.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.gameName.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.gameName.ForeColor = System.Drawing.SystemColors.Highlight;
+            resources.ApplyResources(this.gameName, "gameName");
+            this.gameName.Name = "gameName";
+            this.gameName.Tag = "9999";
+            // 
+            // gameDir
+            // 
+            this.gameDir.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.gameDir.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.gameDir.ForeColor = System.Drawing.SystemColors.Highlight;
+            resources.ApplyResources(this.gameDir, "gameDir");
+            this.gameDir.Name = "gameDir";
+            this.gameDir.Tag = "9999";
+            // 
             // UnityModManagerForm
             // 
             resources.ApplyResources(this, "$this");
@@ -480,7 +590,6 @@ namespace UnityModManagerNet.Installer
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMods)).EndInit();
             this.splitContainerMods.ResumeLayout(false);
             this.ModcontextMenuStrip1.ResumeLayout(false);
-            this.splitContainerModsInstall.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerModsInstall)).EndInit();
             this.splitContainerModsInstall.ResumeLayout(false);
             this.splitContainerMain.Panel1.ResumeLayout(false);
@@ -491,7 +600,9 @@ namespace UnityModManagerNet.Installer
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.additionallyGroupBox.ResumeLayout(false);
+            this.extraFilesGroupBox.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -548,6 +659,12 @@ namespace UnityModManagerNet.Installer
         private System.Windows.Forms.GroupBox skinSetGroup;
         private System.Windows.Forms.ComboBox skinSetBox;
         private System.Windows.Forms.Button btnDownloadUpdate;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox extraFilesGroupBox;
+        private System.Windows.Forms.RichTextBox extraFilesTextBox;
+        private System.Windows.Forms.Button extraFilesAutoButton;
+        private System.Windows.Forms.Button extraFilesManualButton;
+        private System.Windows.Forms.Label gameDir;
+        private System.Windows.Forms.Label gameName;
     }
 }
-

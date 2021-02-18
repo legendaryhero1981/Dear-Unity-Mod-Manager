@@ -60,8 +60,6 @@ namespace UnityModManagerNet.Installer
         static string gameExePath;
 
         static string doorstopFilename = "winhttp.dll";
-        //static string doorstopFilenameX86 = "winhttp_x86.dll";
-        //static string doorstopFilenameX64 = "winhttp_x64.dll";
         static string doorstopConfigFilename = "doorstop_config.ini";
         static string doorstopPath;
         static string doorstopConfigPath;
@@ -128,7 +126,7 @@ namespace UnityModManagerNet.Installer
                 var rb = new RadioButton
                 {
                     Name = i.ToString(),
-                    Text = i == InstallType.DoorstopProxy ? $"{i.ToString()}（推荐）" : i.ToString(),
+                    Text = i == InstallType.DoorstopProxy ? $"{i}（推荐）" : i.ToString(),
                     AutoSize = true,
                     Location = new Point(rbWidth + 8, 50),
                     Margin = new Padding(0)
@@ -239,7 +237,8 @@ namespace UnityModManagerNet.Installer
                 nameof(GameInfo.OldPatchTarget),
                 nameof(GameInfo.Comment),
                 nameof(GameInfo.MinimalManagerVersion),
-                nameof(GameInfo.FixBlackUI)
+                nameof(GameInfo.FixBlackUI),
+                nameof(GameInfo.ExtraFilesUrl)
             };
 
             var prefix = (!string.IsNullOrEmpty(gameInfo.Name) ? $"[{gameInfo.Name}]" : "[?]");
@@ -341,7 +340,7 @@ namespace UnityModManagerNet.Installer
             if (path.StartsWith(gamePath))
             {
                 InactiveForm();
-                Log.Print("DUMM目录不能放在游戏主目录及其子目录下，请先关闭DUMM，再将DUMM目录移动到单独的目录下再试！");
+                Log.Print("DUMM目录不能放在游戏主目录及其子目录下，请先关闭DUMM，再将DUMM目录移动到单独的目录下重试！");
                 return;
             }
 
@@ -628,7 +627,11 @@ namespace UnityModManagerNet.Installer
 
         private void gameList_Changed(object sender, EventArgs e)
         {
+            notesTextBox.Text = "";
             additionallyGroupBox.Visible = false;
+            extraFilesTextBox.Text = "";
+            extraFilesGroupBox.Visible = false;
+
             var selected = (GameInfo)((ComboBox)sender).SelectedItem;
             if (selected != null)
             {
@@ -637,12 +640,18 @@ namespace UnityModManagerNet.Installer
                 selectedGameParams = param.GetGameParam(selected);
                 if (!string.IsNullOrEmpty(selectedGameParams.Path))
                     Log.Print($"游戏目录“{selectedGameParams.Path}”。");
-            }
 
-            if (!string.IsNullOrEmpty(selected.Comment))
-            {
-                notesTextBox.Text = selected.Comment;
-                additionallyGroupBox.Visible = true;
+                if (!string.IsNullOrEmpty(selected.Comment))
+                {
+                    notesTextBox.Text = selected.Comment;
+                    additionallyGroupBox.Visible = true;
+                }
+
+                if (!string.IsNullOrEmpty(selected.ExtraFilesUrl))
+                {
+                    extraFilesTextBox.Text = $"点击“手动”按钮解压缩文件到游戏文件夹，或点击“自动”按钮进行自动安装；必须先安装完附加文件再运行游戏。";
+                    extraFilesGroupBox.Visible = true;
+                }
             }
 
             RefreshForm();
@@ -680,8 +689,6 @@ namespace UnityModManagerNet.Installer
                         }
 
                         Log.Print("正在复制文件到游戏……");
-                        //var arch = Utils.UnmanagedDllIs64Bit(gameExePath);
-                        //var filename = arch == true ? doorstopFilenameX64 : doorstopFilenameX86;
                         Log.Print($"“{doorstopFilename}”");
                         File.Copy(doorstopFilename, doorstopPath, true);
                         Log.Print($"“{doorstopConfigFilename}”");
@@ -1049,6 +1056,26 @@ namespace UnityModManagerNet.Installer
             Process.Start(e.LinkText);
         }
 
+        private void extraFilesAutoButton_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(selectedGame.ExtraFilesUrl))
+            {
+                var form = new DownloadExtraFiles(selectedGame.ExtraFilesUrl, gamePath);
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                }
+            }
+        }
+
+        private void extraFilesManualButton_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(selectedGame.ExtraFilesUrl))
+            {
+                Process.Start(selectedGame.ExtraFilesUrl);
+            }
+        }
+
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
         }
@@ -1062,6 +1089,16 @@ namespace UnityModManagerNet.Installer
         }
 
         private void installedVersion_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void extraFilesGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void splitContainerModsInstall_Panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

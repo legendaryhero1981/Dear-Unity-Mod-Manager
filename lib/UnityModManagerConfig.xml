@@ -2,20 +2,6 @@
 <Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Repository>https://raw.githubusercontent.com/legendaryhero1981/Dear-Unity-Mod-Manager/master/Repository.json</Repository>
   <HomePage>https://github.com/legendaryhero1981/Dear-Unity-Mod-Manager</HomePage>
-  <GameInfo Name="开拓者：拥王者">
-    <GameName>Pathfinder: Kingmaker</GameName>
-    <GameScriptName>PathfinderKingmaker</GameScriptName>
-    <Folder>Pathfinder Kingmaker</Folder>
-    <ModsDirectory>Mods</ModsDirectory>
-    <ModInfo>Info.json</ModInfo>
-    <GameExe>Kingmaker.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
-    <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
-    <OldPatchTarget>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</OldPatchTarget>
-    <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
-    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
-  </GameInfo>
   <GameInfo Name="缺氧">
     <GameName>Oxygen Not Included</GameName>
     <Folder>OxygenNotIncluded</Folder>
@@ -454,13 +440,55 @@
     <Comment>需要游戏版本不低于1.11.3</Comment>
   </GameInfo> 
   <GameInfo Name="奇幻大陆的勇士">
-    <GameName>Phoenotopia Awakening Demo</GameName>
-    <Folder>Phoenotopia Awakening Demo</Folder>
+    <GameName>Phoenotopia Awakening</GameName>
+    <Folder>Phoenotopia Awakening</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
-    <GameExe>PhoenotopiaAwakeningDemo.exe</GameExe>
+    <GameExe>PhoenotopiaAwakening.exe</GameExe>
     <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]PT2.Initialize:After</StartingPoint>
     <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="索拉斯塔">
+    <GameName>Solasta</GameName>
+    <Folder>Solasta</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Solasta.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]RuntimeManager.LoadRuntime:After</StartingPoint>
+    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="极乐迪斯科">
+    <GameName>Disco Elysium</GameName>
+    <Folder>Disco Elysium</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>disco.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]MainMenuList.Start:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenuList.Start:Before</StartingPoint>        
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenuList.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="戴森球计划">
+    <GameName>Dyson Sphere Program</GameName>
+    <Folder>Dyson Sphere Program</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <EntryPoint>[Assembly-CSharp.dll]DSPGame.Start:After</EntryPoint>
+    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="英灵神殿">
+    <GameName>Valheim</GameName>
+    <Folder>Valheim</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>valheim.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[assembly_valheim.dll]FejdStartup.Awake:After</StartingPoint>
+    <GameVersionPoint>[assembly_valheim.dll]Version.GetVersionString</GameVersionPoint>
+    <MinimalManagerVersion>0.23.0</MinimalManagerVersion>
+    <ExtraFilesUrl>https://www.dropbox.com/s/n3wuttu0kwrq2t4/valheim_Data.zip?dl=1</ExtraFilesUrl>
+    <Comment>要求游戏版本不低于0.143.5和unity引擎版本2019.4.161。也许，当这些版本更改时，还必须更新管理器。游戏可以通过Steam检查文件机制来恢复。</Comment>
   </GameInfo>
 </Config>

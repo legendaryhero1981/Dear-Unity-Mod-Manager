@@ -1,6 +1,6 @@
 ﻿namespace UnityModManagerNet.Installer
 {
-    partial class DownloadForm
+    partial class DownloadMod
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DownloadForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DownloadMod));
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.status = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -50,7 +50,7 @@
             this.status.Text = "下载中……";
             this.status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // DownloadForm
+            // DownloadMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -61,7 +61,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DownloadForm";
+            this.Name = "DownloadMod";
             this.ShowInTaskbar = false;
             this.Text = "游戏MOD更新";
             this.TopMost = true;
