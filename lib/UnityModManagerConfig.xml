@@ -491,4 +491,26 @@
     <ExtraFilesUrl>https://www.dropbox.com/s/n3wuttu0kwrq2t4/valheim_Data.zip?dl=1</ExtraFilesUrl>
     <Comment>要求游戏版本不低于0.143.5和unity引擎版本2019.4.161。也许，当这些版本更改时，还必须更新管理器。游戏可以通过Steam检查文件机制来恢复。</Comment>
   </GameInfo>
+  <GameInfo Name="绝对漂移">
+    <GameName>Absolute Drift</GameName>
+    <Folder>Absolute Drift</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>absolutedrift.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]MainMenuNavigation.Start:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenuNavigation.Start:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenuNavigation.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.23.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="武装原型">
+    <GameName>Broforce</GameName>
+    <Folder>Broforce</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Broforce.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.23.2</MinimalManagerVersion>
+  </GameInfo>
 </Config>
