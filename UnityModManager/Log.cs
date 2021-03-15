@@ -137,6 +137,7 @@ namespace UnityModManagerNet
                 Console.WriteLine(e.ToString());
             }
 
+            private static bool hasErrors;
             private const int BufferCapacity = 100;
             private static readonly List<string> Buffer = new List<string>(BufferCapacity);
             internal static int HistoryCapacity = 200;
@@ -179,20 +180,28 @@ namespace UnityModManagerNet
                         File.Create(Filepath).Close();
                         _clearOnce = true;
                     }
-                    if (Buffer.Count > 0)
+                    if (Buffer.Count > 0 && !hasErrors)
                     {
-                        using (var writer = File.AppendText(Filepath))
+                        using var writer = File.AppendText(Filepath);
+                        foreach (var str in Buffer)
                         {
-                            foreach (var str in Buffer)
-                            {
-                                writer.WriteLine(str);
-                            }
+                            writer.WriteLine(str);
                         }
                     }
                 }
+                catch (UnauthorizedAccessException e)
+                {
+                    hasErrors = true;
+                    Console.WriteLine(PrefixException + e);
+                    Console.WriteLine(Prefix + "已取消选中UnityModManager目录的只读复选框。");
+                    History.Add(PrefixException + e);
+                    History.Add(Prefix + "已取消选中UnityModManager目录的只读复选框。");
+                }
                 catch (Exception e)
                 {
-                    Debug.LogException(e);
+                    hasErrors = true;
+                    Console.WriteLine(PrefixException + e);
+                    History.Add(PrefixException + e);
                 }
 
                 Buffer.Clear();

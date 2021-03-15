@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Windows.Forms;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
@@ -26,6 +27,8 @@ namespace UnityModManagerNet.Installer
 
         private static readonly Version VER_0_13 = new Version(0, 13);
         private static readonly Version VER_0_22 = new Version(0, 22);
+
+        private static readonly Version HARMONY_VER = new Version(2, 0);
 
         [Flags]
         enum LibIncParam { Normal = 0, Minimal_lt_0_22 = 1 }
@@ -564,10 +567,7 @@ namespace UnityModManagerNet.Installer
 
         private void btnInstall_Click(object sender, EventArgs e)
         {
-            if (!TestWritePermissions())
-            {
-                return;
-            }
+            if (!TestWritePermissions()||!TestCompatibility()) return;
             var modsPath = Path.Combine(gamePath, selectedGame.ModsDirectory);
             if (!Directory.Exists(modsPath))
             {
@@ -955,23 +955,63 @@ namespace UnityModManagerNet.Installer
         private bool TestWritePermissions()
         {
             var success = true;
-            success = Utils.IsDirectoryWritable(managedPath) && success;
-            success = Utils.IsFileWritable(managerAssemblyPath) && success;
-            success = Utils.IsFileWritable(GameInfo.filepathInGame) && success;
-            success = libraryPaths.Aggregate(success, (current, file) => Utils.IsFileWritable(file) && current);
 
             if (selectedGameParams.InstallType == InstallType.DoorstopProxy)
             {
-                success = Utils.IsFileWritable(doorstopPath) && success;
+                success &= Utils.RemoveReadOnly(doorstopPath);
+                success &= Utils.RemoveReadOnly(doorstopConfigPath);
             }
             else
             {
-                success = Utils.IsFileWritable(entryAssemblyPath) && success;
+                success &= Utils.RemoveReadOnly(entryAssemblyPath);
                 if (injectedEntryAssemblyPath != entryAssemblyPath)
-                    success = Utils.IsFileWritable(injectedEntryAssemblyPath) && success;
+                    success &= Utils.RemoveReadOnly(injectedEntryAssemblyPath);
+            }
+
+            if (Directory.Exists(managerPath))
+            {
+                success = Directory.GetFiles(managerPath).Aggregate(success, (current, f) => current & Utils.RemoveReadOnly(f));
+            }
+
+            if (!success)
+                return false;
+
+            success &= Utils.IsDirectoryWritable(managedPath);
+            success &= Utils.IsFileWritable(managerAssemblyPath);
+            success &= Utils.IsFileWritable(GameInfo.filepathInGame);
+
+            success = libraryPaths.Aggregate(success, (current, file) => current & Utils.IsFileWritable(file));
+
+            if (selectedGameParams.InstallType == InstallType.DoorstopProxy)
+            {
+                success &= Utils.IsFileWritable(doorstopPath);
+                success &= Utils.IsFileWritable(doorstopConfigPath);
+            }
+            else
+            {
+                success &= Utils.IsFileWritable(entryAssemblyPath);
+                if (injectedEntryAssemblyPath != entryAssemblyPath)
+                    success &= Utils.IsFileWritable(injectedEntryAssemblyPath);
             }
 
             return success;
+        }
+
+        private bool TestCompatibility()
+        {
+            foreach (var f in new DirectoryInfo(gamePath).GetFiles("0Harmony.dll", SearchOption.AllDirectories))
+            {
+                if (f.FullName.EndsWith(Path.Combine("UnityModManager", "0Harmony.dll"))) continue;
+                var asm = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(f.FullName));
+                if (asm.GetName().Version < HARMONY_VER)
+                {
+                    Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
+                    return false;
+                }
+                Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
+            }
+
+            return true;
         }
 
         private static bool RestoreOriginal(string file, string backup)

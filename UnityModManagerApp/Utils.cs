@@ -80,6 +80,24 @@ namespace UnityModManagerNet.Installer
             }
         }
 
+        public static bool RemoveReadOnly(string filepath)
+        {
+            try
+            {
+                if (File.Exists(filepath))
+                {
+                    var fi = new FileInfo(filepath);
+                    fi.Attributes &= ~System.IO.FileAttributes.ReadOnly;
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Print(e.ToString());
+            }
+            return false;
+        }
+
         internal static bool TryParseEntryPoint(string str, out string assembly)
         {
             return TryParseEntryPoint(str, out assembly, out _, out _, out _);
