@@ -1035,27 +1035,28 @@ namespace UnityModManagerNet.Installer
         {
             Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
 
-            foreach (var path in libraryPaths)
+            foreach (var destpath  in libraryPaths)
             {
-                var filename = Path.GetFileName(path);
+                var filename = Path.GetFileName(destpath );
                 if (action == Actions.Install)
                 {
-                    if (File.Exists(path))
+                    var sourcepath = Path.Combine(Application.StartupPath, filename);
+                    if (File.Exists(destpath ))
                     {
-                        var source = new FileInfo(filename);
-                        var dest = new FileInfo(path);
+                        var source = new FileInfo(sourcepath);
+                        var dest = new FileInfo(destpath );
                         if (dest.LastWriteTimeUtc == source.LastWriteTimeUtc)
                             continue;
                     }
 
                     Log.Print($"  {filename}");
-                    File.Copy(filename, path, true);
+                    File.Copy(sourcepath, destpath , true);
                 }
                 else
                 {
-                    if (!File.Exists(path)) continue;
+                    if (!File.Exists(destpath )) continue;
                     Log.Print($"  {filename}");
-                    File.Delete(path);
+                    File.Delete(destpath );
                 }
             }
         }

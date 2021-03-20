@@ -121,7 +121,7 @@ namespace UnityModManagerNet.Installer
         {
             try
             {
-                using (var writer = new StreamWriter(filename))
+                using (var writer = new StreamWriter(Path.Combine(Application.StartupPath, filename)))
                 {
                     var config = new Config()
                     {
@@ -156,7 +156,7 @@ namespace UnityModManagerNet.Installer
             {
                 try
                 {
-                    using var stream = File.OpenRead(filename);
+                    using var stream = File.OpenRead(Path.Combine(Application.StartupPath, filename));
                     var serializer = new XmlSerializer(typeof(Config));
                     var result = serializer.Deserialize(stream) as Config;
                     foreach (var file in new DirectoryInfo(Application.StartupPath).GetFiles("UnityModManagerConfig*.xml", SearchOption.TopDirectoryOnly))
@@ -164,7 +164,7 @@ namespace UnityModManagerNet.Installer
                         {
                             try
                             {
-                                using var localStream = File.OpenRead(file.Name);
+                                using var localStream = File.OpenRead(file.FullName);
                                 var localResult = serializer.Deserialize(localStream) as Config;
                                 if (localResult?.GameInfo == null || result?.GameInfo == null) continue;
                                 var concatanatedArray = new GameInfo[result.GameInfo.Length + localResult.GameInfo.Length];
@@ -174,7 +174,7 @@ namespace UnityModManagerNet.Installer
                             }
                             catch (Exception e)
                             {
-                                Log.Print(e + Environment.NewLine + file.Name);
+                                Log.Print(e.ToString());
                             }
                         }
                     OnDeserialize(result);
@@ -182,7 +182,7 @@ namespace UnityModManagerNet.Installer
                 }
                 catch (Exception e)
                 {
-                    Log.Print(e.ToString() + Environment.NewLine + filename);
+                    Log.Print(e + Environment.NewLine + filename);
                 }
             }
             else
