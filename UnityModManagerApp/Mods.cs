@@ -181,16 +181,13 @@ namespace UnityModManagerNet.Installer
 
             try
             {
+                var modId = ReadModInfoFromZip(zip).Id;
+                var modPath = Path.Combine(modsPath, modId);
                 foreach (var e in zip.EntriesSorted)
                 {
-                    if (e.IsDirectory)
-                        continue;
-
-                    var filepath = Path.Combine(modsPath, e.FileName);
-                    if (File.Exists(filepath))
-                    {
-                        File.Delete(filepath);
-                    }
+                    if (!e.IsDirectory) continue;
+                    if (e.FileName.Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar, '/') == modId)
+                        modPath = modsPath;
                 }
                 foreach (var entry in zip.EntriesSorted)
                 {
@@ -200,8 +197,8 @@ namespace UnityModManagerNet.Installer
                     }
                     else
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(modsPath, entry.FileName)) ?? string.Empty);
-                        using var fs = new FileStream(Path.Combine(modsPath, entry.FileName), FileMode.Create, FileAccess.Write);
+                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(modPath, entry.FileName)) ?? string.Empty);
+                        using var fs = new FileStream(Path.Combine(modPath, entry.FileName), FileMode.Create, FileAccess.Write);
                         entry.Extract(fs);
                     }
                 }
