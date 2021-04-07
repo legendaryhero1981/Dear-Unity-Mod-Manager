@@ -107,7 +107,7 @@ namespace UnityModManagerNet.Installer
             }
         }
 
-        private void UninstallMod(string name)
+        private void UninstallMod(ModInfo modInfo)
         {
             if (selectedGame == null)
             {
@@ -122,24 +122,22 @@ namespace UnityModManagerNet.Installer
                 return;
             }
 
-            var modPath = Path.Combine(modsPath, name);
-
-            if (Directory.Exists(modPath))
+            if (Directory.Exists(modInfo.Path))
             {
                 try
                 {
-                    Directory.Delete(modPath, true);
-                    Log.Print($"卸载MOD“{name}”成功！");
+                    Directory.Delete(modInfo.Path, true);
+                    Log.Print($"卸载MOD“{modInfo.Id}”成功！");
                 }
                 catch (Exception ex)
                 {
                     Log.Print(ex.Message);
-                    Log.Print($"卸载MOD“{name}”失败！");
+                    Log.Print($"卸载MOD“{modInfo.Id}”失败！");
                 }
             }
             else
             {
-                Log.Print($"目录“{modPath}”不存在！");
+                Log.Print($"目录“{modInfo.Path}”不存在！");
             }
 
             ReloadMods();
@@ -181,24 +179,35 @@ namespace UnityModManagerNet.Installer
 
             try
             {
-                var modId = ReadModInfoFromZip(zip).Id;
-                var modPath = Path.Combine(modsPath, modId);
-                foreach (var e in zip.EntriesSorted)
+                var modInfo = ReadModInfoFromZip(zip);
+                if (modInfo == null)
                 {
-                    if (!e.IsDirectory) continue;
-                    if (e.FileName.Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar, '/') == modId)
-                        modPath = modsPath;
+                    Log.Print($"{Path.GetFileName(zip.Name)} is not supported.");
+                    return;
+                }
+                var modInstalled = _mods.Find(x => x.Id == modInfo.Id && x.Status == ModStatus.Installed);
+                var modPath = modInstalled ? modInstalled.Path : Path.Combine(modsPath, modInfo.Id);
+                var replaceModDir = "";
+                if (zip.EntriesSorted.Count(x => x.FileName.Equals(selectedGame.ModInfo, StringComparison.CurrentCultureIgnoreCase)) == 0)
+                {
+                    modPath = modsPath;
+                    if (modInstalled) replaceModDir = modInstalled.Path.Split(Path.DirectorySeparatorChar).Last();
                 }
                 foreach (var entry in zip.EntriesSorted)
                 {
+                    var filename = entry.FileName;
+                    if (!string.IsNullOrEmpty(replaceModDir))
+                    {
+                        var pos = filename.IndexOf(Path.AltDirectorySeparatorChar);
+                        filename = replaceModDir + filename.Substring(pos, filename.Length - pos);
+                    }
                     if (entry.IsDirectory)
                     {
-                        Directory.CreateDirectory(Path.Combine(modsPath, entry.FileName));
+                        Directory.CreateDirectory(Path.Combine(modsPath, filename));
                     }
                     else
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(modPath, entry.FileName)) ?? string.Empty);
-                        using var fs = new FileStream(Path.Combine(modPath, entry.FileName), FileMode.Create, FileAccess.Write);
+                        using var fs = new FileStream(Path.Combine(modPath, filename), FileMode.Create, FileAccess.Write);
                         entry.Extract(fs);
                     }
                 }
@@ -487,7 +496,7 @@ namespace UnityModManagerNet.Installer
             var modInfo = selectedMod;
             if (modInfo)
             {
-                UninstallMod(modInfo.Id);
+                UninstallMod(modInfo);
             }
         }
 
@@ -496,10 +505,9 @@ namespace UnityModManagerNet.Installer
             var modInfo = selectedMod;
             if (!modInfo) return;
             var previous = modInfo.AvailableVersions.Where(x => x.Key < modInfo.ParsedVersion).OrderByDescending(x => x.Key).FirstOrDefault();
-            if (!string.IsNullOrEmpty(previous.Value))
-            {
-                InstallMod(previous.Value);
-            }
+            if (string.IsNullOrEmpty(previous.Value)) return;
+            UninstallMod(modInfo);
+            InstallMod(previous.Value);
         }
 
         private void wwwToolStripMenuItem1_Click(object sender, EventArgs e)

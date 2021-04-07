@@ -25,13 +25,13 @@ namespace UnityModManagerNet.Updater
         private const string UpdaterAppFile = "DUMMUpdater.exe";
         private const string CacheFilePostfix = ".cache";
 
-        private readonly HashSet<string> _updaterFileNames = new HashSet<string>
+        private readonly HashSet<string> _updaterFileNames = new()
         {
             UpdaterAppFile,
             "Ionic.Zip.dll",
             "Newtonsoft.Json.dll"
         };
-        private readonly Dictionary<string, string> _updaterFiles = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _updaterFiles = new();
 
         public UpdaterForm()
         {
@@ -50,6 +50,9 @@ namespace UnityModManagerNet.Updater
 
         public void Start()
         {
+            var rewrite = false;
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 0) rewrite = args.Contains("-rewrite");
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             if (!Utils.HasNetworkConnection())
@@ -87,7 +90,7 @@ namespace UnityModManagerNet.Updater
                     return;
                 }
                 var release = repository.Releases.FirstOrDefault(x => x.Id == ManagerName);
-                if (File.Exists(ManagerFile))
+                if (!rewrite && File.Exists(ManagerFile))
                 {
                     var managerAssembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(ManagerFile));
                     if (Utils.ParseVersion(release?.Version) <= managerAssembly.GetName().Version)
