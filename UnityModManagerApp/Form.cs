@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
@@ -75,10 +76,34 @@ namespace UnityModManagerNet.Installer
         Param.GameParam selectedGameParams;
         ModInfo selectedMod => listMods.SelectedItems.Count > 0 ? _mods.Find(x => x.DisplayName == listMods.SelectedItems[0].Text) : null;
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetForegroundWindow(IntPtr hwnd);
+
         public UnityModManagerForm()
         {
+            if (CheckApplicationAlreadyRunning(out var process) && MessageBox.Show("Already running", "Notice", MessageBoxButtons.OK) == DialogResult.OK)
+            {
+                if (!Utils.IsUnixPlatform()) SetForegroundWindow(process.MainWindowHandle);
+                Close();
+                return;
+            }
             InitializeComponent();
             Load += UnityModManagerForm_Load;
+        }
+        static bool CheckApplicationAlreadyRunning(out Process result)
+        {
+            result = null;
+            var id = Process.GetCurrentProcess().Id;
+            var name = Process.GetCurrentProcess().ProcessName;
+            foreach (var p in Process.GetProcessesByName(name))
+            {
+                if (p.Id != id)
+                {
+                    result = p;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void UnityModManagerForm_Load(object sender, EventArgs e)
@@ -567,7 +592,7 @@ namespace UnityModManagerNet.Installer
 
         private void btnInstall_Click(object sender, EventArgs e)
         {
-            if (!TestWritePermissions()||!TestCompatibility()) return;
+            if (!TestWritePermissions() || !TestCompatibility()) return;
             var modsPath = Path.Combine(gamePath, selectedGame.ModsDirectory);
             if (!Directory.Exists(modsPath))
             {
@@ -1035,28 +1060,28 @@ namespace UnityModManagerNet.Installer
         {
             Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
 
-            foreach (var destpath  in libraryPaths)
+            foreach (var destpath in libraryPaths)
             {
-                var filename = Path.GetFileName(destpath );
+                var filename = Path.GetFileName(destpath);
                 if (action == Actions.Install)
                 {
                     var sourcepath = Path.Combine(Application.StartupPath, filename);
-                    if (File.Exists(destpath ))
+                    if (File.Exists(destpath))
                     {
                         var source = new FileInfo(sourcepath);
-                        var dest = new FileInfo(destpath );
+                        var dest = new FileInfo(destpath);
                         if (dest.LastWriteTimeUtc == source.LastWriteTimeUtc)
                             continue;
                     }
 
                     Log.Print($"  {filename}");
-                    File.Copy(sourcepath, destpath , true);
+                    File.Copy(sourcepath, destpath, true);
                 }
                 else
                 {
-                    if (!File.Exists(destpath )) continue;
+                    if (!File.Exists(destpath)) continue;
                     Log.Print($"  {filename}");
-                    File.Delete(destpath );
+                    File.Delete(destpath);
                 }
             }
         }

@@ -192,9 +192,9 @@
   <data name="columnHeader4.Width" type="System.Int32, mscorlib">
     <value>170</value>
   </data>
-  <metadata name="ModcontextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="ModcontextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>329, 11</value>
-  </metadata>
+  </data>
   <data name="ModcontextMenuStrip1.Font" type="System.Drawing.Font, System.Drawing">
     <value>微软雅黑, 14.25pt</value>
   </data>
@@ -1161,9 +1161,9 @@
   <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>213, 11</value>
-  </metadata>
+  </data>
   <data name="statusStrip1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -1257,18 +1257,6 @@
   <data name="notesTextBox.Text" xml:space="preserve">
     <value />
   </data>
-  <data name="&gt;&gt;notesTextBox.Name" xml:space="preserve">
-    <value>notesTextBox</value>
-  </data>
-  <data name="&gt;&gt;notesTextBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;notesTextBox.Parent" xml:space="preserve">
-    <value>additionallyGroupBox</value>
-  </data>
-  <data name="&gt;&gt;notesTextBox.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="inputLog.Font" type="System.Drawing.Font, System.Drawing">
     <value>微软雅黑, 12pt</value>
   </data>
@@ -1289,18 +1277,6 @@
   </data>
   <data name="inputLog.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
-  </data>
-  <data name="&gt;&gt;inputLog.Name" xml:space="preserve">
-    <value>inputLog</value>
-  </data>
-  <data name="&gt;&gt;inputLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;inputLog.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;inputLog.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="skinSetGroup.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1338,18 +1314,6 @@
   <data name="skinSetGroup.Text" xml:space="preserve">
     <value>个性化皮肤设置</value>
   </data>
-  <data name="&gt;&gt;skinSetGroup.Name" xml:space="preserve">
-    <value>skinSetGroup</value>
-  </data>
-  <data name="&gt;&gt;skinSetGroup.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;skinSetGroup.Parent" xml:space="preserve">
-    <value>tabPage4</value>
-  </data>
-  <data name="&gt;&gt;skinSetGroup.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="skinSetBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
   </data>
@@ -1372,18 +1336,6 @@
     <value>300, 36</value>
   </data>
   <data name="skinSetBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.Name" xml:space="preserve">
-    <value>skinSetBox</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.Parent" xml:space="preserve">
-    <value>skinSetGroup</value>
-  </data>
-  <data name="&gt;&gt;skinSetBox.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="statusLabel.Font" type="System.Drawing.Font, System.Drawing">
@@ -1425,21 +1377,21 @@
   <data name="&gt;&gt;panelMain.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <metadata name="folderBrowserDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="folderBrowserDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>50, 11</value>
-  </metadata>
-  <metadata name="modInstallFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  </data>
+  <data name="modInstallFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>510, 11</value>
-  </metadata>
+  </data>
   <data name="modInstallFileDialog.Filter" xml:space="preserve">
     <value>ZIP|*.zip</value>
   </data>
-  <metadata name="skinEngine.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <data name="skinEngine.TrayLocation" type="System.Drawing.Point, System.Drawing">
     <value>56, 44</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="$this.Localizable" type="System.Boolean, mscorlib">
     <value>True</value>
-  </metadata>
+  </data>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>8, 19</value>
   </data>
@@ -10918,5 +10870,8 @@
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="openFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>打开目录</value>
   </data>
 </root>

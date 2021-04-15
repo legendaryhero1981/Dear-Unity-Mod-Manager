@@ -34,6 +34,7 @@ namespace UnityModManagerNet.Installer
             this.revertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uninstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wwwToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerModsInstall = new System.Windows.Forms.SplitContainer();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -164,7 +165,8 @@ namespace UnityModManagerNet.Installer
             this.updateToolStripMenuItem,
             this.revertToolStripMenuItem,
             this.uninstallToolStripMenuItem,
-            this.wwwToolStripMenuItem1});
+            this.wwwToolStripMenuItem1,
+            this.openFolderToolStripMenuItem});
             this.ModcontextMenuStrip1.Name = "ModcontextMenuStrip1";
             this.ModcontextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ModcontextMenuStrip1_Opening);
             // 
@@ -197,6 +199,12 @@ namespace UnityModManagerNet.Installer
             this.wwwToolStripMenuItem1.Name = "wwwToolStripMenuItem1";
             resources.ApplyResources(this.wwwToolStripMenuItem1, "wwwToolStripMenuItem1");
             this.wwwToolStripMenuItem1.Click += new System.EventHandler(this.wwwToolStripMenuItem1_Click);
+            // 
+            // openFolderToolStripMenuItem
+            // 
+            this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
+            resources.ApplyResources(this.openFolderToolStripMenuItem, "openFolderToolStripMenuItem");
+            this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
             // 
             // splitContainerModsInstall
             // 
@@ -647,6 +655,7 @@ namespace UnityModManagerNet.Installer
         private System.Windows.Forms.ToolStripMenuItem uninstallToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem revertToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wwwToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerModsInstall;
         private System.Windows.Forms.Button btnModInstall;
         private System.Windows.Forms.OpenFileDialog modInstallFileDialog;
