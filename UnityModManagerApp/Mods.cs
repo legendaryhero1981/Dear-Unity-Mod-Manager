@@ -182,7 +182,7 @@ namespace UnityModManagerNet.Installer
                 var modInfo = ReadModInfoFromZip(zip);
                 if (modInfo == null)
                 {
-                    Log.Print($"{Path.GetFileName(zip.Name)} is not supported.");
+                    Log.Print($"文件“{Path.GetFileName(zip.Name)}”格式错误！");
                     return;
                 }
                 var modInstalled = _mods.Find(x => x.Id == modInfo.Id && x.Status == ModStatus.Installed);
@@ -199,7 +199,7 @@ namespace UnityModManagerNet.Installer
                     if (!string.IsNullOrEmpty(replaceModDir))
                     {
                         var pos = filename.IndexOf(Path.AltDirectorySeparatorChar);
-                        filename = replaceModDir + filename.Substring(pos, filename.Length - pos);
+                        if (0 <= pos) filename = replaceModDir + filename.Substring(pos, filename.Length - pos);
                     }
                     if (entry.IsDirectory)
                     {
