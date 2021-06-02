@@ -366,6 +366,16 @@
     <StartingPoint>[Assembly-CSharp.dll]SceneLoader.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.22.8</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="深海搁浅">
+    <GameName>Stranded Deep</GameName>
+    <Folder>Stranded Deep</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Stranded_Deep.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Beam.UI.MainMenuPresenter.Awake:Before</StartingPoint>
+    <MinimalManagerVersion>0.22.8</MinimalManagerVersion>
+  </GameInfo>
   <GameInfo Name="星球探险家">
     <GameName>Planet Explorers</GameName>
     <Folder>Planet Explorers</Folder>
@@ -447,7 +457,7 @@
     <GameExe>PhoenotopiaAwakening.exe</GameExe>
     <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]PT2.Initialize:After</StartingPoint>
-    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+    <MinimalManagerVersion>0.22.14</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="索拉斯塔">
     <GameName>Solasta</GameName>
@@ -457,7 +467,7 @@
     <GameExe>Solasta.exe</GameExe>
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]RuntimeManager.LoadRuntime:After</StartingPoint>
-    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+    <MinimalManagerVersion>0.22.13</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="极乐迪斯科">
     <GameName>Disco Elysium</GameName>
@@ -487,7 +497,7 @@
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[assembly_valheim.dll]FejdStartup.Awake:After</StartingPoint>
     <GameVersionPoint>[assembly_valheim.dll]Version.GetVersionString</GameVersionPoint>
-    <MinimalManagerVersion>0.23.0</MinimalManagerVersion>
+    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
     <ExtraFilesUrl>https://www.dropbox.com/s/n3wuttu0kwrq2t4/valheim_Data.zip?dl=1</ExtraFilesUrl>
     <Comment>要求游戏版本不低于0.143.5和unity引擎版本2019.4.161。也许，当这些版本更改时，还必须更新管理器。游戏可以通过Steam检查文件机制来恢复。</Comment>
   </GameInfo>
@@ -500,7 +510,7 @@
     <EntryPoint>[Assembly-CSharp.dll]MainMenuNavigation.Start:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenuNavigation.Start:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenuNavigation.Start:After</UIStartingPoint>
-    <MinimalManagerVersion>0.23.2</MinimalManagerVersion>
+    <MinimalManagerVersion>0.22.10</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="武装原型">
     <GameName>Broforce</GameName>
@@ -511,6 +521,49 @@
     <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
-    <MinimalManagerVersion>0.23.2</MinimalManagerVersion>
+    <MinimalManagerVersion>0.23.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="拉力赛艺术">
+    <GameName>Art of Rally</GameName>
+    <Folder>artofrally</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>artofrally.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]GameEntryPoint.Start:After</StartingPoint>
+    <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="浪漫沙加3">
+    <GameName>Romancing SaGa 3</GameName>
+    <Folder>RomancingSaGa3</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>rs3.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]GameMain.Awake:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]GameMain.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="人类：一败涂地">
+    <GameName>Human Fall Flat</GameName>
+    <Folder>HumanFallFlat</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Human.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Multiplayer.NetGame.Awake:After</StartingPoint>
+    <GameVersionPoint>[Assembly-CSharp.dll]VersionDisplay.fullVersion</GameVersionPoint>
+    <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="奥西里斯：新黎明">
+    <GameName>Osiris New Dawn</GameName>
+    <Folder>Osiris</Folder>
+    <ModInfo>Info.json</ModInfo>
+    <ModsDirectory>Mods</ModsDirectory>
+    <GameExe>OsirisNewDawn.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
+    <GameVersionPoint>[Assembly-CSharp.dll]Version.GetString</GameVersionPoint>
+    <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
   </GameInfo>
 </Config>
