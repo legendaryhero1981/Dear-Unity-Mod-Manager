@@ -566,4 +566,35 @@
     <GameVersionPoint>[Assembly-CSharp.dll]Version.GetString</GameVersionPoint>
     <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
   </GameInfo>
+	<GameInfo Name="妮可来了">
+    <GameName>Here Comes Niko</GameName>
+		<Folder>Here Comes Niko</Folder>
+		<ModInfo>Info.json</ModInfo>
+		<ModsDirectory>Mods</ModsDirectory>
+		<GameExe>Here Comes Niko!.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]scrBoot.Start:After</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]scrPauseMenu.Awake:After</UIStartingPoint>
+		<MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="再创传奇">
+    <GameName>Re:Legend</GameName>
+		<Folder>Re-Legend</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>ReLegend.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
+		<MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="垃圾">
+    <GameName>Muck</GameName>
+		<Folder>Muck</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Muck.exe</GameExe>
+		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]LobbyVisuals.Awake:After</StartingPoint>
+		<MinimalManagerVersion>0.23.5</MinimalManagerVersion>
+	</GameInfo>
 </Config>

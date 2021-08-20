@@ -81,12 +81,6 @@ namespace UnityModManagerNet.Installer
 
         public UnityModManagerForm()
         {
-            if (CheckApplicationAlreadyRunning(out var process) && MessageBox.Show("正在运行", "通知", MessageBoxButtons.OK) == DialogResult.OK)
-            {
-                if (!Utils.IsUnixPlatform()) SetForegroundWindow(process.MainWindowHandle);
-                Close();
-                return;
-            }
             InitializeComponent();
             Load += UnityModManagerForm_Load;
         }
@@ -108,6 +102,12 @@ namespace UnityModManagerNet.Installer
 
         private void UnityModManagerForm_Load(object sender, EventArgs e)
         {
+            if (CheckApplicationAlreadyRunning(out var process) && MessageBox.Show("正在运行", "通知", MessageBoxButtons.OK) == DialogResult.OK)
+            {
+                if (!Utils.IsUnixPlatform()) SetForegroundWindow(process.MainWindowHandle);
+                Close();
+                return;
+            }
             Init();
             InitPageMods();
         }

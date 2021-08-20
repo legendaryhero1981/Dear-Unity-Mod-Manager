@@ -115,6 +115,7 @@ namespace UnityModManagerNet
             insertionPlace = null;
 
             if (!TryParseEntryPoint(str, out string assemblyName, out _, out _, out _)) return false;
+
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (assembly.ManifestModule.Name == assemblyName)
@@ -122,7 +123,17 @@ namespace UnityModManagerNet
                     return TryGetEntryPoint(assembly, str, out foundClass, out foundMethod, out insertionPlace);
                 }
             }
-            UnityModManager.Logger.Error($"找不到Assembly文件“{assemblyName}”！");
+
+            try
+            {
+                var asm = Assembly.Load(assemblyName);
+                return TryGetEntryPoint(asm, str, out foundClass, out foundMethod, out insertionPlace);
+            }
+            catch (Exception e)
+            {
+                UnityModManager.Logger.Error($"文件“{assemblyName}”加载失败！");
+                UnityModManager.Logger.LogException(e);
+            }
 
             return false;
 
