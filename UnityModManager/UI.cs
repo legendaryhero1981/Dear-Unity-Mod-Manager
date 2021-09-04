@@ -46,20 +46,22 @@ namespace UnityModManagerNet
             public static GS CenterFontStyle;
             public static GS NormalFontStyle;
             /// <summary>
-            /// [0.22.4.30] 新增UMM的GUIStyle样式，以便支持UMM相关Mod调用。
+            /// [0.23.5.48] 新增UMM的GUIStyle样式，以便支持UMM相关Mod调用。
             /// </summary>
             public static GS window;
             public static GS h1;
             public static GS h2;
             public static GS bold;
             public static GS button;
+            public static Rect mWindowRect = new(0, 0, 0, 0);
+            public static int tabId;
 
             private static readonly string[] MCheckUpdateStrings = { " 从不", " 自动" };
             private static readonly string[] MShowOnStartStrings = { " 否", " 是" };
 
             private static int _mLastWindowId;
-            private readonly List<Column> _mColumns = new List<Column>();
-            private readonly List<Column> _mOriginColumns = new List<Column>
+            private readonly List<Column> _mColumns = new();
+            private readonly List<Column> _mOriginColumns = new()
             {
                 new Column {Name = "名称", Width = 400, Expand = true},
                 new Column {Name = "版本", Width = 200},
@@ -71,16 +73,16 @@ namespace UnityModManagerNet
             /// <summary>
             /// [0.21.1.20] 新增Mod依赖列表字段
             /// </summary>
-            private static List<string> _mJoinList = new List<string>();
+            private static List<string> _mJoinList = new();
 
             /// <summary>
             /// [0.20.0.17] 当前选项卡的ScrollView控件位置
             /// </summary>
-            public static Vector2 ScrollViewPosition => MScrollPosition[_tabId];
+            public static Vector2 ScrollViewPosition => mScrollPosition[tabId];
             /// <summary>
             /// [0.20.0.17] 窗口位置
             /// </summary>
-            public static Vector2 WindowPosition => _mWindowRect.position;
+            public static Vector2 WindowPosition => mWindowRect.position;
             /// <summary>
             ///  [0.20.0.16] 窗口大小
             /// </summary>
@@ -97,11 +99,9 @@ namespace UnityModManagerNet
             private int _mShowModSettings = -1;
             private float _mUiScale = 1f;
             private bool _mUiScaleChanged;
-            private static Rect _mWindowRect = new Rect(0, 0, 0, 0);
 
             public static readonly string[] Tabs = { "Mods", "日志", "设置" };
-            private static int _tabId;
-            private static readonly Vector2[] MScrollPosition = new Vector2[Tabs.Length];
+            private static readonly Vector2[] mScrollPosition = new Vector2[Tabs.Length];
             private static Texture2D _mBackground;
             private static readonly string FilePathBackground = Path.Combine(Path.GetDirectoryName(typeof(UI).Assembly.Location), "background.jpg");
 
@@ -196,7 +196,7 @@ namespace UnityModManagerNet
             /// [0.22.8.35] 使用独立的协程异步高效地执行来自各Mod的Actions
             /// </summary>
             private const float WaitTime = 5f;
-            private static readonly WaitForSecondsRealtime WaitForSecondsRealtime = new WaitForSecondsRealtime(WaitTime);
+            private static readonly WaitForSecondsRealtime WaitForSecondsRealtime = new(WaitTime);
 
             private static IEnumerator<object> DoActionsFromMods
             {
@@ -490,7 +490,7 @@ namespace UnityModManagerNet
                         _mUiScaleChanged = false;
                         ScaleGui();
                     }
-                    _mWindowRect = GL.Window(0, _mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{Version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(_mWindowSize.x), GL.Height(_mWindowSize.y));
+                    mWindowRect = GL.Window(0, mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{Version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(_mWindowSize.x), GL.Height(_mWindowSize.y));
                 }
 
                 foreach (var mod in ModEntries)
@@ -509,16 +509,16 @@ namespace UnityModManagerNet
 
             private void WindowFunction(int windowId)
             {
-                if (KeyBinding.Ctrl()) GUI.DragWindow(_mWindowRect);
+                if (KeyBinding.Ctrl()) GUI.DragWindow(mWindowRect);
                 else CorrectWindowPos();
                 GL.BeginVertical();
                 GL.Space(Scale(H1FontSize + GlobalFontSize));
                 GL.BeginHorizontal();
-                _tabId = GL.Toolbar(_tabId, Tabs, ButtonStyle, GL.ExpandWidth(false));
+                tabId = GL.Toolbar(tabId, Tabs, ButtonStyle, GL.ExpandWidth(false));
                 GL.FlexibleSpace();
                 GL.EndHorizontal();
-                UnityAction buttons = () => {};
-                DrawTab(_tabId, ref buttons);
+                UnityAction buttons = () => { };
+                DrawTab(tabId, ref buttons);
                 GL.FlexibleSpace();
                 GL.BeginHorizontal();
                 if (GL.Button("关闭", ButtonStyle, GL.ExpandWidth(false))) ToggleWindow();
@@ -535,7 +535,7 @@ namespace UnityModManagerNet
                 {
                     case "Mods":
                         {
-                            MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
+                            mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
                             var amountWidth = _mColumns.Where(x => !x.Skip).Sum(x => x.Width);
                             var expandWidth = _mColumns.Where(x => x.Expand && !x.Skip).Sum(x => x.Width);
                             var mods = ModEntries;
@@ -658,7 +658,7 @@ namespace UnityModManagerNet
                         }
                     case "日志":
                         {
-                            MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
+                            mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
                             GL.BeginVertical(BoxStyle);
                             for (int c = Logger.History.Count, i = Mathf.Max(0, c - Logger.HistoryCapacity); i < c; i++)
                                 GL.Label(Logger.History[i]);
@@ -673,7 +673,7 @@ namespace UnityModManagerNet
                         }
                     case "设置":
                         {
-                            MScrollPosition[tabId] = GL.BeginScrollView(MScrollPosition[tabId], minWidth);
+                            mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
                             GL.BeginVertical(BoxStyle);
                             GL.BeginHorizontal();
                             GL.Label("热键（默认Ctrl+F10）", GL.ExpandWidth(false));
@@ -757,15 +757,15 @@ namespace UnityModManagerNet
             private void CalculateWindowPos()
             {
                 CorrectWindowSize();
-                _mWindowRect.size = _mWindowSize;
-                _mWindowRect.x = (Screen.width - _mWindowSize.x) / 2f;
-                _mWindowRect.y = 0;
+                mWindowRect.size = _mWindowSize;
+                mWindowRect.x = (Screen.width - _mWindowSize.x) / 2f;
+                mWindowRect.y = 0;
             }
 
             private static void CorrectWindowPos()
             {
-                _mWindowRect.x = Mathf.Clamp(_mWindowRect.x, 0, Screen.width - _mWindowRect.width);
-                _mWindowRect.y = Mathf.Clamp(_mWindowRect.y, 0, Screen.height - _mWindowRect.height);
+                mWindowRect.x = Mathf.Clamp(mWindowRect.x, 0, Screen.width - mWindowRect.width);
+                mWindowRect.y = Mathf.Clamp(mWindowRect.y, 0, Screen.height - mWindowRect.height);
             }
 
             private static void CorrectWindowSize()

@@ -11,10 +11,10 @@
     <RootNamespace>UnityModManagerNet</RootNamespace>
     <AssemblyName>UnityModManager</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationVersion>0.23.5.47</ApplicationVersion>
-    <AssemblyVersion>0.23.5.47</AssemblyVersion>
-    <FileVersion>0.23.5.47</FileVersion>
-    <Version>0.23.5.47</Version>
+    <ApplicationVersion>0.23.5.48</ApplicationVersion>
+    <AssemblyVersion>0.23.5.48</AssemblyVersion>
+    <FileVersion>0.23.5.48</FileVersion>
+    <Version>0.23.5.48</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
     <Copyright>Copyright © Legend 2021</Copyright>
@@ -26,27 +26,6 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp-PathfinderKingmaker">
-      <HintPath>..\lib\Assembly-CSharp-PathfinderKingmaker.dll</HintPath>
-      <Private>False</Private>
-      <Aliases>PathfinderKingmaker</Aliases>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>..\lib\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="dnlib">
-      <HintPath>..\lib\dnlib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\lib\Ionic.Zip.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />

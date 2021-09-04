@@ -1027,7 +1027,9 @@ namespace UnityModManagerNet.Installer
             foreach (var f in new DirectoryInfo(gamePath).GetFiles("0Harmony.dll", SearchOption.AllDirectories))
             {
                 if (f.FullName.EndsWith(Path.Combine("UnityModManager", "0Harmony.dll"))) continue;
-                var asm = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(f.FullName));
+                var domain = AppDomain.CreateDomain("0Harmony", null, null, null, false);
+                var asm = domain.Load(File.ReadAllBytes(f.FullName));
+                AppDomain.Unload(domain);
                 if (asm.GetName().Version < HARMONY_VER)
                 {
                     Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");

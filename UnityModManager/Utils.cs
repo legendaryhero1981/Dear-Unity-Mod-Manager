@@ -80,12 +80,13 @@ namespace UnityModManagerNet
         {
         }
 
-        private static TaskBehaviour taskBehaviour;
+        private static readonly TaskBehaviour taskBehaviour;
+        private static readonly GameObject gameObject;
 
         //静态构造函数
         static DelayToInvoke()
         {
-            var gameObject = new GameObject(typeof(DelayToInvoke).FullName, typeof(DelayToInvoke));
+            gameObject = new GameObject(typeof(DelayToInvoke).FullName, typeof(DelayToInvoke));
             Object.DontDestroyOnLoad(gameObject);
             taskBehaviour = gameObject.AddComponent<TaskBehaviour>();
         }
@@ -97,17 +98,17 @@ namespace UnityModManagerNet
 
         public static void StopCoroutine(IEnumerator routine)
         {
-            taskBehaviour.StopCoroutine(routine);
+            if (null != gameObject) taskBehaviour.StopCoroutine(routine);
         }
 
         public static void StopCoroutine(ref Coroutine routine)
         {
-            taskBehaviour.StopCoroutine(routine);
+            if (null != gameObject) taskBehaviour.StopCoroutine(routine);
         }
 
         public static void StopAllCoroutines()
         {
-            taskBehaviour.StopAllCoroutines();
+            if (null != gameObject) taskBehaviour.StopAllCoroutines();
         }
 
         public static Coroutine DelayToInvokeBySecond(Action action, float delaySeconds)
@@ -141,9 +142,7 @@ namespace UnityModManagerNet
 
         private static IEnumerator StartDelayToInvokeByFrame(Action action, int delayFrames)
         {
-            if (delayFrames > 1)
-                for (var i = 0; i < delayFrames; i++)
-                    yield return null;
+            if (delayFrames > 1) for (var i = 0; i < delayFrames; i++) yield return null;
             else yield return null;
             action?.Invoke();
         }

@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2
 		lib\0Harmony.dll = lib\0Harmony.dll
 		lib\0Harmony12.dll = lib\0Harmony12.dll
 		lib\Assembly-CSharp-PathfinderKingmaker.dll = lib\Assembly-CSharp-PathfinderKingmaker.dll
+		lib\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll = lib\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll
 		lib\background.jpg = lib\background.jpg
 		lib\dnlib.dll = lib\dnlib.dll
 		lib\Ionic.Zip.dll = lib\Ionic.Zip.dll

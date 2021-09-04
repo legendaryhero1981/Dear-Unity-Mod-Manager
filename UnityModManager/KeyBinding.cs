@@ -33,7 +33,7 @@ namespace UnityModManagerNet
             }
         }
 
-        internal static object KeyControlZero = new object();
+        internal static object KeyControlZero = new();
         private object m_KeyControl;
         internal object KeyControl
         {
@@ -99,65 +99,58 @@ namespace UnityModManagerNet
         {
             try
             {
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    LegacyInputDisabled = false;
-                }
+                if (Input.GetKey(KeyCode.Space)) LegacyInputDisabled = false;
             }
-            catch (Exception e)
+            catch
             {
                 LegacyInputDisabled = true;
                 UnityModManager.Logger.Log($"Legacy Input is disabled.");
             }
 
-            if (LegacyInputDisabled)
+            if (!LegacyInputDisabled) return;
+            try
             {
-                try
-                {
-                    var assembly = Assembly.Load("Unity.InputSystem");
+                var assembly = Assembly.Load("Unity.InputSystem");
 
-                    inputControlType = assembly.GetType("UnityEngine.InputSystem.InputControl");
-                    if (inputControlType == null)
-                        UnityModManager.Logger.Error("Type UnityEngine.InputSystem.InputControl not found.");
+                inputControlType = assembly.GetType("UnityEngine.InputSystem.InputControl");
+                if (inputControlType == null)
+                    UnityModManager.Logger.Error("Type UnityEngine.InputSystem.InputControl not found.");
 
-                    keyboardType = assembly.GetType("UnityEngine.InputSystem.Keyboard");
-                    if (keyboardType == null)
-                        UnityModManager.Logger.Error("Type UnityEngine.InputSystem.Keyboard not found.");
+                keyboardType = assembly.GetType("UnityEngine.InputSystem.Keyboard");
+                if (keyboardType == null)
+                    UnityModManager.Logger.Error("Type UnityEngine.InputSystem.Keyboard not found.");
 
-                    keyControlType = assembly.GetType("UnityEngine.InputSystem.Controls.KeyControl");
-                    if (keyControlType == null)
-                        UnityModManager.Logger.Error("Type UnityEngine.InputSystem.Controls.KeyControl not found.");
+                keyControlType = assembly.GetType("UnityEngine.InputSystem.Controls.KeyControl");
+                if (keyControlType == null)
+                    UnityModManager.Logger.Error("Type UnityEngine.InputSystem.Controls.KeyControl not found.");
 
-                    currentKeyboardPI = keyboardType.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
-                    if (currentKeyboardPI == null)
-                        UnityModManager.Logger.Error("Property current not found.");
+                currentKeyboardPI = keyboardType.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
+                if (currentKeyboardPI == null)
+                    UnityModManager.Logger.Error("Property current not found.");
 
-                    keyControlFromStringPI = inputControlType.GetProperty("Item");
-                    if (keyControlFromStringPI == null)
-                        UnityModManager.Logger.Error("Property Item not found.");
+                keyControlFromStringPI = inputControlType.GetProperty("Item");
+                if (keyControlFromStringPI == null)
+                    UnityModManager.Logger.Error("Property Item not found.");
 
-                    isPressedPI = keyControlType.GetProperty("isPressed");
-                    if (isPressedPI == null)
-                        UnityModManager.Logger.Error("Property isPressed not found.");
+                isPressedPI = keyControlType.GetProperty("isPressed");
+                if (isPressedPI == null)
+                    UnityModManager.Logger.Error("Property isPressed not found.");
 
-                    wasPressedThisFramePI = keyControlType.GetProperty("wasPressedThisFrame");
-                    if (wasPressedThisFramePI == null)
-                        UnityModManager.Logger.Error("Property wasPressedThisFrame not found.");
+                wasPressedThisFramePI = keyControlType.GetProperty("wasPressedThisFrame");
+                if (wasPressedThisFramePI == null)
+                    UnityModManager.Logger.Error("Property wasPressedThisFrame not found.");
 
-                    wasReleasedThisFramePI = keyControlType.GetProperty("wasReleasedThisFrame");
-                    if (wasReleasedThisFramePI == null)
-                        UnityModManager.Logger.Error("Property wasReleasedThisFrame not found.");
+                wasReleasedThisFramePI = keyControlType.GetProperty("wasReleasedThisFrame");
+                if (wasReleasedThisFramePI == null)
+                    UnityModManager.Logger.Error("Property wasReleasedThisFrame not found.");
 
-                    hasErrors = currentKeyboardPI == null || keyControlFromStringPI == null || isPressedPI == null || wasPressedThisFramePI == null || wasReleasedThisFramePI == null;
-
-                    return;
-                }
-                catch (Exception e)
-                {
-                    hasErrors = true;
-                    UnityModManager.Logger.LogException(e);
-                    UnityModManager.Logger.Error("Legacy Input was marked as disabled, but new Input System was not found.");
-                }
+                hasErrors = currentKeyboardPI == null || keyControlFromStringPI == null || isPressedPI == null || wasPressedThisFramePI == null || wasReleasedThisFramePI == null;
+            }
+            catch (Exception e)
+            {
+                hasErrors = true;
+                UnityModManager.Logger.LogException(e);
+                UnityModManager.Logger.Error("Legacy Input was marked as disabled, but new Input System was not found.");
             }
         }
 
@@ -284,7 +277,7 @@ namespace UnityModManagerNet
             return b && Input.GetKeyUp(keyCode);
         }
 
-        private readonly static Dictionary<string, string> EnabledKeys = new Dictionary<string, string>
+        private readonly static Dictionary<string, string> EnabledKeys = new()
         {
             { "None", "None" },
             { "BackQuote", "~" },
@@ -398,7 +391,7 @@ namespace UnityModManagerNet
             { "Print", "Print Screen" },
         };
 
-        private readonly static Dictionary<string, string> LegacyToInputSystemMap = new Dictionary<string, string>
+        private readonly static Dictionary<string, string> LegacyToInputSystemMap = new()
         {
             { "Backspace", "backspace" },
             { "Tab", "tab" },

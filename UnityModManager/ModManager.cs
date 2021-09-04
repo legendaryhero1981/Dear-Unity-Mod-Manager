@@ -18,11 +18,11 @@ namespace UnityModManagerNet
 {
     public partial class UnityModManager
     {
-        private static readonly Version VER_0 = new Version();
-        private static readonly Version VER_0_13 = new Version(0, 13);
+        private static readonly Version VER_0 = new();
+        private static readonly Version VER_0_13 = new(0, 13);
         private static readonly ModuleDefMD thisModuleDef = ModuleDefMD.Load(typeof(UnityModManager).Module);
         private static bool forbidDisableMods;
-        public static readonly List<ModEntry> ModEntries = new List<ModEntry>();
+        public static readonly List<ModEntry> ModEntries = new();
         internal static bool started;
         internal static bool initialized;
         /// <summary>
@@ -32,7 +32,7 @@ namespace UnityModManagerNet
         /// <summary>
         ///     Contains version of a game, if configured [0.15.0]
         /// </summary>
-        public static Version gameVersion { get; private set; } = new Version();
+        public static Version gameVersion { get; private set; } = new();
         /// <summary>
         ///     Contains version of UMM
         /// </summary>
@@ -561,7 +561,7 @@ namespace UnityModManagerNet
         {
             public readonly ModInfo Info;
             public readonly ModLogger Logger;
-            private readonly Dictionary<long, MethodInfo> _mCache = new Dictionary<long, MethodInfo>();
+            private readonly Dictionary<long, MethodInfo> _mCache = new();
             /// <summary>
             ///     Path to mod folder
             /// </summary>
@@ -585,7 +585,7 @@ namespace UnityModManagerNet
             /// <summary>
             ///     Required mods
             /// </summary>
-            public readonly Dictionary<string, Version> Requirements = new Dictionary<string, Version>();
+            public readonly Dictionary<string, Version> Requirements = new();
             /// <summary>
             ///     Displayed in UMM UI. Add <color></color> tag to change colors. Can be used when custom verification game version
             ///     [0.15.0]
@@ -598,7 +598,7 @@ namespace UnityModManagerNet
             /// <summary>
             ///     [0.20.0.11]
             /// </summary>
-            public readonly ConcurrentStack<Action<ModEntry>> OnModActions = new ConcurrentStack<Action<ModEntry>>();
+            public readonly ConcurrentStack<Action<ModEntry>> OnModActions = new();
             /// <summary>
             ///     Called by MonoBehaviour.FixedUpdate [0.13.0]
             /// </summary>
@@ -658,7 +658,7 @@ namespace UnityModManagerNet
             /// <summary>
             /// List of mods after which this mod should be loaded [0.22.5.31]
             /// </summary>
-            public readonly List<string> LoadAfter = new List<string>();
+            public readonly List<string> LoadAfter = new();
 
             public bool HasUpdate = false;
             private bool _mFirstLoading = true;

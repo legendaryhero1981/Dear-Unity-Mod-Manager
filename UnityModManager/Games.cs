@@ -1,4 +1,5 @@
 ﻿extern alias PathfinderKingmaker;
+extern alias PathfinderWrathOfTheRighteous;
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 
 using KM = PathfinderKingmaker::Kingmaker;
+using WOTR = PathfinderWrathOfTheRighteous::Kingmaker;
 
 namespace UnityModManagerNet
 {
@@ -13,7 +15,7 @@ namespace UnityModManagerNet
     {
         private class GameScripts
         {
-            private static readonly List<GameScript> Scripts = new List<GameScript>();
+            private static readonly List<GameScript> Scripts = new();
             /// <summary>
             ///  [0.20.0.15]
             /// </summary>
@@ -104,6 +106,29 @@ namespace UnityModManagerNet
                         if (_escMode) return;
                         KM.Game.Instance.StopMode(KM.GameModes.GameModeType.EscMode);
                         Logger.Log($"已解冻游戏UI，当前游戏模式为{KM.Game.Instance.CurrentMode}！");
+                    };
+                }
+            }
+
+            private class PathfinderWrathOfTheRighteous : GameScript
+            {
+                private bool _escMode;
+
+                public override void OnAfterLoadMods()
+                {
+                    if (!_freezeUi) return;
+                    FreezeUI = () =>
+                    {
+                        _escMode = WOTR.GameModes.GameModeType.EscMode == WOTR.Game.Instance.CurrentMode || WOTR.GameModes.GameModeType.None == WOTR.Game.Instance.CurrentMode;
+                        if (_escMode) return;
+                        WOTR.Game.Instance.StartMode(WOTR.GameModes.GameModeType.EscMode);
+                        Logger.Log($"已冻结游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
+                    };
+                    UnFreezeUI = () =>
+                    {
+                        if (_escMode) return;
+                        WOTR.Game.Instance.StopMode(WOTR.GameModes.GameModeType.EscMode);
+                        Logger.Log($"已解冻游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
                     };
                 }
             }

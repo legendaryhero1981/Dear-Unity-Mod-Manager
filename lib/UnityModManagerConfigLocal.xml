@@ -16,6 +16,7 @@
   </GameInfo>
   <GameInfo Name="开拓者：正义之怒">
     <GameName>Pathfinder: Wrath of the Righteous</GameName>
+    <GameScriptName>PathfinderWrathOfTheRighteous</GameScriptName>
     <Folder>Pathfinder Wrath of the Righteous</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
