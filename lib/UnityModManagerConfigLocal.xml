@@ -27,4 +27,17 @@
     <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
     <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="开拓者：正义之怒（Steam版）">
+    <GameName>Pathfinder: Wrath of the Righteous</GameName>
+    <GameScriptName>PathfinderWrathOfTheRighteous</GameScriptName>
+    <Folder>Pathfinder Second Adventure</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Wrath.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
+    <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
+    <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+  </GameInfo>
 </Config>
