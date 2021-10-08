@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2
 		lib\winhttp.dll = lib\winhttp.dll
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "Console\Console.csproj", "{7151CE06-904E-485D-8BC3-A7174A9D5D29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{A1FCAE3E-523E-4E33-8860-DD39DDDF0F62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E953E4AD-49FD-4BD8-AFD0-5EDA98DC10C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7151CE06-904E-485D-8BC3-A7174A9D5D29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7151CE06-904E-485D-8BC3-A7174A9D5D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7151CE06-904E-485D-8BC3-A7174A9D5D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7151CE06-904E-485D-8BC3-A7174A9D5D29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

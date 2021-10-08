@@ -1,15 +1,15 @@
-﻿using System;
+﻿using dnlib.DotNet;
+using dnlib.DotNet.Emit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using dnlib.DotNet;
-using dnlib.DotNet.Emit;
+using UnityModManagerNet.ConsoleInstaller;
 using UnityModManagerNet.Injection;
 using UnityModManagerNet.Installer.Properties;
 using UnityModManagerNet.Marks;
@@ -25,18 +25,15 @@ namespace UnityModManagerNet.Installer
         private const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil _autoSizeFormControlUtil;
-
-        private static readonly Version VER_0_13 = new Version(0, 13);
-        private static readonly Version VER_0_22 = new Version(0, 22);
-
-        private static readonly Version HARMONY_VER = new Version(2, 0);
+        private static readonly Version VER_0_22 = new(0, 22);
+        private static readonly Version HARMONY_VER = new(2, 0);
 
         [Flags]
         enum LibIncParam { Normal = 0, Minimal_lt_0_22 = 1 }
 
-        private static readonly Dictionary<string, LibIncParam> libraryFiles = new Dictionary<string, LibIncParam>
+        private static readonly Dictionary<string, LibIncParam> libraryFiles = new()
         {
-            {"background.jpg", LibIncParam.Normal},
+            { "background.jpg", LibIncParam.Normal },
             { "0Harmony.dll", LibIncParam.Normal },
             { "0Harmony12.dll", LibIncParam.Minimal_lt_0_22 },
             { "0Harmony-1.2.dll", LibIncParam.Minimal_lt_0_22 },
@@ -60,9 +57,7 @@ namespace UnityModManagerNet.Installer
         static string managerAssemblyPath;
         static string entryPoint;
         static string injectedEntryPoint;
-
         static string gameExePath;
-
         static string doorstopFilename = "winhttp.dll";
         static string doorstopConfigFilename = "doorstop_config.ini";
         static string doorstopPath;
@@ -84,18 +79,16 @@ namespace UnityModManagerNet.Installer
             InitializeComponent();
             Load += UnityModManagerForm_Load;
         }
-        static bool CheckApplicationAlreadyRunning(out Process result)
+        private static bool CheckApplicationAlreadyRunning(out Process result)
         {
             result = null;
             var id = Process.GetCurrentProcess().Id;
             var name = Process.GetCurrentProcess().ProcessName;
             foreach (var p in Process.GetProcessesByName(name))
             {
-                if (p.Id != id)
-                {
-                    result = p;
-                    return true;
-                }
+                if (p.Id == id) continue;
+                result = p;
+                return true;
             }
             return false;
         }
@@ -104,7 +97,7 @@ namespace UnityModManagerNet.Installer
         {
             if (CheckApplicationAlreadyRunning(out var process) && MessageBox.Show("正在运行", "通知", MessageBoxButtons.OK) == DialogResult.OK)
             {
-                if (!Utils.IsUnixPlatform()) SetForegroundWindow(process.MainWindowHandle);
+                if (!ConsoleInstaller.Utils.IsUnixPlatform()) SetForegroundWindow(process.MainWindowHandle);
                 Close();
                 return;
             }
@@ -125,7 +118,8 @@ namespace UnityModManagerNet.Installer
             FormBorderStyle = FormBorderStyle.FixedDialog;
             instance = this;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            if (!Utils.IsUnixPlatform())
+            ConsoleInstaller.Log.Init<Log>();
+            if (!ConsoleInstaller.Utils.IsUnixPlatform())
             {
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 {
@@ -178,14 +172,14 @@ namespace UnityModManagerNet.Installer
                 {
                     selected = config.GameInfo.FirstOrDefault(x => x.Name == param.LastSelectedGame);
                 }
-                selected = selected ?? config.GameInfo.First();
+                selected ??= config.GameInfo.First();
                 gameList.SelectedItem = selected;
                 selectedGameParams = param.GetGameParam(selected);
             }
             else
             {
                 InactiveForm();
-                Log.Print($"解析配置文件“{Config.filename}”失败！");
+                ConsoleInstaller.Log.Print($"解析配置文件“{Config.filename}”失败！");
                 return;
             }
             CheckLastVersion();
@@ -223,7 +217,6 @@ namespace UnityModManagerNet.Installer
         private void UnityModLoaderForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (config == null) return;
-            Log.Writer.Close();
             param.LastSelectedSkin = skinSetBox.SelectedIndex;
             param.Sync(config.GameInfo);
             param.Save();
@@ -238,19 +231,15 @@ namespace UnityModManagerNet.Installer
             installedVersion.Text = "-";
 
             foreach (var ctrl in installTypeGroup.Controls)
-            {
                 if (ctrl is RadioButton btn)
-                {
                     btn.Enabled = false;
-                }
-            }
         }
 
         private bool IsValid(GameInfo gameInfo)
         {
             if (selectedGame == null)
             {
-                Log.Print("请先选定一个游戏！");
+                ConsoleInstaller.Log.Print("请先选定一个游戏！");
                 return false;
             }
 
@@ -277,10 +266,10 @@ namespace UnityModManagerNet.Installer
                 var value = field.GetValue(gameInfo);
                 if (value != null && value.ToString() != "") continue;
                 hasError = true;
-                Log.Print($"节点“{prefix}”的子节点“{field.Name}”值为空！");
+                ConsoleInstaller.Log.Print($"节点“{prefix}”的子节点“{field.Name}”值为空！");
             }
 
-            return !hasError && (string.IsNullOrEmpty(gameInfo.EntryPoint) || Utils.TryParseEntryPoint(gameInfo.EntryPoint, out _)) && (string.IsNullOrEmpty(gameInfo.StartingPoint) || Utils.TryParseEntryPoint(gameInfo.StartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.UIStartingPoint) || Utils.TryParseEntryPoint(gameInfo.UIStartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.OldPatchTarget) || Utils.TryParseEntryPoint(gameInfo.OldPatchTarget, out _));
+            return !hasError && (string.IsNullOrEmpty(gameInfo.EntryPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.EntryPoint, out _)) && (string.IsNullOrEmpty(gameInfo.StartingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.StartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.UIStartingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.UIStartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.OldPatchTarget) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.OldPatchTarget, out _));
         }
 
         private void RefreshForm()
@@ -304,28 +293,28 @@ namespace UnityModManagerNet.Installer
                     btnOpenFolder.ForeColor = Color.Red;
                     btnOpenFolder.Text = "选择游戏主目录";
                     folderBrowserDialog.SelectedPath = null;
-                    Log.Print($"游戏主目录“{selectedGame.Folder}”不存在！");
+                    ConsoleInstaller.Log.Print($"游戏主目录“{selectedGame.Folder}”不存在！");
                     return;
                 }
-                Log.Print($"已检测到游戏主目录“{result}”。");
+                ConsoleInstaller.Log.Print($"已检测到游戏主目录“{result}”。");
                 selectedGameParams.Path = result;
             }
 
-            if (!Utils.IsUnixPlatform() && !Directory.GetFiles(selectedGameParams.Path, "*.exe", SearchOption.TopDirectoryOnly).Any())
+            if (!ConsoleInstaller.Utils.IsUnixPlatform() && !Directory.GetFiles(selectedGameParams.Path, "*.exe", SearchOption.TopDirectoryOnly).Any())
             {
                 InactiveForm();
-                Log.Print("请选择游戏可执行文件所在的目录。");
+                ConsoleInstaller.Log.Print("请选择游戏可执行文件所在的目录。");
                 return;
             }
 
-            if (Utils.IsMacPlatform() && !selectedGameParams.Path.EndsWith(".app"))
+            if (ConsoleInstaller.Utils.IsMacPlatform() && !selectedGameParams.Path.EndsWith(".app"))
             {
                 InactiveForm();
-                Log.Print("请选择游戏可执行文件（扩展名为.app）所在的目录。");
+                ConsoleInstaller.Log.Print("请选择游戏可执行文件（扩展名为.app）所在的目录。");
                 return;
             }
 
-            Utils.TryParseEntryPoint(selectedGame.EntryPoint, out var assemblyName);
+            ConsoleInstaller.Utils.TryParseEntryPoint(selectedGame.EntryPoint, out var assemblyName);
             gamePath = selectedGameParams.Path;
             btnOpenFolder.ForeColor = Color.Green;
             btnOpenFolder.Text = new DirectoryInfo(gamePath).Name;
@@ -333,7 +322,7 @@ namespace UnityModManagerNet.Installer
             if (File.Exists(Path.Combine(gamePath, DLL_IL2CPP)))
             {
                 InactiveForm();
-                Log.Print("尚不支持使用IL2CPP编译的游戏版本！");
+                ConsoleInstaller.Log.Print("尚不支持使用IL2CPP编译的游戏版本！");
                 return;
             }
             managedPath = FindManagedFolder(gamePath);
@@ -350,7 +339,7 @@ namespace UnityModManagerNet.Installer
             doorstopConfigPath = Path.Combine(gamePath, doorstopConfigFilename);
 
             libraryPaths = new List<string>();
-            var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
+            var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? ConsoleInstaller.Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
             foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22))
                 libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
@@ -368,7 +357,7 @@ namespace UnityModManagerNet.Installer
             if (path.StartsWith(gamePath))
             {
                 InactiveForm();
-                Log.Print("DUMM目录不能放在游戏主目录及其子目录下，请先关闭DUMM，再将DUMM目录移动到单独的目录下重试！");
+                ConsoleInstaller.Log.Print("DUMM目录不能放在游戏主目录及其子目录下，请先关闭DUMM，再将DUMM目录移动到单独的目录下重试！");
                 return;
             }
 
@@ -379,7 +368,7 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 InactiveForm();
-                Log.Print(e + Environment.NewLine + entryAssemblyPath);
+                ConsoleInstaller.Log.Print(e + Environment.NewLine + entryAssemblyPath);
                 return;
             }
 
@@ -389,7 +378,7 @@ namespace UnityModManagerNet.Installer
             if (File.Exists(GameInfo.filepathInGame))
             {
                 var gameConfig = GameInfo.ImportFromGame();
-                if (gameConfig == null || !Utils.TryParseEntryPoint(gameConfig.EntryPoint, out assemblyName))
+                if (gameConfig == null || !ConsoleInstaller.Utils.TryParseEntryPoint(gameConfig.EntryPoint, out assemblyName))
                 {
                     InactiveForm();
                     return;
@@ -399,7 +388,7 @@ namespace UnityModManagerNet.Installer
             }
             else if (!string.IsNullOrEmpty(selectedGame.OldPatchTarget))
             {
-                if (!Utils.TryParseEntryPoint(selectedGame.OldPatchTarget, out assemblyName))
+                if (!ConsoleInstaller.Utils.TryParseEntryPoint(selectedGame.OldPatchTarget, out assemblyName))
                 {
                     InactiveForm();
                     return;
@@ -418,7 +407,7 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 InactiveForm();
-                Log.Print(e + Environment.NewLine + injectedEntryAssemblyPath + Environment.NewLine + managerAssemblyPath);
+                ConsoleInstaller.Log.Print(e + Environment.NewLine + injectedEntryAssemblyPath + Environment.NewLine + managerAssemblyPath);
                 return;
             }
 
@@ -426,7 +415,6 @@ namespace UnityModManagerNet.Installer
             var unavailableMethods = new List<InstallType>();
             var managerType = typeof(UnityModManager);
             var starterType = typeof(UnityModManagerStarter);
-
         Rescan:
             var v0_12_Installed = injectedAssemblyDef.Types.FirstOrDefault(x => x.Name == managerType.Name);
             var newWayInstalled = injectedAssemblyDef.Types.FirstOrDefault(x => x.Name == starterType.Name);
@@ -441,7 +429,7 @@ namespace UnityModManagerNet.Installer
                 goto Rescan;
             }
 
-            if (Utils.IsUnixPlatform() || !File.Exists(gameExePath))
+            if (ConsoleInstaller.Utils.IsUnixPlatform() || !File.Exists(gameExePath))
             {
                 unavailableMethods.Add(InstallType.DoorstopProxy);
                 selectedGameParams.InstallType = InstallType.Assembly;
@@ -460,7 +448,7 @@ namespace UnityModManagerNet.Installer
 
             foreach (var ctrl in installTypeGroup.Controls)
             {
-                if (!(ctrl is RadioButton btn)) continue;
+                if (ctrl is not RadioButton btn) continue;
                 if (unavailableMethods.Exists(x => x.ToString() == btn.Name))
                 {
                     btn.Visible = false;
@@ -473,14 +461,13 @@ namespace UnityModManagerNet.Installer
                     btn.Enabled = false;
                     continue;
                 }
-
                 btn.Visible = true;
                 btn.Enabled = true;
                 btn.Checked = btn.Name == selectedGameParams.InstallType.ToString();
             }
 
             if (selectedGameParams.InstallType == InstallType.Assembly)
-                btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}{Utils.FileSuffixCache}");
+                btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}{ConsoleInstaller.Utils.FileSuffixCache}");
 
             tabControl.TabPages[1].Enabled = true;
             managerDef ??= injectedAssemblyDef;
@@ -496,7 +483,7 @@ namespace UnityModManagerNet.Installer
                 if (v0_12_Installed != null)
                 {
                     var versionString = managerInstalled.Fields.First(x => x.Name == nameof(UnityModManager.Version)).Constant.Value.ToString();
-                    version2 = Utils.ParseVersion(versionString);
+                    version2 = ConsoleInstaller.Utils.ParseVersion(versionString);
                 }
                 else
                     version2 = managerDef.Assembly.Version;
@@ -535,7 +522,7 @@ namespace UnityModManagerNet.Installer
                         path = Path.Combine(path, folder);
                         path = Path.Combine(path, str);
                         if (!Directory.Exists(path)) continue;
-                        if (!Utils.IsMacPlatform()) return path;
+                        if (!ConsoleInstaller.Utils.IsMacPlatform()) return path;
                         foreach (var dir in Directory.GetDirectories(path))
                         {
                             if (!dir.EndsWith(".app")) continue;
@@ -549,7 +536,7 @@ namespace UnityModManagerNet.Installer
 
         private string FindManagedFolder(string path)
         {
-            if (Utils.IsMacPlatform())
+            if (ConsoleInstaller.Utils.IsMacPlatform())
             {
                 var dir = $"{path}/Contents/Resources/Data/Managed";
                 if (Directory.Exists(dir))
@@ -615,7 +602,7 @@ namespace UnityModManagerNet.Installer
             if (selectedGameParams.InstallType == InstallType.Assembly)
             {
                 var injectedEntryAssemblyPath = Path.Combine(managedPath, injectedAssemblyDef.Name);
-                var originalAssemblyPath = $"{injectedEntryAssemblyPath}{Utils.FileSuffixCache}";
+                var originalAssemblyPath = $"{injectedEntryAssemblyPath}{ConsoleInstaller.Utils.FileSuffixCache}";
                 RestoreOriginal(injectedEntryAssemblyPath, originalAssemblyPath);
             }
 
@@ -638,7 +625,7 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception ex)
             {
-                Log.Print(ex.ToString());
+                ConsoleInstaller.Log.Print(ex.ToString());
             }
         }
 
@@ -660,11 +647,11 @@ namespace UnityModManagerNet.Installer
             var selected = (GameInfo)((ComboBox)sender).SelectedItem;
             if (selected != null)
             {
-                Log.Print($"切换游戏为“{selected.Name}”。");
+                ConsoleInstaller.Log.Print($"切换游戏为“{selected.Name}”。");
                 param.LastSelectedGame = selected.Name;
                 selectedGameParams = param.GetGameParam(selected);
                 if (!string.IsNullOrEmpty(selectedGameParams.Path))
-                    Log.Print($"游戏目录“{selectedGameParams.Path}”。");
+                    ConsoleInstaller.Log.Print($"游戏目录“{selectedGameParams.Path}”。");
 
                 if (!string.IsNullOrEmpty(selected.Comment))
                 {
@@ -674,7 +661,7 @@ namespace UnityModManagerNet.Installer
 
                 if (!string.IsNullOrEmpty(selected.ExtraFilesUrl))
                 {
-                    extraFilesTextBox.Text = $"点击“手动”按钮解压缩文件到游戏文件夹，或点击“自动”按钮进行自动安装；必须先安装完附加文件再运行游戏。";
+                    extraFilesTextBox.Text = "点击“手动”按钮解压缩文件到游戏文件夹，或点击“自动”按钮进行自动安装；必须先安装完附加文件再运行游戏。";
                     extraFilesGroupBox.Visible = true;
                 }
             }
@@ -682,7 +669,7 @@ namespace UnityModManagerNet.Installer
             RefreshForm();
         }
 
-        enum Actions
+        private enum Actions
         {
             Install,
             Remove
@@ -698,96 +685,95 @@ namespace UnityModManagerNet.Installer
                 case Actions.Install:
                     try
                     {
-                        Log.Print("=======================================");
+                        ConsoleInstaller.Log.Print("=======================================");
 
                         if (!Directory.Exists(managerPath))
                             Directory.CreateDirectory(managerPath);
 
-                        Utils.MakeBackup(doorstopPath);
-                        Utils.MakeBackup(doorstopConfigPath);
-                        Utils.MakeBackup(libraryPaths);
+                        ConsoleInstaller.Utils.MakeBackup(doorstopPath);
+                        ConsoleInstaller.Utils.MakeBackup(doorstopConfigPath);
+                        ConsoleInstaller.Utils.MakeBackup(libraryPaths);
 
                         if (!InstallDoorstop(Actions.Remove, false))
                         {
-                            Log.Print("安装管理器模块到游戏失败，不能卸载上一个版本！");
+                            ConsoleInstaller.Log.Print("安装管理器模块到游戏失败，不能卸载上一个版本！");
                             goto EXIT;
                         }
 
-                        Log.Print("正在复制文件到游戏……");
-                        Log.Print($"“{doorstopFilename}”");
+                        ConsoleInstaller.Log.Print("正在复制文件到游戏……");
+                        ConsoleInstaller.Log.Print($"“{doorstopFilename}”");
                         File.Copy(doorstopFilename, doorstopPath, true);
-                        Log.Print($"“{doorstopConfigFilename}”");
+                        ConsoleInstaller.Log.Print($"“{doorstopConfigFilename}”");
                         File.WriteAllText(doorstopConfigPath, $@"[UnityDoorstop]{Environment.NewLine}enabled = true{Environment.NewLine}targetAssembly = {managerAssemblyPath}");
-                        DoactionLibraries(Actions.Install);
-                        DoactionGameConfig(Actions.Install);
-                        Log.Print("安装管理器模块到游戏成功！");
+                        DoActionLibraries(Actions.Install);
+                        DoActionGameConfig(Actions.Install);
+                        ConsoleInstaller.Log.Print("安装管理器模块到游戏成功！");
 
                         success = true;
                     }
                     catch (Exception e)
                     {
-                        Log.Print(e.ToString());
-                        Utils.RestoreBackup(doorstopPath);
-                        Utils.RestoreBackup(doorstopConfigPath);
-                        Utils.RestoreBackup(libraryPaths);
-                        Utils.RestoreBackup(gameConfigPath);
-                        Log.Print("安装管理器模块到游戏失败！");
+                        ConsoleInstaller.Log.Print(e.ToString());
+                        ConsoleInstaller.Utils.RestoreBackup(doorstopPath);
+                        ConsoleInstaller.Utils.RestoreBackup(doorstopConfigPath);
+                        ConsoleInstaller.Utils.RestoreBackup(libraryPaths);
+                        ConsoleInstaller.Utils.RestoreBackup(gameConfigPath);
+                        ConsoleInstaller.Log.Print("安装管理器模块到游戏失败！");
                     }
                     break;
-
                 case Actions.Remove:
                     try
                     {
                         if (write)
                         {
-                            Log.Print("=======================================");
+                            ConsoleInstaller.Log.Print("=======================================");
                         }
 
-                        Utils.MakeBackup(gameConfigPath);
+                        ConsoleInstaller.Utils.MakeBackup(gameConfigPath);
                         if (write)
                         {
-                            Utils.MakeBackup(doorstopPath);
-                            Utils.MakeBackup(doorstopConfigPath);
-                            Utils.MakeBackup(libraryPaths);
+                            ConsoleInstaller.Utils.MakeBackup(doorstopPath);
+                            ConsoleInstaller.Utils.MakeBackup(doorstopConfigPath);
+                            ConsoleInstaller.Utils.MakeBackup(libraryPaths);
                         }
 
-                        Log.Print("正在从游戏目录删除文件……");
-                        Log.Print($"  '{doorstopFilename}'");
+                        ConsoleInstaller.Log.Print("正在从游戏目录删除文件……");
+                        ConsoleInstaller.Log.Print($"  '{doorstopFilename}'");
                         File.Delete(doorstopPath);
-                        Log.Print($"  '{doorstopConfigFilename}'");
+                        ConsoleInstaller.Log.Print($"  '{doorstopConfigFilename}'");
                         File.Delete(doorstopConfigPath);
 
                         if (write)
                         {
-                            DoactionLibraries(Actions.Remove);
-                            DoactionGameConfig(Actions.Remove);
-                            Log.Print("从游戏目录删除文件成功！");
+                            DoActionLibraries(Actions.Remove);
+                            DoActionGameConfig(Actions.Remove);
+                            ConsoleInstaller.Log.Print("从游戏目录删除文件成功！");
                         }
 
                         success = true;
                     }
                     catch (Exception e)
                     {
-                        Log.Print(e.ToString());
+                        ConsoleInstaller.Log.Print(e.ToString());
                         if (write)
                         {
-                            Utils.RestoreBackup(doorstopPath);
-                            Utils.RestoreBackup(doorstopConfigPath);
-                            Utils.RestoreBackup(libraryPaths);
-                            Utils.RestoreBackup(gameConfigPath);
-                            Log.Print("从游戏目录删除文件失败！");
+                            ConsoleInstaller.Utils.RestoreBackup(doorstopPath);
+                            ConsoleInstaller.Utils.RestoreBackup(doorstopConfigPath);
+                            ConsoleInstaller.Utils.RestoreBackup(libraryPaths);
+                            ConsoleInstaller.Utils.RestoreBackup(gameConfigPath);
+                            ConsoleInstaller.Log.Print("从游戏目录删除文件失败！");
                         }
                     }
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
         EXIT:
-            if (write)
-            {
-                Utils.DeleteBackup(doorstopPath);
-                Utils.DeleteBackup(doorstopConfigPath);
-                Utils.DeleteBackup(libraryPaths);
-                Utils.DeleteBackup(gameConfigPath);
-            }
+            if (!write) return success;
+            ConsoleInstaller.Utils.DeleteBackup(doorstopPath);
+            ConsoleInstaller.Utils.DeleteBackup(doorstopConfigPath);
+            ConsoleInstaller.Utils.DeleteBackup(libraryPaths);
+            ConsoleInstaller.Utils.DeleteBackup(gameConfigPath);
             return success;
         }
 
@@ -796,10 +782,8 @@ namespace UnityModManagerNet.Installer
             var managerType = typeof(UnityModManager);
             var starterType = typeof(UnityModManagerStarter);
             var gameConfigPath = GameInfo.filepathInGame;
-
             var assemblyPath = Path.Combine(managedPath, assemblyDef.Name);
-            var originalAssemblyPath = $"{assemblyPath}{Utils.FileSuffixCache}";
-
+            var originalAssemblyPath = $"{assemblyPath}{ConsoleInstaller.Utils.FileSuffixCache}";
             var success = false;
 
             switch (action)
@@ -808,13 +792,13 @@ namespace UnityModManagerNet.Installer
                     {
                         try
                         {
-                            Log.Print("=======================================");
+                            ConsoleInstaller.Log.Print("=======================================");
 
                             if (!Directory.Exists(managerPath))
                                 Directory.CreateDirectory(managerPath);
 
-                            Utils.MakeBackup(assemblyPath);
-                            Utils.MakeBackup(libraryPaths);
+                            ConsoleInstaller.Utils.MakeBackup(assemblyPath);
+                            ConsoleInstaller.Utils.MakeBackup(libraryPaths);
 
                             if (!IsDirty(assemblyDef))
                             {
@@ -824,13 +808,13 @@ namespace UnityModManagerNet.Installer
 
                             if (!InjectAssembly(Actions.Remove, injectedAssemblyDef, assemblyDef != injectedAssemblyDef))
                             {
-                                Log.Print("安装管理器模块到游戏失败，不能卸载上一个版本！");
+                                ConsoleInstaller.Log.Print("安装管理器模块到游戏失败，不能卸载上一个版本！");
                                 goto EXIT;
                             }
 
-                            Log.Print($"正在注入文件“{Path.GetFileName(assemblyPath)}”……");
+                            ConsoleInstaller.Log.Print($"正在注入文件“{Path.GetFileName(assemblyPath)}”……");
 
-                            if (!Utils.TryGetEntryPoint(assemblyDef, entryPoint, out var methodDef, out var insertionPlace, true))
+                            if (!ConsoleInstaller.Utils.TryGetEntryPoint(assemblyDef, entryPoint, out var methodDef, out var insertionPlace, true))
                             {
                                 goto EXIT;
                             }
@@ -851,34 +835,33 @@ namespace UnityModManagerNet.Installer
                             }
 
                             assemblyDef.Write(assemblyPath);
-                            DoactionLibraries(Actions.Install);
-                            DoactionGameConfig(Actions.Install);
+                            DoActionLibraries(Actions.Install);
+                            DoActionGameConfig(Actions.Install);
 
-                            Log.Print("安装管理器模块到游戏成功！");
+                            ConsoleInstaller.Log.Print("安装管理器模块到游戏成功！");
 
                             success = true;
                         }
                         catch (Exception e)
                         {
-                            Log.Print(e.ToString());
-                            Utils.RestoreBackup(assemblyPath);
-                            Utils.RestoreBackup(libraryPaths);
-                            Utils.RestoreBackup(gameConfigPath);
-                            Log.Print("安装管理器模块到游戏失败！");
+                            ConsoleInstaller.Log.Print(e.ToString());
+                            ConsoleInstaller.Utils.RestoreBackup(assemblyPath);
+                            ConsoleInstaller.Utils.RestoreBackup(libraryPaths);
+                            ConsoleInstaller.Utils.RestoreBackup(gameConfigPath);
+                            ConsoleInstaller.Log.Print("安装管理器模块到游戏失败！");
                         }
                     }
                     break;
-
                 case Actions.Remove:
                     {
                         try
                         {
                             if (write)
                             {
-                                Log.Print("=======================================");
+                                ConsoleInstaller.Log.Print("=======================================");
                             }
 
-                            Utils.MakeBackup(gameConfigPath);
+                            ConsoleInstaller.Utils.MakeBackup(gameConfigPath);
 
                             var v0_12_Installed = assemblyDef.Types.FirstOrDefault(x => x.Name == managerType.Name);
                             var newWayInstalled = assemblyDef.Types.FirstOrDefault(x => x.Name == starterType.Name);
@@ -887,14 +870,13 @@ namespace UnityModManagerNet.Installer
                             {
                                 if (write)
                                 {
-                                    Utils.MakeBackup(assemblyPath);
-                                    Utils.MakeBackup(libraryPaths);
+                                    ConsoleInstaller.Utils.MakeBackup(assemblyPath);
+                                    ConsoleInstaller.Utils.MakeBackup(libraryPaths);
                                 }
 
-                                Log.Print("正在从游戏卸载管理器模块……");
+                                ConsoleInstaller.Log.Print("正在从游戏卸载管理器模块……");
 
                                 Instruction instr = null;
-
                                 if (newWayInstalled != null)
                                 {
                                     instr = OpCodes.Call.ToInstruction(newWayInstalled.Methods.First(x => x.Name == nameof(UnityModManagerStarter.Start)));
@@ -906,7 +888,7 @@ namespace UnityModManagerNet.Installer
 
                                 if (!string.IsNullOrEmpty(injectedEntryPoint))
                                 {
-                                    if (!Utils.TryGetEntryPoint(assemblyDef, injectedEntryPoint, out var methodDef, out _, true))
+                                    if (!ConsoleInstaller.Utils.TryGetEntryPoint(assemblyDef, injectedEntryPoint, out var methodDef, out _, true))
                                     {
                                         goto EXIT;
                                     }
@@ -933,9 +915,9 @@ namespace UnityModManagerNet.Installer
                                 if (write)
                                 {
                                     assemblyDef.Write(assemblyPath);
-                                    DoactionLibraries(Actions.Remove);
-                                    DoactionGameConfig(Actions.Remove);
-                                    Log.Print("从游戏卸载管理器模块成功！");
+                                    DoActionLibraries(Actions.Remove);
+                                    DoActionGameConfig(Actions.Remove);
+                                    ConsoleInstaller.Log.Print("从游戏卸载管理器模块成功！");
                                 }
                             }
 
@@ -943,33 +925,34 @@ namespace UnityModManagerNet.Installer
                         }
                         catch (Exception e)
                         {
-                            Log.Print(e.ToString());
+                            ConsoleInstaller.Log.Print(e.ToString());
                             if (write)
                             {
-                                Utils.RestoreBackup(assemblyPath);
-                                Utils.RestoreBackup(libraryPaths);
-                                Utils.RestoreBackup(gameConfigPath);
-                                Log.Print("从游戏卸载管理器模块失败！");
+                                ConsoleInstaller.Utils.RestoreBackup(assemblyPath);
+                                ConsoleInstaller.Utils.RestoreBackup(libraryPaths);
+                                ConsoleInstaller.Utils.RestoreBackup(gameConfigPath);
+                                ConsoleInstaller.Log.Print("从游戏卸载管理器模块失败！");
                             }
                         }
                     }
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
-
         EXIT:
             if (!write) return success;
-            Utils.DeleteBackup(assemblyPath);
-            Utils.DeleteBackup(libraryPaths);
-            Utils.DeleteBackup(gameConfigPath);
+            ConsoleInstaller.Utils.DeleteBackup(assemblyPath);
+            ConsoleInstaller.Utils.DeleteBackup(libraryPaths);
+            ConsoleInstaller.Utils.DeleteBackup(gameConfigPath);
             return success;
         }
 
-        private static bool IsDirty(ModuleDefMD assembly)
+        private static bool IsDirty(ModuleDef assembly)
         {
-            return assembly.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName || x.Name == typeof(UnityModManager).Name) != null;
+            return assembly.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName || x.Name == nameof(UnityModManager)) != null;
         }
 
-        private static void MakeDirty(ModuleDefMD assembly)
+        private static void MakeDirty(ModuleDef assembly)
         {
             var moduleDef = ModuleDefMD.Load(typeof(IsDirty).Module);
             var typeDef = moduleDef.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName);
@@ -983,40 +966,36 @@ namespace UnityModManagerNet.Installer
 
             if (selectedGameParams.InstallType == InstallType.DoorstopProxy)
             {
-                success &= Utils.RemoveReadOnly(doorstopPath);
-                success &= Utils.RemoveReadOnly(doorstopConfigPath);
+                success &= ConsoleInstaller.Utils.RemoveReadOnly(doorstopPath);
+                success &= ConsoleInstaller.Utils.RemoveReadOnly(doorstopConfigPath);
             }
             else
             {
-                success &= Utils.RemoveReadOnly(entryAssemblyPath);
+                success &= ConsoleInstaller.Utils.RemoveReadOnly(entryAssemblyPath);
                 if (injectedEntryAssemblyPath != entryAssemblyPath)
-                    success &= Utils.RemoveReadOnly(injectedEntryAssemblyPath);
+                    success &= ConsoleInstaller.Utils.RemoveReadOnly(injectedEntryAssemblyPath);
             }
 
             if (Directory.Exists(managerPath))
-            {
-                success = Directory.GetFiles(managerPath).Aggregate(success, (current, f) => current & Utils.RemoveReadOnly(f));
-            }
+                success = Directory.GetFiles(managerPath).Aggregate(success, (current, f) => current & ConsoleInstaller.Utils.RemoveReadOnly(f));
 
-            if (!success)
-                return false;
+            if (!success) return false;
 
-            success &= Utils.IsDirectoryWritable(managedPath);
-            success &= Utils.IsFileWritable(managerAssemblyPath);
-            success &= Utils.IsFileWritable(GameInfo.filepathInGame);
-
-            success = libraryPaths.Aggregate(success, (current, file) => current & Utils.IsFileWritable(file));
+            success &= ConsoleInstaller.Utils.IsDirectoryWritable(managedPath);
+            success &= ConsoleInstaller.Utils.IsFileWritable(managerAssemblyPath);
+            success &= ConsoleInstaller.Utils.IsFileWritable(GameInfo.filepathInGame);
+            success = libraryPaths.Aggregate(success, (current, file) => current & ConsoleInstaller.Utils.IsFileWritable(file));
 
             if (selectedGameParams.InstallType == InstallType.DoorstopProxy)
             {
-                success &= Utils.IsFileWritable(doorstopPath);
-                success &= Utils.IsFileWritable(doorstopConfigPath);
+                success &= ConsoleInstaller.Utils.IsFileWritable(doorstopPath);
+                success &= ConsoleInstaller.Utils.IsFileWritable(doorstopConfigPath);
             }
             else
             {
-                success &= Utils.IsFileWritable(entryAssemblyPath);
+                success &= ConsoleInstaller.Utils.IsFileWritable(entryAssemblyPath);
                 if (injectedEntryAssemblyPath != entryAssemblyPath)
-                    success &= Utils.IsFileWritable(injectedEntryAssemblyPath);
+                    success &= ConsoleInstaller.Utils.IsFileWritable(injectedEntryAssemblyPath);
             }
 
             return success;
@@ -1032,10 +1011,10 @@ namespace UnityModManagerNet.Installer
                 AppDomain.Unload(domain);
                 if (asm.GetName().Version < HARMONY_VER)
                 {
-                    Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
+                    ConsoleInstaller.Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
                     return false;
                 }
-                Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
+                ConsoleInstaller.Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
             }
 
             return true;
@@ -1046,21 +1025,21 @@ namespace UnityModManagerNet.Installer
             try
             {
                 File.Copy(backup, file, true);
-                Log.Print("已还原游戏原始文件！");
+                ConsoleInstaller.Log.Print("已还原游戏原始文件！");
                 File.Delete(backup);
                 return true;
             }
             catch (Exception e)
             {
-                Log.Print(e.Message);
+                ConsoleInstaller.Log.Print(e.Message);
             }
 
             return false;
         }
 
-        private static void DoactionLibraries(Actions action)
+        private static void DoActionLibraries(Actions action)
         {
-            Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
+            ConsoleInstaller.Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
 
             foreach (var destpath in libraryPaths)
             {
@@ -1076,28 +1055,28 @@ namespace UnityModManagerNet.Installer
                             continue;
                     }
 
-                    Log.Print($"  {filename}");
+                    ConsoleInstaller.Log.Print($"  {filename}");
                     File.Copy(sourcepath, destpath, true);
                 }
                 else
                 {
                     if (!File.Exists(destpath)) continue;
-                    Log.Print($"  {filename}");
+                    ConsoleInstaller.Log.Print($"  {filename}");
                     File.Delete(destpath);
                 }
             }
         }
 
-        private void DoactionGameConfig(Actions action)
+        private void DoActionGameConfig(Actions action)
         {
             if (action == Actions.Install)
             {
-                Log.Print("已创建配置文件“Config.xml”。");
+                ConsoleInstaller.Log.Print("已创建配置文件“Config.xml”。");
                 selectedGame.ExportToGame();
             }
             else if (File.Exists(GameInfo.filepathInGame))
             {
-                Log.Print("已删除配置文件“Config.xml”。");
+                ConsoleInstaller.Log.Print("已删除配置文件“Config.xml”。");
                 File.Delete(GameInfo.filepathInGame);
             }
         }
@@ -1126,14 +1105,9 @@ namespace UnityModManagerNet.Installer
 
         private void extraFilesAutoButton_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(selectedGame.ExtraFilesUrl))
-            {
-                var form = new DownloadExtraFiles(selectedGame.ExtraFilesUrl, gamePath);
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                }
-            }
+            if (string.IsNullOrEmpty(selectedGame.ExtraFilesUrl)) return;
+            var form = new DownloadExtraFiles(selectedGame.ExtraFilesUrl, gamePath);
+            form.ShowDialog();
         }
 
         private void extraFilesManualButton_Click(object sender, EventArgs e)
@@ -1158,17 +1132,14 @@ namespace UnityModManagerNet.Installer
 
         private void installedVersion_Click(object sender, EventArgs e)
         {
-
         }
 
         private void extraFilesGroupBox_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void splitContainerModsInstall_Panel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
     }
 }

@@ -42,7 +42,7 @@ namespace UnityModManagerNet.Installer
             catch (Exception e)
             {
                 status.Text = e.Message;
-                Log.Print(e.Message);
+                ConsoleInstaller.Log.Print(e.Message);
             }
         }
 
@@ -56,7 +56,7 @@ namespace UnityModManagerNet.Installer
             if (e.Error != null)
             {
                 status.Text = e.Error.Message;
-                Log.Print(e.Error.Message);
+                ConsoleInstaller.Log.Print(e.Error.Message);
                 return;
             }
 

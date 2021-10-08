@@ -29,21 +29,19 @@ namespace UnityModManagerNet.Installer
             if (string.IsNullOrEmpty(gamePath))
             {
                 status.Text = "请选择游戏目录。";
-                Log.Print(status.Text);
+                ConsoleInstaller.Log.Print(status.Text);
                 return;
             }
 
             try
             {
                 status.Text = "下载中……";
-                Log.Print(status.Text);
-                using (var wc = new WebClient())
-                {
-                    wc.Encoding = Encoding.UTF8;
-                    wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
-                    wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
-                    wc.DownloadFileAsync(new Uri(url), downloadFile);
-                }
+                ConsoleInstaller.Log.Print(status.Text);
+                using var wc = new WebClient();
+                wc.Encoding = Encoding.UTF8;
+                wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
+                wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
+                wc.DownloadFileAsync(new Uri(url), downloadFile);
             }
             catch (Exception e)
             {
@@ -61,7 +59,7 @@ namespace UnityModManagerNet.Installer
             if (e.Error != null)
             {
                 status.Text = e.Error.Message;
-                Log.Print(e.Error.Message);
+                ConsoleInstaller.Log.Print(e.Error.Message);
                 return;
             }
             if (!e.Cancelled)
@@ -80,22 +78,20 @@ namespace UnityModManagerNet.Installer
                             else
                             {
                                 Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(gamePath, entry.FileName)));
-                                using (FileStream fs = new FileStream(Path.Combine(gamePath, entry.FileName), FileMode.Create, FileAccess.Write))
-                                {
-                                    entry.Extract(fs);
-                                }
+                                using FileStream fs = new FileStream(Path.Combine(gamePath, entry.FileName), FileMode.Create, FileAccess.Write);
+                                entry.Extract(fs);
                             }
                         }
                     }
 
                     status.Text = "下载完毕。";
-                    Log.Print(status.Text);
+                    ConsoleInstaller.Log.Print(status.Text);
                     success = true;
                 }
                 catch (Exception ex)
                 {
                     status.Text = ex.Message;
-                    Log.Print(ex.Message);
+                    ConsoleInstaller.Log.Print(ex.Message);
                 }
 
                 if (File.Exists(downloadFile))

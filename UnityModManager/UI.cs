@@ -660,8 +660,8 @@ namespace UnityModManagerNet
                         {
                             mScrollPosition[tabId] = GL.BeginScrollView(mScrollPosition[tabId], minWidth);
                             GL.BeginVertical(BoxStyle);
-                            for (int c = Logger.History.Count, i = Mathf.Max(0, c - Logger.HistoryCapacity); i < c; i++)
-                                GL.Label(Logger.History[i]);
+                            for (int c = Logger.history.Count, i = Mathf.Max(0, c - Logger.historyCapacity); i < c; i++)
+                                GL.Label(Logger.history[i]);
                             GL.EndVertical();
                             GL.EndScrollView();
                             buttons += delegate

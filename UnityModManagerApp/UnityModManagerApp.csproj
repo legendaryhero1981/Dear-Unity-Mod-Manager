@@ -103,11 +103,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UnityModManager\UnityModManager.csproj" />
+    <ProjectReference Include="..\Console\Console.csproj" />
     <ProjectReference Include="..\Updater\Updater.csproj" />
   </ItemGroup>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup>
     <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
-    <PostBuildEvent>D:\games\exe4j\file -cd!~::-m!~ "(?i)(?&lt;!assembly-csharp.*`.dll`)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\file "-cd!^~::-m!~" "(?i)(assembly-csharp|UnityEngine).*?`.dll`$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
   </PropertyGroup>
 </Project>

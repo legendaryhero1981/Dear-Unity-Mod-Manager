@@ -1,15 +1,10 @@
 ﻿using System;
-using System.IO;
 
 namespace UnityModManagerNet.Installer
 {
-    static class Log
+    public class Log : ConsoleInstaller.Log
     {
-        public const string fileLog = "Log.txt";
-        public static readonly StreamWriter Writer = File.CreateText(fileLog);
-        private static bool firstLine = true;
-
-        public static void Print(string str, bool append = false)
+        public override void Write(string str, bool append = false)
         {
             if (append)
             {
@@ -32,20 +27,7 @@ namespace UnityModManagerNet.Installer
             }
 
             UnityModManagerForm.instance.inputLog.AppendText(str);
-
-            try
-            {
-                Writer.Write(str);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        public static void Append(string str)
-        {
-            Print(str, true);
+            stream?.Write(str);
         }
     }
 }

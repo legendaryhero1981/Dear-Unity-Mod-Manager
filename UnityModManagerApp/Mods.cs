@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Ionic.Zip;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using Ionic.Zip;
+using UnityModManagerNet.ConsoleInstaller;
 
 namespace UnityModManagerNet.Installer
 {
@@ -42,7 +43,7 @@ namespace UnityModManagerNet.Installer
             //Drag and drop files on OS X are in the format /.file/id=6571367.2773272
             if (Environment.OSVersion.Platform == PlatformID.Unix && files[0].StartsWith("/.file"))
             {
-                files = files.Select(Utils.ResolveOSXFileUrl).ToArray();
+                files = files.Select(ConsoleInstaller.Utils.ResolveOSXFileUrl).ToArray();
             }
 
             SaveAndInstallZipFiles(files);
@@ -76,13 +77,13 @@ namespace UnityModManagerNet.Installer
                     }
                     else
                     {
-                        Log.Print($"只能处理后缀名为.zip的压缩文件！");
+                        ConsoleInstaller.Log.Print($"只能处理后缀名为.zip的压缩文件！");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Log.Print(ex.Message);
-                    Log.Print($"安装文件“{Path.GetFileName(filepath)}”失败！");
+                    ConsoleInstaller.Log.Print(ex.Message);
+                    ConsoleInstaller.Log.Print($"安装文件“{Path.GetFileName(filepath)}”失败！");
                 }
 
             // delete old zip files if count > 2
@@ -99,8 +100,8 @@ namespace UnityModManagerNet.Installer
                     }
                     catch (Exception ex)
                     {
-                        Log.Print(ex.Message);
-                        Log.Print($"删除旧压缩文件“{item.Path}”失败！");
+                        ConsoleInstaller.Log.Print(ex.Message);
+                        ConsoleInstaller.Log.Print($"删除旧压缩文件“{item.Path}”失败！");
                         break;
                     }
                 }
@@ -111,14 +112,14 @@ namespace UnityModManagerNet.Installer
         {
             if (selectedGame == null)
             {
-                Log.Print("请先选定一个游戏！");
+                ConsoleInstaller.Log.Print("请先选定一个游戏！");
                 return;
             }
 
             var modsPath = Path.Combine(gamePath, selectedGame.ModsDirectory);
             if (!Directory.Exists(modsPath))
             {
-                Log.Print("请先安装MOD管理器模块到游戏！");
+                ConsoleInstaller.Log.Print("请先安装MOD管理器模块到游戏！");
                 return;
             }
 
@@ -127,17 +128,17 @@ namespace UnityModManagerNet.Installer
                 try
                 {
                     Directory.Delete(modInfo.Path, true);
-                    Log.Print($"卸载MOD“{modInfo.Id}”成功！");
+                    ConsoleInstaller.Log.Print($"卸载MOD“{modInfo.Id}”成功！");
                 }
                 catch (Exception ex)
                 {
-                    Log.Print(ex.Message);
-                    Log.Print($"卸载MOD“{modInfo.Id}”失败！");
+                    ConsoleInstaller.Log.Print(ex.Message);
+                    ConsoleInstaller.Log.Print($"卸载MOD“{modInfo.Id}”失败！");
                 }
             }
             else
             {
-                Log.Print($"目录“{modInfo.Path}”不存在！");
+                ConsoleInstaller.Log.Print($"目录“{modInfo.Path}”不存在！");
             }
 
             ReloadMods();
@@ -148,7 +149,7 @@ namespace UnityModManagerNet.Installer
         {
             if (!File.Exists(filepath))
             {
-                Log.Print($"文件“{Path.GetFileName(filepath)}”不存在！");
+                ConsoleInstaller.Log.Print($"文件“{Path.GetFileName(filepath)}”不存在！");
             }
             try
             {
@@ -157,8 +158,8 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception e)
             {
-                Log.Print(e.Message);
-                Log.Print($"安装MOD“{Path.GetFileName(filepath)}”失败！");
+                ConsoleInstaller.Log.Print(e.Message);
+                ConsoleInstaller.Log.Print($"安装MOD“{Path.GetFileName(filepath)}”失败！");
             }
         }
 
@@ -166,14 +167,14 @@ namespace UnityModManagerNet.Installer
         {
             if (selectedGame == null)
             {
-                Log.Print("请先选定一个游戏！");
+                ConsoleInstaller.Log.Print("请先选定一个游戏！");
                 return;
             }
 
             var modsPath = Path.Combine(gamePath, selectedGame.ModsDirectory);
             if (!Directory.Exists(modsPath))
             {
-                Log.Print("请先安装MOD管理器模块到游戏！");
+                ConsoleInstaller.Log.Print("请先安装MOD管理器模块到游戏！");
                 return;
             }
 
@@ -182,7 +183,7 @@ namespace UnityModManagerNet.Installer
                 var modInfo = ReadModInfoFromZip(zip);
                 if (modInfo == null)
                 {
-                    Log.Print($"文件“{Path.GetFileName(zip.Name)}”格式错误！");
+                    ConsoleInstaller.Log.Print($"文件“{Path.GetFileName(zip.Name)}”格式错误！");
                     return;
                 }
                 var modInstalled = _mods.Find(x => x.Id == modInfo.Id && x.Status == ModStatus.Installed);
@@ -212,13 +213,13 @@ namespace UnityModManagerNet.Installer
                         entry.Extract(fs);
                     }
                 }
-                Log.Print($"解压缩文件“{Path.GetFileName(zip.Name)}”成功！");
+                ConsoleInstaller.Log.Print($"解压缩文件“{Path.GetFileName(zip.Name)}”成功！");
             }
             catch (Exception ex)
             {
-                Log.Print(ex.Message);
-                Log.Print(ex.StackTrace);
-                Log.Print($"解压缩文件“{Path.GetFileName(zip.Name)}”失败！");
+                ConsoleInstaller.Log.Print(ex.Message);
+                ConsoleInstaller.Log.Print(ex.StackTrace);
+                ConsoleInstaller.Log.Print($"解压缩文件“{Path.GetFileName(zip.Name)}”失败！");
             }
 
             if (!reloadMods) return;
@@ -253,8 +254,8 @@ namespace UnityModManagerNet.Installer
                     }
                     catch (Exception e)
                     {
-                        Log.Print(e.Message);
-                        Log.Print($"解析文件“{jsonPath}”失败！");
+                        ConsoleInstaller.Log.Print(e.Message);
+                        ConsoleInstaller.Log.Print($"解析文件“{jsonPath}”失败！");
                     }
                 }
             }
@@ -306,7 +307,7 @@ namespace UnityModManagerNet.Installer
                 if (ModStatus.Installed.Equals(modInfo.Status))
                 {
                     var release = _repositories.ContainsKey(selectedGame) ? _repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id) : null;
-                    var web = !string.IsNullOrEmpty(release?.Version) ? Utils.ParseVersion(release.Version) : new Version();
+                    var web = !string.IsNullOrEmpty(release?.Version) ? ConsoleInstaller.Utils.ParseVersion(release.Version) : new Version();
                     var local = modInfo.AvailableVersions.Keys.Max(x => x) ?? new Version();
 
                     if (local > modInfo.ParsedVersion && local >= web)
@@ -337,7 +338,7 @@ namespace UnityModManagerNet.Installer
                 if (!string.IsNullOrEmpty(modInfo.ManagerVersion))
                 {
                     listItem.SubItems.Add(modInfo.ManagerVersion);
-                    if (version < Utils.ParseVersion(modInfo.ManagerVersion))
+                    if (version < ConsoleInstaller.Utils.ParseVersion(modInfo.ManagerVersion))
                     {
                         listItem.ForeColor = System.Drawing.Color.FromArgb(192, 0, 0);
                         status = "需要更新MOD管理器";
@@ -362,8 +363,8 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception e)
             {
-                Log.Print(e.Message);
-                Log.Print($"解析文件“{Path.GetFileName(filepath)}”失败！");
+                ConsoleInstaller.Log.Print(e.Message);
+                ConsoleInstaller.Log.Print($"解析文件“{Path.GetFileName(filepath)}”失败！");
             }
 
             return null;
@@ -389,8 +390,8 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception e)
             {
-                Log.Print(e.Message);
-                Log.Print($"解析文件“{Path.GetFileName(zip.Name)}”失败！");
+                ConsoleInstaller.Log.Print(e.Message);
+                ConsoleInstaller.Log.Print($"解析文件“{Path.GetFileName(zip.Name)}”失败！");
             }
 
             return null;
@@ -425,7 +426,7 @@ namespace UnityModManagerNet.Installer
                             var release = _repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id);
                             if (release != null && !string.IsNullOrEmpty(release.DownloadUrl) && !string.IsNullOrEmpty(release.Version))
                             {
-                                var ver = Utils.ParseVersion(release.Version);
+                                var ver = ConsoleInstaller.Utils.ParseVersion(release.Version);
                                 if (modInfo.ParsedVersion < ver)
                                 {
                                     inRepository = ver;
@@ -454,6 +455,8 @@ namespace UnityModManagerNet.Installer
                 case ModStatus.NotInstalled:
                     installToolStripMenuItem.Visible = true;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             if (!string.IsNullOrEmpty(modInfo.HomePage))
@@ -489,7 +492,7 @@ namespace UnityModManagerNet.Installer
             if (_repositories.ContainsKey(selectedGame))
             {
                 var release = _repositories[selectedGame].FirstOrDefault(x => x.Id == modInfo.Id);
-                if (release != null && !string.IsNullOrEmpty(release.DownloadUrl) && !string.IsNullOrEmpty(release.Version) && modInfo.AvailableVersions.All(x => x.Key < Utils.ParseVersion(release.Version)))
+                if (release != null && !string.IsNullOrEmpty(release.DownloadUrl) && !string.IsNullOrEmpty(release.Version) && modInfo.AvailableVersions.All(x => x.Key < ConsoleInstaller.Utils.ParseVersion(release.Version)))
                 {
                     var downloadForm = new DownloadMod(release);
                     var result = downloadForm.ShowDialog();

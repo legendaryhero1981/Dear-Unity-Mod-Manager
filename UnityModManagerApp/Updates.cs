@@ -6,12 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Forms;
+using UnityModManagerNet.ConsoleInstaller;
 
 namespace UnityModManagerNet.Installer
 {
     public partial class UnityModManagerForm
     {
-        private readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> _repositories = new Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>>();
+        private readonly Dictionary<GameInfo, HashSet<UnityModManager.Repository.Release>> _repositories = new();
         private const string RepositoryUrl = "raw.githubusercontent.com";
 
         private void CheckModUpdates()
@@ -38,8 +39,8 @@ namespace UnityModManagerNet.Installer
                 }
                 catch (Exception e)
                 {
-                    Log.Print(e.Message);
-                    Log.Print($"从网站“{url}”检查MOD新版本失败！");
+                    ConsoleInstaller.Log.Print(e.Message);
+                    ConsoleInstaller.Log.Print($"从网站“{url}”检查MOD新版本失败！");
                 }
             }
         }
@@ -48,7 +49,7 @@ namespace UnityModManagerNet.Installer
         {
             if (e.Error != null)
             {
-                Log.Print(e.Error.Message);
+                ConsoleInstaller.Log.Print(e.Error.Message);
                 return;
             }
 
@@ -71,8 +72,8 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception ex)
             {
-                Log.Print(ex.Message);
-                Log.Print($"从网站“{url}”检查MOD新版本失败！");
+                ConsoleInstaller.Log.Print(ex.Message);
+                ConsoleInstaller.Log.Print($"从网站“{url}”检查MOD新版本失败！");
             }
         }
 
@@ -81,11 +82,11 @@ namespace UnityModManagerNet.Installer
             if (string.IsNullOrEmpty(config.Repository))
                 return;
 
-            Log.Print("正在检查MOD管理器的新版本……");
+            ConsoleInstaller.Log.Print("正在检查MOD管理器的新版本……");
 
             if (!HasNetworkConnection())
             {
-                Log.Print("无法访问网站，请检查防火墙或代理设置！");
+                ConsoleInstaller.Log.Print("无法访问网站，请检查防火墙或代理设置！");
                 return;
             }
 
@@ -97,8 +98,8 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception e)
             {
-                Log.Print(e.Message);
-                Log.Print($"下载MOD新版本失败！");
+                ConsoleInstaller.Log.Print(e.Message);
+                ConsoleInstaller.Log.Print($"下载MOD新版本失败！");
             }
         }
 
@@ -106,7 +107,7 @@ namespace UnityModManagerNet.Installer
         {
             if (e.Error != null)
             {
-                Log.Print(e.Error.Message);
+                ConsoleInstaller.Log.Print(e.Error.Message);
                 return;
             }
 
@@ -119,18 +120,18 @@ namespace UnityModManagerNet.Installer
                 var release = repository.Releases.FirstOrDefault(x => x.Id == nameof(UnityModManager));
                 if (release == null || string.IsNullOrEmpty(release.Version)) return;
 
-                var ver = Utils.ParseVersion(release.Version);
+                var ver = ConsoleInstaller.Utils.ParseVersion(release.Version);
                 if (version < ver)
                 {
                     btnDownloadUpdate.Text = $@"下载V{release.Version}";
-                    Log.Print($"有可用的新版本。");
+                    ConsoleInstaller.Log.Print($"有可用的新版本。");
                 }
-                else Log.Print($"没有可用的新版本。");
+                else ConsoleInstaller.Log.Print($"没有可用的新版本。");
             }
             catch (Exception ex)
             {
-                Log.Print(ex.Message);
-                Log.Print($"检查MOD新版本时出错！");
+                ConsoleInstaller.Log.Print(ex.Message);
+                ConsoleInstaller.Log.Print($"检查MOD新版本时出错！");
             }
         }
 
@@ -144,7 +145,7 @@ namespace UnityModManagerNet.Installer
             }
             catch (Exception e)
             {
-                Log.Print(e.Message);
+                ConsoleInstaller.Log.Print(e.Message);
             }
 
             return false;

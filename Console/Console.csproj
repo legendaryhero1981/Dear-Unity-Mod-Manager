@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{7151CE06-904E-485D-8BC3-A7174A9D5D29}</ProjectGuid>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <OutputType>Exe</OutputType>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>UnityModManagerNet.ConsoleInstaller</RootNamespace>
+    <AssemblyName>Console</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0.0</Version>
+    <Authors>李允</Authors>
+    <Company>Legend</Company>
+    <Copyright>Copyright © Legend 2021</Copyright>
+    <Description>亲爱的Unity游戏MOD管理器控制台程序</Description>
+    <AssemblyTitle>$(Description)</AssemblyTitle>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\lib\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="dnlib">
+      <HintPath>..\lib\dnlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnityModManager\UnityModManager.csproj" />
+  </ItemGroup>
+</Project>

@@ -138,10 +138,10 @@ namespace UnityModManagerNet
             }
 
             private static bool hasErrors;
-            private const int BufferCapacity = 100;
-            private static readonly List<string> Buffer = new List<string>(BufferCapacity);
-            internal static int HistoryCapacity = 200;
-            internal static List<string> History = new List<string>(HistoryCapacity * 2);
+            private const int bufferCapacity = 100;
+            private static readonly List<string> buffer = new List<string>(bufferCapacity);
+            internal static int historyCapacity = 200;
+            internal static List<string> history = new List<string>(historyCapacity * 2);
 
             private static void Write(string str, bool onlyNative = false)
             {
@@ -151,21 +151,21 @@ namespace UnityModManagerNet
 
                 if (onlyNative) return;
 
-                Buffer.Add(str);
-                History.Add(str);
+                buffer.Add(str);
+                history.Add(str);
 
-                if (History.Count < HistoryCapacity * 2) return;
+                if (history.Count < historyCapacity * 2) return;
 
-                var result = History.Skip(HistoryCapacity);
-                History.Clear();
-                History.AddRange(result);
+                var result = history.Skip(historyCapacity);
+                history.Clear();
+                history.AddRange(result);
             }
 
             private static float _timer;
 
             internal static void Watcher(float dt)
             {
-                if (Buffer.Count >= BufferCapacity || _timer > 1f)
+                if (buffer.Count >= bufferCapacity || _timer > 1f)
                     WriteBuffers();
                 else
                     _timer += dt;
@@ -180,10 +180,10 @@ namespace UnityModManagerNet
                         File.Create(Filepath).Close();
                         _clearOnce = true;
                     }
-                    if (Buffer.Count > 0 && !hasErrors)
+                    if (buffer.Count > 0 && !hasErrors)
                     {
                         using var writer = File.AppendText(Filepath);
-                        foreach (var str in Buffer)
+                        foreach (var str in buffer)
                         {
                             writer.WriteLine(str);
                         }
@@ -194,24 +194,24 @@ namespace UnityModManagerNet
                     hasErrors = true;
                     Console.WriteLine(PrefixException + e);
                     Console.WriteLine(Prefix + "已取消选中UnityModManager目录的只读复选框。");
-                    History.Add(PrefixException + e);
-                    History.Add(Prefix + "已取消选中UnityModManager目录的只读复选框。");
+                    history.Add(PrefixException + e);
+                    history.Add(Prefix + "已取消选中UnityModManager目录的只读复选框。");
                 }
                 catch (Exception e)
                 {
                     hasErrors = true;
                     Console.WriteLine(PrefixException + e);
-                    History.Add(PrefixException + e);
+                    history.Add(PrefixException + e);
                 }
 
-                Buffer.Clear();
+                buffer.Clear();
                 _timer = 0;
             }
 
             public static void Clear()
             {
-                Buffer.Clear();
-                History.Clear();
+                buffer.Clear();
+                history.Clear();
             }
         }
     }
