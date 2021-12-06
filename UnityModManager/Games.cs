@@ -19,7 +19,7 @@ namespace UnityModManagerNet
             /// <summary>
             ///  [0.20.0.15]
             /// </summary>
-            private static bool _freezeUi;
+            private static bool freezeUI;
 
             public static void Init(List<ModEntry> modEntries)
             {
@@ -50,8 +50,8 @@ namespace UnityModManagerNet
             public static void OnAfterLoadMods()
             {
                 var mod = ModEntries.Find(m => "0".Equals(m.Info.FreezeUI) || "false".Equals(m.Info.FreezeUI?.ToLower()));
-                _freezeUi = null == mod;
-                Logger.Log(_freezeUi ? $"DUMM冻结游戏UI模式已开启！" : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
+                freezeUI = null == mod;
+                Logger.Log(freezeUI ? $"DUMM冻结游戏UI模式已开启！" : $"检测到Mod “{mod.Info.DisplayName}” 的配置文件 “{Config.ModInfo}” 设置了 “{nameof(mod.Info.FreezeUI)}” 字段值为 “{mod.Info.FreezeUI}”，DUMM冻结游戏UI模式已关闭！");
                 foreach (var o in Scripts)
                 {
                     try
@@ -93,7 +93,7 @@ namespace UnityModManagerNet
 
                 public override void OnAfterLoadMods()
                 {
-                    if (!_freezeUi) return;
+                    if (!freezeUI) return;
                     FreezeUI = () =>
                     {
                         _escMode = KM.GameModes.GameModeType.EscMode == KM.Game.Instance.CurrentMode || KM.GameModes.GameModeType.None == KM.Game.Instance.CurrentMode;
@@ -116,7 +116,7 @@ namespace UnityModManagerNet
 
                 public override void OnAfterLoadMods()
                 {
-                    if (!_freezeUi) return;
+                    if (!freezeUI) return;
                     FreezeUI = () =>
                     {
                         _escMode = WOTR.GameModes.GameModeType.EscMode == WOTR.Game.Instance.CurrentMode || WOTR.GameModes.GameModeType.None == WOTR.Game.Instance.CurrentMode;
