@@ -58,6 +58,7 @@ namespace UnityModManagerNet.Installer
         static string entryPoint;
         static string injectedEntryPoint;
         static string gameExePath;
+        static string unityPlayerPath;
         static string doorstopFilename = "winhttp.dll";
         static string doorstopConfigFilename = "doorstop_config.ini";
         static string doorstopPath;
@@ -316,6 +317,8 @@ namespace UnityModManagerNet.Installer
 
             ConsoleInstaller.Utils.TryParseEntryPoint(selectedGame.EntryPoint, out var assemblyName);
             gamePath = selectedGameParams.Path;
+            if (File.Exists(Path.Combine(gamePath, "UnityPlayer.dll")))
+                unityPlayerPath = Path.Combine(gamePath, "UnityPlayer.dll");
             btnOpenFolder.ForeColor = Color.Green;
             btnOpenFolder.Text = new DirectoryInfo(gamePath).Name;
             folderBrowserDialog.SelectedPath = gamePath;

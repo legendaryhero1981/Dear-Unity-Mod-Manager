@@ -448,7 +448,7 @@
     <UIStartingPoint>[Assembly-CSharp.dll]ADOStartup.Startup:After</UIStartingPoint>
     <MinimalManagerVersion>0.22.14</MinimalManagerVersion>
     <Comment>需要游戏版本不低于1.11.3</Comment>
-  </GameInfo> 
+  </GameInfo>
   <GameInfo Name="奇幻大陆的勇士">
     <GameName>Phoenotopia Awakening</GameName>
     <Folder>Phoenotopia Awakening</Folder>
@@ -476,7 +476,7 @@
     <ModInfo>Info.json</ModInfo>
     <GameExe>disco.exe</GameExe>
     <EntryPoint>[Assembly-CSharp.dll]MainMenuList.Start:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp.dll]MainMenuList.Start:Before</StartingPoint>        
+    <StartingPoint>[Assembly-CSharp.dll]MainMenuList.Start:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenuList.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
   </GameInfo>
@@ -566,35 +566,123 @@
     <GameVersionPoint>[Assembly-CSharp.dll]Version.GetString</GameVersionPoint>
     <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
   </GameInfo>
-	<GameInfo Name="妮可来了">
+  <GameInfo Name="妮可来了">
     <GameName>Here Comes Niko</GameName>
-		<Folder>Here Comes Niko</Folder>
-		<ModInfo>Info.json</ModInfo>
-		<ModsDirectory>Mods</ModsDirectory>
-		<GameExe>Here Comes Niko!.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]scrBoot.Start:After</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]scrPauseMenu.Awake:After</UIStartingPoint>
-		<MinimalManagerVersion>0.23.4</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="再创传奇">
+    <Folder>Here Comes Niko</Folder>
+    <ModInfo>Info.json</ModInfo>
+    <ModsDirectory>Mods</ModsDirectory>
+    <GameExe>Here Comes Niko!.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]scrBoot.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]scrPauseMenu.Awake:After</UIStartingPoint>
+    <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="再创传奇">
     <GameName>Re:Legend</GameName>
-		<Folder>Re-Legend</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>ReLegend.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
-		<MinimalManagerVersion>0.23.4</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="垃圾">
+    <Folder>Re-Legend</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>ReLegend.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
+    <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="垃圾">
     <GameName>Muck</GameName>
-		<Folder>Muck</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Muck.exe</GameExe>
-		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]LobbyVisuals.Awake:After</StartingPoint>
-		<MinimalManagerVersion>0.23.5</MinimalManagerVersion>
-	</GameInfo>
+    <Folder>Muck</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Muck.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]LobbyVisuals.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.23.5</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Duskers">
+    <GameName>无人机操作系统</GameName>
+    <Folder>Duskers</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Duskers.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenu.Initialize:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Initialize:After</UIStartingPoint>
+    <Comment>Definition by LoganDark</Comment>
+    <MinimalManagerVersion>0.23.5</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Grand Tactician The Civil War 1861 1865">
+    <GameName>大战术家:南北战争（1861-1865）</GameName>
+    <Folder>Grand Tactician The Civil War 1861 1865</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>The Civil War (1861-1865).exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenuControls.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenuControls.Start:After</UIStartingPoint>
+    <Comment>Definition by makotech222</Comment>
+    <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Toree 2">
+    <GameName>托妮2</GameName>
+    <Folder>Toree 2</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Toree2.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]StartScript.Start:After</StartingPoint>
+    <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Sailwind">
+    <GameName>乘风破浪</GameName>
+    <Folder>Sailwind</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Sailwind.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]StartMenu.Start:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]StartMenu.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Inscryption">
+    <GameName>邪恶冥刻</GameName>
+    <Folder>Inscryption</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Inscryption.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]DiskCardGame.StartScreenController.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]DiskCardGame.StartScreenController.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Planetbase">
+    <GameName>星球基地</GameName>
+    <Folder>Planetbase</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Planetbase.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Planetbase.ErrorManager.init:Before</StartingPoint>
+    <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Gloomhaven">
+    <GameName>幽港迷城</GameName>
+    <Folder>Gloomhaven</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>GH.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[GH.Runtime.dll]GLOOM.MainMenu.MainMenuUIManager.Start:After</StartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="Black Geyser">
+    <GameName>黑色间歇泉：黑暗的使者</GameName>
+    <Folder>Black Geyser Couriers of Darkness</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>BlackGeyser.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]BG.Loading.GrapeOceanSplashController.DoSlpash:Before</StartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
+  </GameInfo>
 </Config>

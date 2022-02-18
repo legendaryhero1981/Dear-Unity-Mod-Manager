@@ -29,6 +29,8 @@ namespace UnityModManagerNet
             public const int GlobalFontSize = 20;
             public const int H1FontSize = GlobalFontSize + 4;
             public const int H2FontSize = GlobalFontSize + 2;
+            private string[] mOSfonts = null;
+            private int mSelectedFont;
 
             /// <summary>
             /// [0.20.0.17] 新增多种自定义GUIStyle样式
@@ -238,6 +240,23 @@ namespace UnityModManagerNet
                 _mExpectedWindowSize = _mWindowSize;
                 _mUiScale = Mathf.Clamp(Params.UIScale, UiScaleMin, UiScaleMax);
                 _mExpectedUiScale = _mUiScale;
+                mOSfonts = Font.GetOSInstalledFontNames();
+
+                if (mOSfonts.Length == 0)
+                {
+                    Logger.Error("No compatible font found in OS. If you play through Wine, install winetricks allfonts.");
+                    OpenUnityFileLog();
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(Params.UIFont))
+                        Params.UIFont = GlobalFontName;
+                    if (!mOSfonts.Contains(Params.UIFont))
+                        Params.UIFont = mOSfonts.First();
+
+                    mSelectedFont = Array.IndexOf(mOSfonts, Params.UIFont);
+                }
+
                 Textures.Init();
                 if (null == _mBackground)
                 {
@@ -436,7 +455,7 @@ namespace UnityModManagerNet
 
             private void ScaleGui()
             {
-                GUI.skin.font = Font.CreateDynamicFontFromOSFont(GlobalFontName, Scale(GlobalFontSize));
+                GUI.skin.font = Font.CreateDynamicFontFromOSFont(Params.UIFont, Scale(GlobalFontSize));
                 GUI.skin.horizontalSlider = HSliderStyle;
                 GUI.skin.horizontalSliderThumb = HSliderThumbStyle;
                 GUI.skin.toggle = ToggleStyle;

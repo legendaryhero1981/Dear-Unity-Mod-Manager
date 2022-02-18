@@ -19,15 +19,16 @@ namespace UnityModManagerNet
                 public bool Enabled = true;
             }
 
-            public static KeyBinding DefaultHotkey = new KeyBinding { keyCode = KeyCode.F10, modifiers = 1 };
-            public static KeyBinding EscapeHotkey = new KeyBinding { keyCode = KeyCode.Escape };
-            public KeyBinding Hotkey = new KeyBinding();
+            public static KeyBinding DefaultHotkey = new() { keyCode = KeyCode.F10, modifiers = 1 };
+            public static KeyBinding EscapeHotkey = new() { keyCode = KeyCode.Escape };
+            public KeyBinding Hotkey = new();
             public int CheckUpdates = 1;
             public int ShowOnStart = 1;
             public float WindowWidth;
             public float WindowHeight;
             public float UIScale = 1f;
-            public List<Mod> ModParams = new List<Mod>();
+            public string UIFont;
+            public List<Mod> ModParams = new();
 
             private static readonly string Filepath = Path.Combine(Path.GetDirectoryName(typeof(Param).Assembly.Location) ?? string.Empty, "Params.xml");
 
@@ -99,8 +100,11 @@ namespace UnityModManagerNet
             public string GameName;
             public string GameVersionPoint;
             public string GameScriptName;
+            public string OldPatchTarget;
+            public string Comment;
             public string FixBlackUI;
             public string MinimalManagerVersion;
+            public string ExtraFilesUrl;
 
             private static readonly string Filepath = Path.Combine(Path.GetDirectoryName(typeof(GameInfo).Assembly.Location) ?? string.Empty, "Config.xml");
 

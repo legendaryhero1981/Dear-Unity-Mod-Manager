@@ -18,7 +18,7 @@
     <Version>1.0.0.0</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
-    <Copyright>Copyright © Legend 2021</Copyright>
+    <Copyright>Copyright © Legend 2022</Copyright>
     <Description>亲爱的Unity游戏MOD管理器更新程序</Description>
     <AssemblyTitle>$(Description)</AssemblyTitle>
   </PropertyGroup>

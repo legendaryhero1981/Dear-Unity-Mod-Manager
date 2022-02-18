@@ -433,39 +433,111 @@ namespace UnityModManagerNet
                 var param = str.Split('|');
                 if (param.Length != 2)
                     throw new Exception(
-                        $"VisibleOn/InvisibleOn({str})必须提供两个参数，字段名称和值, 例如：FieldName|True。");
-                var dependsOnField = type.GetField(param[0],
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                if (dependsOnField == null) throw new Exception($"找不到字段“{param[0]}”！");
-                if (!dependsOnField.FieldType.IsPrimitive && !dependsOnField.FieldType.IsEnum)
-                    throw new Exception($"不支持的类型：“{dependsOnField.FieldType.Name}”！");
-                object dependsOnValue = null;
-                if (dependsOnField.FieldType.IsEnum)
-                    try
+                        $"VisibleOn/InvisibleOn({str})必须提供两个参数，字段名称和值, 例如：FieldName|True或#PropertyName|True。");
+                var isField = !str.StartsWith("#");
+                if (isField)
+                {
+                    var dependsOnField = type.GetField(param[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    if (dependsOnField == null)
                     {
-                        dependsOnValue = Enum.Parse(dependsOnField.FieldType, param[1]);
+                        throw new Exception($"找不到字段“{param[0]}”！请在属性的开头插入#！");
                     }
-                    catch (Exception e)
+                    if (!dependsOnField.FieldType.IsPrimitive && !dependsOnField.FieldType.IsEnum)
                     {
-                        mod.Logger.Log($"解析值“VisibleOn/InvisibleOn({str})”");
-                        throw e;
+                        throw new Exception($"不支持的类型：“{dependsOnField.FieldType.Name}”！");
                     }
-                else if (dependsOnField.FieldType == typeof(string))
-                    dependsOnValue = param[1];
+                    object dependsOnValue = null;
+                    if (dependsOnField.FieldType.IsEnum)
+                    {
+                        try
+                        {
+                            dependsOnValue = Enum.Parse(dependsOnField.FieldType, param[1]);
+                            if (dependsOnValue == null)
+                            {
+                                throw new Exception($"不能解析值“{param[1]}”！");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            mod.Logger.Log($"解析值VisibleOn/InvisibleOn({str})时出错！");
+                            throw e;
+                        }
+                    }
+                    else if (dependsOnField.FieldType == typeof(string))
+                    {
+                        dependsOnValue = param[1];
+                    }
+                    else
+                    {
+                        try
+                        {
+                            dependsOnValue = Convert.ChangeType(param[1], dependsOnField.FieldType);
+                            if (dependsOnValue == null)
+                            {
+                                throw new Exception($"不能解析值“{param[1]}”！");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            mod.Logger.Log($"解析值VisibleOn/InvisibleOn({str})时出错！");
+                            throw e;
+                        }
+                    }
+                    var value = dependsOnField.GetValue(container);
+                    return value.GetHashCode() == dependsOnValue.GetHashCode();
+                }
                 else
-                    try
+                {
+                    param[0] = param[0].TrimStart('#');
+                    var dependsOnProperty = type.GetProperty(param[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    if (dependsOnProperty == null)
                     {
-                        dependsOnValue = Convert.ChangeType(param[1], dependsOnField.FieldType);
-                        if (dependsOnValue == null) throw new Exception($"解析值“{param[1]}“失败！");
+                        throw new Exception($"找不到属性“{param[0]}”！");
                     }
-                    catch (Exception e)
+                    if (!dependsOnProperty.PropertyType.IsPrimitive && !dependsOnProperty.PropertyType.IsEnum)
                     {
-                        mod.Logger.Log($"解析值“VisibleOn/InvisibleOn({str})”");
-                        throw e;
+                        throw new Exception($"不支持的属性：“{dependsOnProperty.PropertyType.Name}”！");
                     }
-
-                var value = dependsOnField.GetValue(container);
-                return value.GetHashCode() == dependsOnValue.GetHashCode();
+                    object dependsOnValue = null;
+                    if (dependsOnProperty.PropertyType.IsEnum)
+                    {
+                        try
+                        {
+                            dependsOnValue = Enum.Parse(dependsOnProperty.PropertyType, param[1]);
+                            if (dependsOnValue == null)
+                            {
+                                throw new Exception($"不能解析值“{param[1]}”！");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            mod.Logger.Log($"解析值VisibleOn/InvisibleOn({str})时出错！");
+                            throw e;
+                        }
+                    }
+                    else if (dependsOnProperty.PropertyType == typeof(string))
+                    {
+                        dependsOnValue = param[1];
+                    }
+                    else
+                    {
+                        try
+                        {
+                            dependsOnValue = Convert.ChangeType(param[1], dependsOnProperty.PropertyType);
+                            if (dependsOnValue == null)
+                            {
+                                throw new Exception($"不能解析值“{param[1]}”！");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            mod.Logger.Log($"解析值VisibleOn/InvisibleOn({str})时出错！");
+                            throw e;
+                        }
+                    }
+                    var value = dependsOnProperty.GetValue(container, null);
+                    return value.GetHashCode() == dependsOnValue.GetHashCode();
+                }
             }
 
             private static bool Draw(object container, Type type, ModEntry mod, DrawFieldMask defaultMask, int unique)

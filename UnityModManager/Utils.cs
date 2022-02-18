@@ -14,17 +14,25 @@ namespace UnityModManagerNet
     {
         public static void OpenUnityFileLog()
         {
-            var folders = new[] { Application.persistentDataPath, Application.dataPath };
-            var files = new[] { "Player.log", "output_log.txt" };
-            foreach (var folder in folders)
-                foreach (var file in files)
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                var folders = new string[] { Application.persistentDataPath, Application.dataPath };
+                var files = new string[] { "Player.log", "output_log.txt" };
+                foreach (var folder in folders)
                 {
-                    var filepath = Path.Combine(folder, file);
-                    if (!File.Exists(filepath)) continue;
-                    Thread.Sleep(500);
-                    Application.OpenURL(filepath);
-                    return;
+                    foreach (var file in files)
+                    {
+                        var filepath = Path.Combine(folder, file);
+                        if (File.Exists(filepath))
+                        {
+                            Thread.Sleep(500);
+                            Application.OpenURL(filepath);
+                            return;
+                        }
+                    }
                 }
+            }).Start();
         }
 
         public static Version ParseVersion(string str)
