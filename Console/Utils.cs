@@ -356,9 +356,7 @@ namespace UnityModManagerNet.ConsoleInstaller
                 {
                     foreach (var folder in folders)
                     {
-                        var path = Path.Combine(disk, root);
-                        path = Path.Combine(path, folder);
-                        path = Path.Combine(path, str);
+                        var path = Path.Combine(disk, root, folder, str);
                         if (!Directory.Exists(path)) continue;
                         if (!IsMacPlatform()) return path;
                         foreach (var dir in Directory.GetDirectories(path))

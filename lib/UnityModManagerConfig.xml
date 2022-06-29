@@ -597,8 +597,8 @@
     <StartingPoint>[Assembly-CSharp.dll]LobbyVisuals.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.23.5</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Duskers">
-    <GameName>无人机操作系统</GameName>
+  <GameInfo Name="无人机操作系统">
+    <GameName>Duskers</GameName>
     <Folder>Duskers</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -609,8 +609,8 @@
     <Comment>Definition by LoganDark</Comment>
     <MinimalManagerVersion>0.23.5</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Grand Tactician The Civil War 1861 1865">
-    <GameName>大战术家:南北战争（1861-1865）</GameName>
+  <GameInfo Name="大战术家:南北战争（1861-1865）">
+    <GameName>Grand Tactician The Civil War 1861 1865</GameName>
     <Folder>Grand Tactician The Civil War 1861 1865</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -621,8 +621,8 @@
     <Comment>Definition by makotech222</Comment>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Toree 2">
-    <GameName>托妮2</GameName>
+  <GameInfo Name="托妮2">
+    <GameName>Toree 2</GameName>
     <Folder>Toree 2</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -631,8 +631,8 @@
     <StartingPoint>[Assembly-CSharp.dll]StartScript.Start:After</StartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Sailwind">
-    <GameName>乘风破浪</GameName>
+  <GameInfo Name="乘风破浪">
+    <GameName>Sailwind</GameName>
     <Folder>Sailwind</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -642,8 +642,8 @@
     <UIStartingPoint>[Assembly-CSharp.dll]StartMenu.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Inscryption">
-    <GameName>邪恶冥刻</GameName>
+  <GameInfo Name="邪恶冥刻">
+    <GameName>Inscryption</GameName>
     <Folder>Inscryption</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -653,8 +653,8 @@
     <UIStartingPoint>[Assembly-CSharp.dll]DiskCardGame.StartScreenController.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Planetbase">
-    <GameName>星球基地</GameName>
+  <GameInfo Name="星球基地">
+    <GameName>Planetbase</GameName>
     <Folder>Planetbase</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -663,8 +663,8 @@
     <StartingPoint>[Assembly-CSharp.dll]Planetbase.ErrorManager.init:Before</StartingPoint>
     <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Gloomhaven">
-    <GameName>幽港迷城</GameName>
+  <GameInfo Name="幽港迷城">
+    <GameName>Gloomhaven</GameName>
     <Folder>Gloomhaven</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -674,8 +674,8 @@
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
     <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="Black Geyser">
-    <GameName>黑色间歇泉：黑暗的使者</GameName>
+  <GameInfo Name="黑色间歇泉：黑暗的使者">
+    <GameName>Black Geyser</GameName>
     <Folder>Black Geyser Couriers of Darkness</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
@@ -685,4 +685,73 @@
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
     <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
   </GameInfo>
+	<GameInfo Name="核爆RPG：特鲁多格勒">
+    <GameName>ATOM RPG Trudograd</GameName>
+		<Folder>ATOM RPG Trudograd</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Trudograd_Win64.exe</GameExe>
+		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+		<StartingPoint>[AtomGame.dll]MainMenu.Start:After</StartingPoint>
+		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="瓦格鲁斯:万壑之地">
+    <GameName>Vagrus - The Riven Realms</GameName>
+		<Folder>Vagrus - The Riven Realms</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Vagrus.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]Game.Start:After</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]MainMenuUI.Awake:After</UIStartingPoint>
+		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="梅卡妮可">
+    <GameName>Mechanica</GameName>
+		<Folder>Mechanica</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Mechanica.exe</GameExe>
+		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]Game.UI.MainMenuFadeIn.Start:After</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]Game.UI.MainMenuFadeIn.Start:After</UIStartingPoint>
+		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="史前王国">
+    <GameName>Prehistoric Kingdom</GameName>
+		<Folder>Prehistoric Kingdom</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Prehistoric Kingdom.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</UIStartingPoint>
+		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="星际勇士">
+    <GameName>Star Valor</GameName>
+		<Folder>Star Valor</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Star Valor.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</UIStartingPoint>
+		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+	</GameInfo>
+	<GameInfo Name="咒术师学院">
+    <GameName>Spellcaster University</GameName>
+		<Folder>Spellcaster University</Folder>
+		<ModsDirectory>Mods</ModsDirectory>
+		<ModInfo>Info.json</ModInfo>
+		<GameExe>Spellcaster University.exe</GameExe>
+		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+		<StartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</StartingPoint>
+		<UIStartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</UIStartingPoint>
+		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+	</GameInfo>
 </Config>

@@ -12,9 +12,7 @@ using System.Windows.Forms;
 using UnityModManagerNet.ConsoleInstaller;
 using UnityModManagerNet.Injection;
 using UnityModManagerNet.Installer.Properties;
-using UnityModManagerNet.Marks;
 using UnityModManagerNet.UI.Utils;
-using FileAttributes = System.IO.FileAttributes;
 
 namespace UnityModManagerNet.Installer
 {
@@ -287,7 +285,7 @@ namespace UnityModManagerNet.Installer
 
             if (string.IsNullOrEmpty(selectedGameParams.Path) || !Directory.Exists(selectedGameParams.Path))
             {
-                var result = FindGameFolder(selectedGame.Folder);
+                var result = ConsoleInstaller.Utils.FindGameFolder(selectedGame.Folder);
                 if (string.IsNullOrEmpty(result))
                 {
                     InactiveForm();
@@ -328,7 +326,7 @@ namespace UnityModManagerNet.Installer
                 ConsoleInstaller.Log.Print("尚不支持使用IL2CPP编译的游戏版本！");
                 return;
             }
-            managedPath = FindManagedFolder(gamePath);
+            managedPath = ConsoleInstaller.Utils.FindManagedFolder(gamePath);
             managerPath = Path.Combine(managedPath, nameof(UnityModManager));
             entryAssemblyPath = Path.Combine(managedPath, assemblyName);
             injectedEntryAssemblyPath = entryAssemblyPath;
@@ -470,7 +468,7 @@ namespace UnityModManagerNet.Installer
             }
 
             if (selectedGameParams.InstallType == InstallType.Assembly)
-                btnRestore.Enabled = IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}{ConsoleInstaller.Utils.FileSuffixCache}");
+                btnRestore.Enabled = ConsoleInstaller.Utils.IsDirty(injectedAssemblyDef) && File.Exists($"{injectedEntryAssemblyPath}{ConsoleInstaller.Utils.FileSuffixCache}");
 
             tabControl.TabPages[1].Enabled = true;
             managerDef ??= injectedAssemblyDef;
@@ -502,64 +500,6 @@ namespace UnityModManagerNet.Installer
                 btnInstall.Enabled = true;
                 btnRemove.Enabled = false;
             }
-        }
-
-        private string FindGameFolder(string str)
-        {
-            var disks = new[] { @"C:\", @"D:\", @"E:\", @"F:\" };
-            var roots = new[] { "Games", "Program files", "Program files (x86)", "" };
-            var folders = new[] { @"Steam\SteamApps\common", @"GoG Galaxy\Games", "" };
-
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                disks = new[] { Environment.GetEnvironmentVariable("HOME") };
-                roots = new[] { "Library/Application Support", ".steam" };
-                folders = new[] { "Steam/SteamApps/common", "steam/steamapps/common", "Steam/steamapps/common" };
-            }
-
-            foreach (var disk in disks)
-                foreach (var root in roots)
-                    foreach (var folder in folders)
-                    {
-                        var path = Path.Combine(disk, root);
-                        path = Path.Combine(path, folder);
-                        path = Path.Combine(path, str);
-                        if (!Directory.Exists(path)) continue;
-                        if (!ConsoleInstaller.Utils.IsMacPlatform()) return path;
-                        foreach (var dir in Directory.GetDirectories(path))
-                        {
-                            if (!dir.EndsWith(".app")) continue;
-                            path = Path.Combine(path, dir);
-                            break;
-                        }
-                        return path;
-                    }
-            return null;
-        }
-
-        private string FindManagedFolder(string path)
-        {
-            if (ConsoleInstaller.Utils.IsMacPlatform())
-            {
-                var dir = $"{path}/Contents/Resources/Data/Managed";
-                if (Directory.Exists(dir))
-                    return dir;
-            }
-
-            foreach (var di in new DirectoryInfo(path).GetDirectories())
-            {
-                if ((di.Attributes & FileAttributes.ReparsePoint) != 0)
-                    continue;
-
-                var dir = di.FullName;
-                if (dir.EndsWith("Managed") && (File.Exists(Path.Combine(dir, "Assembly-CSharp.dll")) || File.Exists(Path.Combine(dir, "UnityEngine.dll"))))
-                    return dir;
-                var result = FindManagedFolder(dir);
-                if (!string.IsNullOrEmpty(result))
-                    return result;
-            }
-
-            return null;
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -632,12 +572,20 @@ namespace UnityModManagerNet.Installer
             }
         }
 
+        private bool showChoosePathNotice = true;
         private void btnOpenFolder_Click(object sender, EventArgs e)
         {
+            if (showChoosePathNotice)
+            {
+                MessageBox.Show("请选择游戏安装目录，例如：D:/Steam/steamapps/common/游戏名称", "游戏安装目录", MessageBoxButtons.OK);
+                showChoosePathNotice = false;
+            }
             var result = folderBrowserDialog.ShowDialog();
-            if (result != DialogResult.OK) return;
-            selectedGameParams.Path = folderBrowserDialog.SelectedPath;
-            RefreshForm();
+            if (result == DialogResult.OK)
+            {
+                selectedGameParams.Path = folderBrowserDialog.SelectedPath;
+                RefreshForm();
+            }
         }
 
         private void gameList_Changed(object sender, EventArgs e)
@@ -707,7 +655,8 @@ namespace UnityModManagerNet.Installer
                         ConsoleInstaller.Log.Print($"“{doorstopFilename}”");
                         File.Copy(doorstopFilename, doorstopPath, true);
                         ConsoleInstaller.Log.Print($"“{doorstopConfigFilename}”");
-                        File.WriteAllText(doorstopConfigPath, $@"[UnityDoorstop]{Environment.NewLine}enabled = true{Environment.NewLine}targetAssembly = {managerAssemblyPath}");
+                        var relativeManagerAssemblyPath = managerAssemblyPath.Substring(gamePath.Length).Trim(Path.DirectorySeparatorChar);
+                        File.WriteAllText(doorstopConfigPath, "[General]" + Environment.NewLine + "enabled = true" + Environment.NewLine + "target_assembly = " + relativeManagerAssemblyPath);
                         DoActionLibraries(Actions.Install);
                         DoActionGameConfig(Actions.Install);
                         ConsoleInstaller.Log.Print("安装管理器模块到游戏成功！");
@@ -803,10 +752,10 @@ namespace UnityModManagerNet.Installer
                             ConsoleInstaller.Utils.MakeBackup(assemblyPath);
                             ConsoleInstaller.Utils.MakeBackup(libraryPaths);
 
-                            if (!IsDirty(assemblyDef))
+                            if (!ConsoleInstaller.Utils.IsDirty(assemblyDef))
                             {
                                 File.Copy(assemblyPath, originalAssemblyPath, true);
-                                MakeDirty(assemblyDef);
+                                ConsoleInstaller.Utils.MakeDirty(assemblyDef);
                             }
 
                             if (!InjectAssembly(Actions.Remove, injectedAssemblyDef, assemblyDef != injectedAssemblyDef))
@@ -910,9 +859,9 @@ namespace UnityModManagerNet.Installer
                                 else if (v0_12_Installed != null)
                                     assemblyDef.Types.Remove(v0_12_Installed);
 
-                                if (!IsDirty(assemblyDef))
+                                if (!ConsoleInstaller.Utils.IsDirty(assemblyDef))
                                 {
-                                    MakeDirty(assemblyDef);
+                                    ConsoleInstaller.Utils.MakeDirty(assemblyDef);
                                 }
 
                                 if (write)
@@ -948,19 +897,6 @@ namespace UnityModManagerNet.Installer
             ConsoleInstaller.Utils.DeleteBackup(libraryPaths);
             ConsoleInstaller.Utils.DeleteBackup(gameConfigPath);
             return success;
-        }
-
-        private static bool IsDirty(ModuleDef assembly)
-        {
-            return assembly.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName || x.Name == nameof(UnityModManager)) != null;
-        }
-
-        private static void MakeDirty(ModuleDef assembly)
-        {
-            var moduleDef = ModuleDefMD.Load(typeof(IsDirty).Module);
-            var typeDef = moduleDef.Types.FirstOrDefault(x => x.FullName == typeof(IsDirty).FullName);
-            moduleDef.Types.Remove(typeDef);
-            assembly.Types.Add(typeDef);
         }
 
         private bool TestWritePermissions()

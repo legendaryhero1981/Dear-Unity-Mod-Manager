@@ -428,6 +428,9 @@ namespace UnityModManagerNet
                 if (DrawIntField(ref value, label, style, option)) onChange(value);
             }
 
+            /// <summary>
+            /// # is a feature of [0.24.2]
+            /// </summary>
             private static bool DependsOn(string str, object container, Type type, ModEntry mod)
             {
                 var param = str.Split('|');

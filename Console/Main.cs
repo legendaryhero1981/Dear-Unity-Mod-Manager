@@ -291,6 +291,11 @@ namespace UnityModManagerNet.ConsoleInstaller
                 SelectGameFolder();
             }
 
+            if (!string.IsNullOrEmpty(selectedGame.Comment))
+            {
+                Log.Print(selectedGame.Comment);
+            }
+
             param.Sync(config.GameInfo);
             param.Save();
             Utils.TryParseEntryPoint(selectedGame.EntryPoint, out var assemblyName);
@@ -702,7 +707,8 @@ namespace UnityModManagerNet.ConsoleInstaller
                         Log.Print($"  '{doorstopFilename}'");
                         File.Copy(doorstopFilename, doorstopPath, true);
                         Log.Print($"  '{doorstopConfigFilename}'");
-                        File.WriteAllText(doorstopConfigPath, $@"[UnityDoorstop]{Environment.NewLine}enabled = true{Environment.NewLine}targetAssembly = {managerAssemblyPath}");
+                        var relativeManagerAssemblyPath = managerAssemblyPath.Substring(gamePath.Length).Trim(Path.DirectorySeparatorChar);
+                        File.WriteAllText(doorstopConfigPath, "[General]" + Environment.NewLine + "enabled = true" + Environment.NewLine + "target_assembly = " + relativeManagerAssemblyPath);
                         DoActionLibraries(Actions.Install);
                         DoActionGameConfig(Actions.Install);
                         Log.Print("安装管理器模块到游戏成功！");

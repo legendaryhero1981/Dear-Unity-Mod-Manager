@@ -47,7 +47,7 @@ namespace UnityModManagerNet
         /// </summary>
         internal static Action FreezeUI = () => { }, UnFreezeUI = () => { };
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             AppDomain.CurrentDomain.AssemblyLoad += OnLoad;
         }
@@ -55,7 +55,8 @@ namespace UnityModManagerNet
         private static void OnLoad(object sender, AssemblyLoadEventArgs args)
         {
             var name = args.LoadedAssembly.GetName().Name;
-            if (name != "Assembly-CSharp" && name != "GH.Runtime") return;
+            Console.WriteLine(name);
+            if (name != "Assembly-CSharp" && name != "GH.Runtime" && name != "AtomGame") return;
             AppDomain.CurrentDomain.AssemblyLoad -= OnLoad;
             Injector.Run(true);
         }
@@ -640,7 +641,6 @@ namespace UnityModManagerNet
             /// </summary>
             public Action<ModEntry, float> OnUpdate;
             public Assembly Assembly { get; private set; }
-            //public ModSettings Settings = null;
             /// <summary>
             ///     Show button to reload the mod [0.14.0]
             /// </summary>
@@ -821,148 +821,183 @@ namespace UnityModManagerNet
                 var assemblyPath = System.IO.Path.Combine(Path, Info.AssemblyName);
                 var pdbPath = assemblyPath.Replace(".dll", ".pdb");
 
+                var replacedAssemblyPath = string.Empty;
+                var commandArgs = Environment.GetCommandLineArgs();
+                var idx = Array.IndexOf(commandArgs, $"--umm-{Info.Id}-assembly-path");
+                if (idx != -1 && commandArgs.Length > idx + 1)
+                {
+                    replacedAssemblyPath = assemblyPath = commandArgs[idx + 1];
+                }
+
                 if (File.Exists(assemblyPath))
                 {
-                    try
+                    if (!string.IsNullOrEmpty(replacedAssemblyPath))
                     {
-                        var assemblyCachePath = assemblyPath;
-                        var pdbCachePath = pdbPath;
-                        var cacheExists = false;
-
-                        if (_mFirstLoading)
+                        try
                         {
-                            var fi = new FileInfo(assemblyPath);
-                            var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + UnityModManager.Version.GetHashCode() +
-                                                 ManagerVersion.GetHashCode()).GetHashCode();
-                            assemblyCachePath = $"{assemblyPath}.{hash}.cache";
-                            pdbCachePath = assemblyCachePath + ".pdb";
-                            cacheExists = File.Exists(assemblyCachePath);
-
-                            if (!cacheExists)
-                                foreach (var filepath in Directory.GetFiles(Path, "*.cache*"))
-                                    try
-                                    {
-                                        File.Delete(filepath);
-                                    }
-                                    catch (Exception)
-                                    {
-                                    }
+                            Assembly = Assembly.LoadFile(assemblyPath);
+                            _mFirstLoading = false;
                         }
-
-                        if (ManagerVersion >= VER_0_13)
+                        catch (Exception exception)
                         {
+                            ErrorOnLoading = true;
+                            this.Logger.Error($"Error loading file '{assemblyPath}'.");
+                            this.Logger.LogException(exception);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var assemblyCachePath = assemblyPath;
+                            var pdbCachePath = pdbPath;
+                            var cacheExists = false;
+
                             if (_mFirstLoading)
+                            {
+                                var fi = new FileInfo(assemblyPath);
+                                var hash = (ushort)((long)fi.LastWriteTimeUtc.GetHashCode() + Version.GetHashCode() +
+                                                     ManagerVersion.GetHashCode()).GetHashCode();
+                                assemblyCachePath = assemblyPath + $".{hash}.cache";
+                                pdbCachePath = assemblyCachePath + ".pdb";
+                                cacheExists = File.Exists(assemblyCachePath);
+                                if (!cacheExists)
+                                    foreach (var filepath in Directory.GetFiles(Path, "*.cache*"))
+                                        try
+                                        {
+                                            File.Delete(filepath);
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
+                            }
+
+                            if (ManagerVersion >= VER_0_13)
+                            {
+                                if (_mFirstLoading)
+                                {
+                                    if (!cacheExists)
+                                    {
+                                        var hasChanges = false;
+                                        var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
+                                        foreach (var item in modDef.GetAssemblyRefs())
+                                        {
+                                            if (!item.FullName.StartsWith("0Harmony, Version=1.")) continue;
+                                            item.Name = "0Harmony-1.2";
+                                            hasChanges = true;
+                                        }
+
+                                        if (hasChanges)
+                                            modDef.Write(assemblyCachePath);
+                                        else
+                                            File.Copy(assemblyPath, assemblyCachePath, true);
+                                        if (File.Exists(pdbPath))
+                                            File.Copy(pdbPath, pdbCachePath, true);
+                                    }
+
+                                    Assembly = Assembly.LoadFile(assemblyCachePath);
+                                    foreach (var type in Assembly.GetTypes())
+                                    {
+                                        if (!type.GetCustomAttributes(typeof(EnableReloadingAttribute), true).Any())
+                                            continue;
+                                        CanReload = true;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
+                                    modDef.Assembly.Name += ++_mReloaderCount;
+                                    using var buf = new MemoryStream();
+                                    modDef.Write(buf);
+                                    Assembly = File.Exists(pdbPath)
+                                        ? Assembly.Load(buf.ToArray(), File.ReadAllBytes(pdbPath))
+                                        : Assembly.Load(buf.ToArray());
+                                }
+                            }
+                            else
                             {
                                 if (!cacheExists)
                                 {
                                     var hasChanges = false;
                                     var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
+                                    foreach (var item in modDef.GetTypeRefs())
+                                        if (item.FullName == "UnityModManagerNet.UnityModManager")
+                                        {
+                                            item.ResolutionScope = new AssemblyRefUser(thisModuleDef.Assembly);
+                                            hasChanges = true;
+                                        }
+
+                                    foreach (var item in modDef.GetMemberRefs().Where(member => member.IsFieldRef))
+                                        if (item.Name == "modsPath" &&
+                                            item.Class.FullName == "UnityModManagerNet.UnityModManager")
+                                        {
+                                            item.Name = "OldModsPath";
+                                            hasChanges = true;
+                                        }
+
                                     foreach (var item in modDef.GetAssemblyRefs())
                                     {
                                         if (!item.FullName.StartsWith("0Harmony, Version=1.")) continue;
                                         item.Name = "0Harmony-1.2";
                                         hasChanges = true;
                                     }
+
                                     if (hasChanges)
                                         modDef.Write(assemblyCachePath);
                                     else
                                         File.Copy(assemblyPath, assemblyCachePath, true);
-                                    if (File.Exists(pdbPath))
-                                        File.Copy(pdbPath, pdbCachePath, true);
                                 }
+
                                 Assembly = Assembly.LoadFile(assemblyCachePath);
-                                foreach (var type in Assembly.GetTypes())
-                                {
-                                    if (!type.GetCustomAttributes(typeof(EnableReloadingAttribute), true).Any())
-                                        continue;
-                                    CanReload = true;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
-                                modDef.Assembly.Name += ++_mReloaderCount;
-                                using var buf = new MemoryStream();
-                                modDef.Write(buf);
-                                Assembly = File.Exists(pdbPath) ? Assembly.Load(buf.ToArray(), File.ReadAllBytes(pdbPath)) : Assembly.Load(buf.ToArray());
-                            }
-                        }
-                        else
-                        {
-                            if (!cacheExists)
-                            {
-                                var hasChanges = false;
-                                var modDef = ModuleDefMD.Load(File.ReadAllBytes(assemblyPath));
-                                foreach (var item in modDef.GetTypeRefs())
-                                    if (item.FullName == "UnityModManagerNet.UnityModManager")
-                                    {
-                                        item.ResolutionScope = new AssemblyRefUser(thisModuleDef.Assembly);
-                                        hasChanges = true;
-                                    }
-                                foreach (var item in modDef.GetMemberRefs().Where(member => member.IsFieldRef))
-                                    if (item.Name == "modsPath" && item.Class.FullName == "UnityModManagerNet.UnityModManager")
-                                    {
-                                        item.Name = "OldModsPath";
-                                        hasChanges = true;
-                                    }
-                                foreach (var item in modDef.GetAssemblyRefs())
-                                {
-                                    if (!item.FullName.StartsWith("0Harmony, Version=1.")) continue;
-                                    item.Name = "0Harmony-1.2";
-                                    hasChanges = true;
-                                }
-                                if (hasChanges)
-                                    modDef.Write(assemblyCachePath);
-                                else
-                                    File.Copy(assemblyPath, assemblyCachePath, true);
                             }
 
-                            Assembly = Assembly.LoadFile(assemblyCachePath);
+                            _mFirstLoading = false;
                         }
-
-                        _mFirstLoading = false;
-                    }
-                    catch (Exception exception)
-                    {
-                        ErrorOnLoading = true;
-                        Logger.Error($"读取文件“{assemblyPath}”失败！");
-                        Logger.LogException(exception);
-                        return false;
-                    }
-
-                    try
-                    {
-                        var param = new object[] { this };
-                        var types = new[] { typeof(ModEntry) };
-                        if (FindMethod(Info.EntryMethod, types, false) == null)
-                        {
-                            param = null;
-                            types = null;
-                        }
-
-                        if (!Invoke(Info.EntryMethod, out var result, param, types) ||
-                            result != null && (bool)result == false)
+                        catch (Exception exception)
                         {
                             ErrorOnLoading = true;
-                            Logger.Log($"加载入口方法“{Info.EntryMethod}”失败！");
+                            Logger.Error($"读取文件“{assemblyPath}”失败！");
+                            Logger.LogException(exception);
+                            return false;
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        ErrorOnLoading = true;
-                        Logger.Log(e.ToString());
-                        return false;
-                    }
 
-                    Started = true;
-                    if (ErrorOnLoading) return false;
-                    Active = true;
-                    return true;
+                        try
+                        {
+                            var param = new object[] { this };
+                            var types = new[] { typeof(ModEntry) };
+                            if (FindMethod(Info.EntryMethod, types, false) == null)
+                            {
+                                param = null;
+                                types = null;
+                            }
+
+                            if (!Invoke(Info.EntryMethod, out var result, param, types) ||
+                                result != null && (bool)result == false)
+                            {
+                                ErrorOnLoading = true;
+                                Logger.Log($"加载入口方法“{Info.EntryMethod}”失败！");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            ErrorOnLoading = true;
+                            Logger.Log(e.ToString());
+                            return false;
+                        }
+
+                        Started = true;
+                        if (ErrorOnLoading) return false;
+                        Active = true;
+                        return true;
+                    }
                 }
-
-                ErrorOnLoading = true;
-                Logger.Error($"找不到文件“{assemblyPath}”！");
+                else
+                {
+                    ErrorOnLoading = true;
+                    Logger.Error($"找不到文件“{assemblyPath}”！");
+                }
                 return false;
             }
 
