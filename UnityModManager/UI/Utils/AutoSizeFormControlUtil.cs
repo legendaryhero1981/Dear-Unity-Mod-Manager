@@ -32,9 +32,8 @@ namespace UnityModManagerNet.UI.Utils
             _controlsInfo = new Dictionary<string, string>();
         }
         /// <summary>
-        /// 
-        /// </summary>
         /// <param name="control">panel 控件</param>
+        /// </summary>
         public void RefreshControlsInfo(Control control)
         {
             ClearCaches();

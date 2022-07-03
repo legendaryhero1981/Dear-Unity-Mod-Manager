@@ -1,5 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UnityEngine;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using UnityModManagerTests;
 
 namespace UnityModManagerNet.UI.Utils.Tests
@@ -10,7 +11,9 @@ namespace UnityModManagerNet.UI.Utils.Tests
         [TestMethod()]
         public void FileToBase64StringTest()
         {
-            var base64String = ImguiUtil.FileToBase64String((string)TestContext.Properties["ImguiUtilTests.imgFilePath"]);
+            var imgFilePath = (string) TestContext.Properties["ImguiUtilTests.imgFilePath"];
+            Logger.LogMessage(imgFilePath);
+            var base64String = ImguiUtil.FileToBase64String(imgFilePath);
             Assert.IsNotNull(base64String);
         }
 

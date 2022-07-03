@@ -10,7 +10,7 @@
     <TargetPlatform>x64</TargetPlatform>
 
     <!-- Framework35 | Framework40 | Framework45 -->
-    <TargetFrameworkVersion>Framework45</TargetFrameworkVersion>
+    <TargetFrameworkVersion>net472</TargetFrameworkVersion>
 
     <!-- Specify timeout in milliseconds. A valid value should be greater than 0 -->
     <TestSessionTimeout>10000</TestSessionTimeout>
@@ -47,19 +47,30 @@
 
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
-    <Parameter name="ImguiUtilTests.imgFilePath" value="" />
+    <Parameter name="ImguiUtilTests.imgFilePath" value="G:/cache/截图/imageres/imageres.dll(98).png" />
   </TestRunParameters>
+
+  <!-- Configuration for loggers -->
+  <LoggerRunSettings>
+    <Loggers>
+      <Logger friendlyName="html" enabled="True">
+        <Configuration>
+          <LogFileName>test.html</LogFileName>
+        </Configuration>
+      </Logger>
+    </Loggers>
+  </LoggerRunSettings>
 
   <!-- MSTest adapter -->
   <MSTest>
     <MapInconclusiveToFailed>true</MapInconclusiveToFailed>
     <CaptureTraceOutput>false</CaptureTraceOutput>
-    <DeleteDeploymentDirectoryAfterTestRunIsComplete>false</DeleteDeploymentDirectoryAfterTestRunIsComplete>
+    <DeleteDeploymentDirectoryAfterTestRunIsComplete>true</DeleteDeploymentDirectoryAfterTestRunIsComplete>
     <DeploymentEnabled>false</DeploymentEnabled>
     <KeepExecutorAliveAfterLegacyRun>false</KeepExecutorAliveAfterLegacyRun>
     <InProcMode>true</InProcMode>
     <AssemblyResolution>
-      <Directory path="" includeSubDirectories="false"/>
+      <Directory path="E:/Decompile/Code/lib/Unity" includeSubDirectories="false"/>
     </AssemblyResolution>
   </MSTest>
 </RunSettings>

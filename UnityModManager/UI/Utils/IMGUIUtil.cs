@@ -17,15 +17,12 @@ namespace UnityModManagerNet.UI.Utils
             try
             {
                 var texture2D = new Texture2D(width, height);
-                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                {
-                    var buffer = new byte[fs.Length];
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    texture2D.LoadImage(buffer);
-                    Logger.Log($"将文件{path}转换为Texture2D对象成功！");
-                    _ = true;
-                    return texture2D;
-                }
+                using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                var buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, (int)fs.Length);
+                texture2D.LoadImage(buffer);
+                Logger.Log($"将文件{path}转换为Texture2D对象成功！");
+                return texture2D;
             }
             catch (Exception e)
             {
@@ -41,13 +38,11 @@ namespace UnityModManagerNet.UI.Utils
             var base64String = "";
             try
             {
-                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                {
-                    var buffer = new byte[fs.Length];
-                    fs.Read(buffer, 0, (int)fs.Length);
-                    base64String = Convert.ToBase64String(buffer);
-                    Logger.Log($"获取当前图片base64为：{base64String}");
-                }
+                using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                var buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, (int)fs.Length);
+                base64String = Convert.ToBase64String(buffer);
+                Logger.Log($"获取当前图片base64为：{base64String}");
             }
             catch (Exception e)
             {
