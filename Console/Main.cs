@@ -54,7 +54,7 @@ namespace UnityModManagerNet.ConsoleInstaller
         }
 
         [Flags]
-        private enum LibIncParam { Normal = 0, Minimal_lt_0_22 = 1 }
+        private enum LibIncParam { Normal = 0, Skip = 1, Minimal_lt_0_22 = 2 }
 
         private static readonly Dictionary<string, LibIncParam> libraryFiles = new()
         {
@@ -322,7 +322,7 @@ namespace UnityModManagerNet.ConsoleInstaller
             injectedEntryPoint = selectedGame.EntryPoint;
             libraryPaths = new List<string>();
             var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
-            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22))
+            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22 || (item.Value & LibIncParam.Skip) <= 0))
                 libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
@@ -334,6 +334,11 @@ namespace UnityModManagerNet.ConsoleInstaller
             }
             else
                 gameExePath = string.Empty;
+
+            if (File.Exists(Path.Combine(managedPath, "System.Xml.dll")))
+            {
+                libraryFiles["System.Xml.dll"] = LibIncParam.Skip;
+            }
 
             var path = new DirectoryInfo(Application.StartupPath).FullName;
             if (path.StartsWith(gamePath))
@@ -464,7 +469,7 @@ namespace UnityModManagerNet.ConsoleInstaller
                 actions |= Actions.Install;
             }
 
-            Log.Print("请输入命令键。");
+            Log.Print("输入命令键或按Enter键退出。");
             for (var i = (int)Actions.Install; i <= (int)Actions.Restore; i <<= 1)
             {
                 if (actions.HasFlag((Actions)i))
@@ -949,6 +954,16 @@ namespace UnityModManagerNet.ConsoleInstaller
                     if (!File.Exists(destpath)) continue;
                     Log.Print($"  {filename}");
                     File.Delete(destpath);
+                }
+            }
+
+            if (action == Actions.Delete)
+            {
+                foreach (var file in Directory.GetFiles(managerPath, "*.dll"))
+                {
+                    var filename = Path.GetFileName(file);
+                    Log.Print($"  {filename}");
+                    File.Delete(file);
                 }
             }
         }

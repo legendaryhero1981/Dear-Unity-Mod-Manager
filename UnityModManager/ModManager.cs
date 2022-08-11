@@ -55,7 +55,6 @@ namespace UnityModManagerNet
         private static void OnLoad(object sender, AssemblyLoadEventArgs args)
         {
             var name = args.LoadedAssembly.GetName().Name;
-            Console.WriteLine(name);
             if (name != "Assembly-CSharp" && name != "GH.Runtime" && name != "AtomGame") return;
             AppDomain.CurrentDomain.AssemblyLoad -= OnLoad;
             Injector.Run(true);

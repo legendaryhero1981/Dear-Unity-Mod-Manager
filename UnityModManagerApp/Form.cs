@@ -27,7 +27,7 @@ namespace UnityModManagerNet.Installer
         private static readonly Version HARMONY_VER = new(2, 0);
 
         [Flags]
-        enum LibIncParam { Normal = 0, Minimal_lt_0_22 = 1 }
+        enum LibIncParam { Normal = 0, Skip = 1, Minimal_lt_0_22 = 2 }
 
         private static readonly Dictionary<string, LibIncParam> libraryFiles = new()
         {
@@ -339,9 +339,12 @@ namespace UnityModManagerNet.Installer
             doorstopPath = Path.Combine(gamePath, doorstopFilename);
             doorstopConfigPath = Path.Combine(gamePath, doorstopConfigFilename);
 
+            if (File.Exists(Path.Combine(managedPath, "System.Xml.dll")))
+                libraryFiles["System.Xml.dll"] = LibIncParam.Skip;
+
             libraryPaths = new List<string>();
             var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? ConsoleInstaller.Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
-            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22))
+            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22 || (item.Value & LibIncParam.Skip) <= 0))
                 libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
@@ -993,7 +996,6 @@ namespace UnityModManagerNet.Installer
                         if (dest.LastWriteTimeUtc == source.LastWriteTimeUtc)
                             continue;
                     }
-
                     ConsoleInstaller.Log.Print($"  {filename}");
                     File.Copy(sourcepath, destpath, true);
                 }
@@ -1002,6 +1004,16 @@ namespace UnityModManagerNet.Installer
                     if (!File.Exists(destpath)) continue;
                     ConsoleInstaller.Log.Print($"  {filename}");
                     File.Delete(destpath);
+                }
+            }
+
+            if (action == Actions.Remove)
+            {
+                foreach(var file in Directory.GetFiles(managerPath, "*.dll"))
+                {
+                    var filename = Path.GetFileName(file);
+                    ConsoleInstaller.Log.Print($"  {filename}");
+                    File.Delete(file);
                 }
             }
         }
