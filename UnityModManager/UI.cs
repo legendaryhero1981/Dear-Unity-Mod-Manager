@@ -55,13 +55,23 @@ namespace UnityModManagerNet
             public static GS h2;
             public static GS bold;
             public static GS button;
+            public static GS question;
+            public static GS tooltipBox;
+
             public static Rect mWindowRect = new(0, 0, 0, 0);
             public static int tabId;
+            private static int _mLastWindowId;
 
             private static readonly string[] MCheckUpdateStrings = { " 从不", " 自动" };
             private static readonly string[] MShowOnStartStrings = { " 否", " 是" };
 
-            private static int _mLastWindowId;
+            private class Column
+            {
+                public bool Expand;
+                public string Name;
+                public bool Skip;
+                public float Width;
+            }
             private readonly List<Column> _mColumns = new();
             private readonly List<Column> _mOriginColumns = new()
             {
@@ -71,12 +81,10 @@ namespace UnityModManagerNet
                 new Column {Name = "开/关", Width = 120},
                 new Column {Name = "状态", Width = 100}
             };
-
             /// <summary>
             /// [0.21.1.20] 新增Mod依赖列表字段
             /// </summary>
             private static List<string> _mJoinList = new();
-
             /// <summary>
             /// [0.20.0.17] 当前选项卡的ScrollView控件位置
             /// </summary>
@@ -91,6 +99,7 @@ namespace UnityModManagerNet
             public static Vector2 WindowSize => _mWindowSize;
             private static Vector2 _mWindowSize = Vector2.zero;
 
+            private GC mTooltip;
             private GameObject _mCanvas;
             private Resolution _mCurrentResolution;
             private float _mExpectedUiScale = 1f;
@@ -430,12 +439,14 @@ namespace UnityModManagerNet
                 };
                 HSliderStyle = new GS(GUI.skin.horizontalSlider)
                 {
+                    name = "umm slider",
                     fixedHeight = GlobalFontSize,
                     padding = RectOffset(0),
                     margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2)
                 };
                 HSliderThumbStyle = new GS(GUI.skin.horizontalSliderThumb)
                 {
+                    name = "umm slider thumb",
                     fixedHeight = GlobalFontSize,
                     padding = RectOffset(GlobalFontSize / 2, 0),
                     margin = RectOffset(0)
@@ -451,6 +462,26 @@ namespace UnityModManagerNet
                     clipping = TextClipping.Overflow,
                     wordWrap = true
                 };
+                question = new GS()
+                {
+                    name = "umm question",
+                    margin = RectOffset(0, GlobalFontSize / 2)
+                };
+                tooltipBox = new GS()
+                {
+                    name = "umm tooltip",
+                    alignment = TextAnchor.MiddleCenter,
+                    normal =
+                    {
+                        textColor = Color.white ,
+                        background = new Texture2D(2, 2, TextureFormat.RGBA32, false)
+                    },
+                    hover = { textColor = Color.white },
+                    border = { left = 2, right = 2, top = 2, bottom = 2 },
+                    richText = true
+                };
+                tooltipBox.normal.background.SetPixels32(new Color32[4].Select(x => x = new Color32(30, 30, 30, 255)).ToArray());
+                tooltipBox.normal.background.Apply();
             }
 
             private void ScaleGui()
@@ -461,6 +492,7 @@ namespace UnityModManagerNet
                 GUI.skin.toggle = ToggleStyle;
                 GUI.skin.button = ButtonStyle;
                 GUI.skin.label = NormalFontStyle;
+                question.fixedWidth = question.fixedHeight = Scale(GlobalFontSize);
                 HSliderStyle.fixedHeight = HSliderThumbStyle.fixedHeight = Scale(GlobalFontSize);
                 ToggleStyle.fontSize = ButtonStyle.fontSize = NormalFontStyle.fontSize = CenterFontStyle.fontSize = BoldFontStyle.fontSize = Scale(GlobalFontSize);
                 WindowStyle.fontSize = H1FontStyle.fontSize = Scale(H1FontSize);
@@ -528,6 +560,7 @@ namespace UnityModManagerNet
 
             private void WindowFunction(int windowId)
             {
+                if (Event.current.type == EventType.Repaint) mTooltip = null;
                 if (KeyBinding.Ctrl()) GUI.DragWindow(mWindowRect);
                 else CorrectWindowPos();
                 GL.BeginVertical();
@@ -545,6 +578,19 @@ namespace UnityModManagerNet
                 buttons();
                 GL.EndHorizontal();
                 GL.EndVertical();
+                if (mTooltip != null && Event.current.type == EventType.Repaint)
+                {
+                    var size = tooltipBox.CalcSize(mTooltip) + Vector2.one * 10;
+                    var pos = Event.current.mousePosition;
+                    GUI.Box(
+                        size.x + pos.x < mWindowRect.width
+                            ? new Rect(pos.x, pos.y + 10, size.x, size.y)
+                            : new Rect(pos.x - size.x, pos.y + 10, size.x, size.y), mTooltip.text, tooltipBox);
+                }
+                else
+                {
+                    GUI.Box(new Rect(-9999, 0, 0, 0), "");
+                }
             }
 
             private void DrawTab(int tabId, ref UnityAction buttons)
@@ -767,10 +813,10 @@ namespace UnityModManagerNet
                 return (int)(value * Instance._mUiScale);
             }
 
-            private float Scale(float value)
+            public static float Scale(float value)
             {
                 if (!Instance) return value;
-                return value * _mUiScale;
+                return value * Instance._mUiScale;
             }
 
             private void CalculateWindowPos()
@@ -869,13 +915,13 @@ namespace UnityModManagerNet
             {
                 return ++_mLastWindowId;
             }
-
-            private class Column
+            /// <summary>
+            /// Renders question mark with a tooltip [0.25.0]
+            /// </summary>
+            public static void RenderTooltip(string str, GUIStyle style = null, params GUILayoutOption[] options)
             {
-                public bool Expand;
-                public string Name;
-                public bool Skip;
-                public float Width;
+                BeginTooltip(str);
+                EndTooltip(str, style, options);
             }
         }
     }

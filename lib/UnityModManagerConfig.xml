@@ -754,4 +754,36 @@
 		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
 		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
 	</GameInfo>
+  <GameInfo Name="我是小鱼儿">
+    <GameName>I Am Fish</GameName>
+    <Folder>IAmFish</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>IAmFish.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]IAmFish.Core.Bootstrap.Bootstrap.ShellReady:After</StartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="咩咩启示录">
+    <GameName>Cult of the Lamb</GameName>
+    <Folder>Cult of the Lamb</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Cult Of The Lamb.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Lamb.UI.MainMenu.MainMenu.Start:Before</StartingPoint>
+    <MinimalManagerVersion>0.24.5</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="地球不屈">
+    <GameName>Terra Invicta</GameName>
+    <Folder>Terra Invicta</Folder>
+    <ModsDirectory>Mods/Enabled</ModsDirectory>
+    <ModInfo>ModInfo.json</ModInfo>
+    <GameExe>TerraInvicta.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]StartMenuController.Start:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]StartMenuController.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
+  </GameInfo>
 </Config>

@@ -68,47 +68,39 @@ namespace UnityModManagerNet
     [AttributeUsage(AttributeTargets.Field)]
     public class DrawAttribute : Attribute
     {
-        /// <summary>
-        ///     Applies box style.
-        /// </summary>
-        public bool Box;
-
-        public bool Collapsible;
-        public int Height;
-
-        /// <summary>
-        ///     Becomes visible if a field value matches. Use format "FieldName|Value". Supports only string, primitive and enum
-        ///     types.
-        /// </summary>
-        public string VisibleOn;
-
-        /// <summary>
-        ///     Becomes invisible if a field value matches. Use format "FieldName|Value". Supports only string, primitive and enum
-        ///     types.
-        /// </summary>
-        public string InvisibleOn;
-
+        public DrawType Type = DrawType.Auto;
         public string Label;
-        public double Max = double.MaxValue;
-
-        /// <summary>
-        ///     Maximum text length.
-        /// </summary>
-        public int MaxLength = int.MaxValue;
-
+        public int Width = 0;
+        public int Height = 0;
         public double Min = double.MinValue;
-
+        public double Max = double.MaxValue;
         /// <summary>
-        ///     Rounds a double-precision floating-point value to a specified number of fractional digits, and rounds midpoint
-        ///     values to the nearest even number.
-        ///     Default 2
+        /// Rounds a double-precision floating-point value to a specified number of fractional digits, and rounds midpoint values to the nearest even number. 
+        /// Default 2
         /// </summary>
         public int Precision = 2;
-
-        public DrawType Type = DrawType.Auto;
+        /// <summary>
+        /// Maximum text length.
+        /// </summary>
+        public int MaxLength = int.MaxValue;
+        /// <summary>
+        /// Becomes visible if a field value matches. Use format "FieldName|Value". Supports only string, primitive and enum types.
+        /// </summary>
+        public string VisibleOn;
+        /// <summary>
+        /// Becomes invisible if a field value matches. Use format "FieldName|Value". Supports only string, primitive and enum types.
+        /// </summary>
+        public string InvisibleOn;
+        /// <summary>
+        /// Applies box style.
+        /// </summary>
+        public bool Box;
+        public bool Collapsible;
         public bool Vertical;
-
-        public int Width;
+        /// <summary>
+        /// (RichText) [0.25.0]
+        /// </summary>
+        public string Tooltip;
 
         public DrawAttribute()
         {
@@ -543,6 +535,48 @@ namespace UnityModManagerNet
                 }
             }
 
+            private static void BeginTooltip(string tooltip) { }
+
+            private static void EndTooltip(string tooltip, GUIStyle style = null, params GUILayoutOption[] options)
+            {
+                if (!string.IsNullOrEmpty(tooltip))
+                {
+                    GUILayout.Box(Textures.Question, style ?? question, options);
+                    if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    {
+                        ShowTooltip(tooltip);
+                    }
+                }
+            }
+
+            private static void BeginHorizontalTooltip(DrawAttribute a)
+            {
+                if (!string.IsNullOrEmpty(a.Tooltip))
+                {
+                    if (a.Vertical)
+                        GUILayout.BeginHorizontal();
+                }
+            }
+
+            private static void EndHorizontalTooltip(DrawAttribute a)
+            {
+                if (!string.IsNullOrEmpty(a.Tooltip))
+                {
+                    GUILayout.Box(Textures.Question, question);
+                    if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    {
+                        ShowTooltip(a.Tooltip);
+                    }
+                    if (a.Vertical)
+                        GUILayout.EndHorizontal();
+                }
+            }
+
+            private static void ShowTooltip(string str)
+            {
+                Instance.mTooltip = new GUIContent(str);
+            }
+
             private static bool Draw(object container, Type type, ModEntry mod, DrawFieldMask defaultMask, int unique)
             {
                 var changed = false;
@@ -625,7 +659,11 @@ namespace UnityModManagerNet
                             GUILayout.BeginHorizontal();
 
                         if (!string.IsNullOrEmpty(fieldName))
-                            GUILayout.Label($"{fieldName}", GUILayout.ExpandWidth(false));
+                        {
+                            BeginHorizontalTooltip(a);
+                            GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                            EndHorizontalTooltip(a);
+                        }
 
                         var visible = true;
                         if (a.Collapsible)
@@ -710,7 +748,9 @@ namespace UnityModManagerNet
                                         GUILayout.BeginVertical();
                                     else
                                         GUILayout.BeginHorizontal();
+                                    BeginHorizontalTooltip(a);
                                     GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    EndHorizontalTooltip(a);
                                     if (!a.Vertical)
                                         GUILayout.Space(Scale(5));
                                     var vec = (Vector2)f.GetValue(container);
@@ -736,7 +776,9 @@ namespace UnityModManagerNet
                                         GUILayout.BeginVertical();
                                     else
                                         GUILayout.BeginHorizontal();
+                                    BeginHorizontalTooltip(a);
                                     GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    EndHorizontalTooltip(a);
                                     if (!a.Vertical)
                                         GUILayout.Space(Scale(5));
                                     var vec = (Vector3)f.GetValue(container);
@@ -762,7 +804,9 @@ namespace UnityModManagerNet
                                         GUILayout.BeginVertical();
                                     else
                                         GUILayout.BeginHorizontal();
+                                    BeginHorizontalTooltip(a);
                                     GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    EndHorizontalTooltip(a);
                                     if (!a.Vertical)
                                         GUILayout.Space(Scale(5));
                                     var vec = (Vector4)f.GetValue(container);
@@ -788,7 +832,9 @@ namespace UnityModManagerNet
                                         GUILayout.BeginVertical();
                                     else
                                         GUILayout.BeginHorizontal();
+                                    BeginHorizontalTooltip(a);
                                     GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                    EndHorizontalTooltip(a);
                                     if (!a.Vertical)
                                         GUILayout.Space(Scale(5));
                                     var vec = (Color)f.GetValue(container);
@@ -840,7 +886,9 @@ namespace UnityModManagerNet
                                     if (f.FieldType.IsArray)
                                     {
                                         GUILayout.BeginHorizontal();
+                                        BeginHorizontalTooltip(a);
                                         GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                        EndHorizontalTooltip(a);
                                         GUILayout.Space(Scale(5));
                                         if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
                                         {
@@ -863,7 +911,9 @@ namespace UnityModManagerNet
                                     }
                                     else
                                     {
+                                        BeginHorizontalTooltip(a);
                                         GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                        EndHorizontalTooltip(a);
                                     }
 
                                     if (!a.Vertical)
@@ -957,7 +1007,9 @@ namespace UnityModManagerNet
                                     GUILayout.BeginVertical();
                                 else
                                     GUILayout.BeginHorizontal();
+                                BeginHorizontalTooltip(a);
                                 GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                EndHorizontalTooltip(a);
                                 if (!a.Vertical)
                                     GUILayout.Space(Scale(5));
                                 var val = f.GetValue(container).ToString();
@@ -1001,7 +1053,9 @@ namespace UnityModManagerNet
                                     GUILayout.BeginVertical();
                                 else
                                     GUILayout.BeginHorizontal();
+                                BeginHorizontalTooltip(a);
                                 GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                EndHorizontalTooltip(a);
                                 var val = (bool)f.GetValue(container);
                                 var result = GUILayout.Toggle(val, "", options.ToArray());
                                 if (a.Vertical)
@@ -1031,7 +1085,9 @@ namespace UnityModManagerNet
                                     GUILayout.BeginVertical();
                                 else
                                     GUILayout.BeginHorizontal();
+                                BeginHorizontalTooltip(a);
                                 GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                EndHorizontalTooltip(a);
                                 if (!a.Vertical)
                                     GUILayout.Space(Scale(5));
                                 var values = Enum.GetNames(f.FieldType);
@@ -1065,7 +1121,9 @@ namespace UnityModManagerNet
                                     GUILayout.BeginVertical();
                                 else
                                     GUILayout.BeginHorizontal();
+                                BeginHorizontalTooltip(a);
                                 GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                EndHorizontalTooltip(a);
                                 if (!a.Vertical)
                                     GUILayout.Space(Scale(5));
                                 var values = Enum.GetNames(f.FieldType);
@@ -1092,7 +1150,9 @@ namespace UnityModManagerNet
                                     GUILayout.BeginVertical();
                                 else
                                     GUILayout.BeginHorizontal();
+                                BeginHorizontalTooltip(a);
                                 GUILayout.Label(fieldName, GUILayout.ExpandWidth(false));
+                                EndHorizontalTooltip(a);
                                 if (!a.Vertical)
                                     GUILayout.Space(Scale(5));
                                 var key = (KeyBinding)f.GetValue(container);
