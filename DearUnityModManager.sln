@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28922.388
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{0EEC949D-BF5C-4F12-9743-0A635ABC8DE4}"
 EndProject
@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2
 		lib\IrisSkin4.dll = lib\IrisSkin4.dll
 		lib\Newtonsoft.Json.dll = lib\Newtonsoft.Json.dll
 		lib\System.Xml.dll = lib\System.Xml.dll
+		lib\UnityEngine.dll = lib\UnityEngine.dll
+		lib\UnityEngine.UI.dll = lib\UnityEngine.UI.dll
 		lib\UnityModManagerConfig.xml = lib\UnityModManagerConfig.xml
 		lib\UnityModManagerConfigLocal.xml = lib\UnityModManagerConfigLocal.xml
 		lib\winhttp.dll = lib\winhttp.dll

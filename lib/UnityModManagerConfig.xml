@@ -786,4 +786,35 @@
     <UIStartingPoint>[Assembly-CSharp.dll]StartMenuController.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="杀手皇后:黑">
+    <GameName>Killer Queen Black</GameName>
+    <Folder>Killer Queen Black</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Killer Queen Black.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]LoadingBarScript.Awake:Before</StartingPoint>
+    <GameVersionPoint>[GameLogic.dll]GameLogic.AnalyticsUtility.Version()</GameVersionPoint>
+    <MinimalManagerVersion>0.25.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="现代坦克模拟器">
+    <GameName>Gunner HEAT PC</GameName>
+    <Folder>Gunner HEAT PC/Bin</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>GHPC.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]GHPC.SceneController.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.25.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="奥拓星球：强敌">
+    <GameName>Autonauts vs Pirate Bots</GameName>
+    <Folder>AVPB</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Autonauts vs Pirate Bots.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]Boot.Awake:Before</EntryPoint>
+    <GameVersionPoint>[Assembly-CSharp.dll]SaveLoadManager.m_Version</GameVersionPoint>
+    <MinimalManagerVersion>0.25.0</MinimalManagerVersion>
+  </GameInfo>
 </Config>

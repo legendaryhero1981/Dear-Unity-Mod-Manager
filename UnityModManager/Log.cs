@@ -76,7 +76,7 @@ namespace UnityModManagerNet
             private const string PrefixError = "[MOD管理器] [错误] ";
             private const string PrefixException = "[MOD管理器] [异常] ";
 
-            public static readonly string Filepath = Path.Combine(Path.Combine(Application.dataPath, Path.Combine("Managed", nameof(UnityModManager))), "Log.txt");
+            public static readonly string Filepath = Path.Combine(Path.GetDirectoryName(typeof(GameInfo).Assembly.Location) ?? string.Empty, "Log.txt");
 
             private static bool _clearOnce;
 

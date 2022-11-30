@@ -12,6 +12,8 @@ namespace UnityModManagerNet
 {
     public partial class UnityModManager
     {
+        private const string RepositoryUrl = "www.nexusmods.com";
+
         private static void CheckModUpdates()
         {
             Logger.Log("正在检查MOD新版本……");
@@ -67,7 +69,7 @@ namespace UnityModManagerNet
             {
                 using (var ping = new Ping())
                 {
-                    return ping.Send("raw.githubusercontent.com", 1000)?.Status == IPStatus.Success;
+                    return ping.Send(RepositoryUrl, 1000)?.Status == IPStatus.Success;
                 }
             }
             catch (Exception e)

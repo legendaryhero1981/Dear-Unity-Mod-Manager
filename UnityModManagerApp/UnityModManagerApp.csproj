@@ -19,7 +19,7 @@
     <Version>1.0.0.0</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
-    <Copyright>Copyright © Legend 2022</Copyright>
+    <Copyright>Copyright © Legend 2011-$([System.DateTime]::Now.ToString('yyyy'))</Copyright>
     <Description>亲爱的Unity游戏MOD管理器</Description>
     <AssemblyTitle>$(Description)</AssemblyTitle>
   </PropertyGroup>
@@ -28,6 +28,12 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>..\lib\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="0Harmony">
       <HintPath>..\lib\0Harmony.dll</HintPath>
     </Reference>
