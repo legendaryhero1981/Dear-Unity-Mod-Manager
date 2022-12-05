@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using UnityModManagerNet.ConsoleInstaller;
 using UnityModManagerNet.Injection;
 using UnityModManagerNet.Installer.Properties;
+using UnityModManagerNet.Installer.Tools;
 using UnityModManagerNet.UI.Utils;
 
 namespace UnityModManagerNet.Installer
@@ -598,14 +599,26 @@ namespace UnityModManagerNet.Installer
             extraFilesTextBox.Text = "";
             extraFilesGroupBox.Visible = false;
 
-            var selected = (GameInfo)((ComboBox)sender).SelectedItem;
-            if (selected != null)
+            if (((ComboBox)sender).SelectedItem is GameInfo selected)
             {
                 ConsoleInstaller.Log.Print($"切换游戏为“{selected.Name}”。");
                 param.LastSelectedGame = selected.Name;
                 selectedGameParams = param.GetGameParam(selected);
-                if (!string.IsNullOrEmpty(selectedGameParams.Path))
-                    ConsoleInstaller.Log.Print($"游戏目录“{selectedGameParams.Path}”。");
+                if (string.IsNullOrEmpty(selectedGameParams.Path))
+                {
+                    if (ConsoleInstaller.Utils.IsWindowsPlatform())
+                    {
+                        selectedGameParams.Path = SteamHelper.GetGameDirectory(selected.Folder);
+                        if (!string.IsNullOrEmpty(selectedGameParams.Path))
+                        {
+                            ConsoleInstaller.Log.Print($"游戏目录“{selectedGameParams.Path}”。");
+                        }
+                    }
+                }
+                else
+                {
+                    ConsoleInstaller.Log.Print($"Game path '{selectedGameParams.Path}'.");
+                }
 
                 if (!string.IsNullOrEmpty(selected.Comment))
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using dnlib.DotNet;
 using UnityModManagerNet.Marks;
@@ -207,6 +208,16 @@ namespace UnityModManagerNet.ConsoleInstaller
             var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
             return output.TrimEnd();
+        }
+
+        public static bool IsPlatform(OSPlatform platform)
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        }
+
+        public static bool IsWindowsPlatform()
+        {
+            return IsPlatform(OSPlatform.Windows);
         }
 
         public static bool IsUnixPlatform()
