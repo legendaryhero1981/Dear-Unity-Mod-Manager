@@ -11,10 +11,10 @@
     <RootNamespace>UnityModManagerNet</RootNamespace>
     <AssemblyName>UnityModManager</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationVersion>0.25.2.56</ApplicationVersion>
-    <AssemblyVersion>0.25.2.56</AssemblyVersion>
-    <FileVersion>0.25.2.56</FileVersion>
-    <Version>0.25.2.56</Version>
+    <ApplicationVersion>0.25.4.57</ApplicationVersion>
+    <AssemblyVersion>0.25.4.57</AssemblyVersion>
+    <FileVersion>0.25.4.57</FileVersion>
+    <Version>0.25.4.57</Version>
     <Authors>李允</Authors>
     <Company>Legend</Company>
     <Copyright>Copyright © Legend 2011-$([System.DateTime]::Now.ToString('yyyy'))</Copyright>

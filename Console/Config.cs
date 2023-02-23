@@ -247,7 +247,7 @@ namespace UnityModManagerNet.ConsoleInstaller
 
         public void Save()
         {
-            var path = Path.Combine(Application.LocalUserAppDataPath, filename);
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UnityModManagerNet", filename);
             try
             {
                 using var writer = new StreamWriter(path);
@@ -263,7 +263,7 @@ namespace UnityModManagerNet.ConsoleInstaller
 
         public static Param Load()
         {
-            var path = Path.Combine(Application.LocalUserAppDataPath, filename);
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UnityModManagerNet", filename);
             if (!File.Exists(path)) return new Param();
             try
             {
