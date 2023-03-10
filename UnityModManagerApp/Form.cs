@@ -676,7 +676,6 @@ namespace UnityModManagerNet.Installer
                         DoActionLibraries(Actions.Install);
                         DoActionGameConfig(Actions.Install);
                         ConsoleInstaller.Log.Print("安装管理器模块到游戏成功！");
-
                         success = true;
                     }
                     catch (Exception e)
@@ -956,20 +955,28 @@ namespace UnityModManagerNet.Installer
             return success;
         }
 
-        private bool TestCompatibility()
+        private static bool TestCompatibility()
         {
-            foreach (var f in new DirectoryInfo(gamePath).GetFiles("0Harmony.dll", SearchOption.AllDirectories))
+            try
             {
-                if (f.FullName.EndsWith(Path.Combine("UnityModManager", "0Harmony.dll"))) continue;
-                var domain = AppDomain.CreateDomain("0Harmony", null, null, null, false);
-                var asm = domain.Load(File.ReadAllBytes(f.FullName));
-                AppDomain.Unload(domain);
-                if (asm.GetName().Version < HARMONY_VER)
+                foreach (var f in new DirectoryInfo(gamePath).GetFiles("0Harmony.dll", SearchOption.AllDirectories))
                 {
-                    ConsoleInstaller.Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
-                    return false;
+                    if (f.FullName.EndsWith(Path.Combine("UnityModManager", "0Harmony.dll"))) continue;
+                    var domain = AppDomain.CreateDomain("0Harmony", null, null, null, false);
+                    var asm = domain.Load(File.ReadAllBytes(f.FullName));
+                    AppDomain.Unload(domain);
+                    if (asm.GetName().Version < HARMONY_VER)
+                    {
+                        ConsoleInstaller.Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
+                        return false;
+                    }
+                    ConsoleInstaller.Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
                 }
-                ConsoleInstaller.Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
 
             return true;

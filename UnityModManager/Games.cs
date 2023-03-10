@@ -1,5 +1,6 @@
 ﻿extern alias PathfinderKingmaker;
 extern alias PathfinderWrathOfTheRighteous;
+extern alias SolastaCrown;
 
 using System;
 using System.Collections.Generic;
@@ -85,6 +86,37 @@ namespace UnityModManagerNet
                 public virtual void OnModToggle(ModEntry modEntry, bool value) { }
                 public virtual void OnBeforeLoadMods() { }
                 public virtual void OnAfterLoadMods() { }
+            }
+
+            private class SolastaCrownOfTheMagister : GameScript
+            {
+                private bool _escMode;
+
+                public override void OnAfterLoadMods()
+                {
+                    if (!freezeUI) return;
+                    FreezeUI = () =>
+                    {
+                        var screen = SolastaCrown.Gui.CurrentLocationScreen;
+                        _escMode = screen is not SolastaCrown.GameLocationScreenExploration;
+                        if (_escMode) return;
+                        var screenExploration = screen as SolastaCrown.GameLocationScreenExploration;
+                        _escMode = screenExploration == null || screenExploration.TimeAndNavigationPanel.GameTime.Paused;
+                        if (_escMode) return;
+                        screenExploration?.TimeAndNavigationPanel.OnPauseCb();
+                        Logger.Log($"已冻结游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
+                    };
+                    UnFreezeUI = () =>
+                    {
+                        if (_escMode) return;
+                        var screen = SolastaCrown.Gui.CurrentLocationScreen;
+                        _escMode = screen is not SolastaCrown.GameLocationScreenExploration;
+                        if (_escMode) return;
+                        var screenExploration = screen as SolastaCrown.GameLocationScreenExploration;
+                        screenExploration?.TimeAndNavigationPanel.OnPlayCb();
+                        Logger.Log($"已解冻游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
+                    };
+                }
             }
 
             private class PathfinderKingmaker : GameScript

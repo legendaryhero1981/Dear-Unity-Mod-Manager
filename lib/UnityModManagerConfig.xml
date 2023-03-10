@@ -437,6 +437,15 @@
     <StartingPoint>[Assembly-CSharp.dll]MainManager.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.22.12</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="通过BMX街道管">
+    <GameName>BMX Streets Pipe</GameName>
+    <Folder>PIPE</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>PIPE.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]BikeLoadOut.Awake:After</EntryPoint>
+    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
+  </GameInfo>
   <GameInfo Name="冰与火之舞">
     <GameName>A Dance of Fire and Ice</GameName>
     <Folder>ADOFAI</Folder>
@@ -458,16 +467,6 @@
     <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]PT2.Initialize:After</StartingPoint>
     <MinimalManagerVersion>0.22.14</MinimalManagerVersion>
-  </GameInfo>
-  <GameInfo Name="索拉斯塔">
-    <GameName>Solasta</GameName>
-    <Folder>Solasta</Folder>
-    <ModsDirectory>Mods</ModsDirectory>
-    <ModInfo>Info.json</ModInfo>
-    <GameExe>Solasta.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp.dll]RuntimeManager.LoadRuntime:After</StartingPoint>
-    <MinimalManagerVersion>0.22.13</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="极乐迪斯科">
     <GameName>Disco Elysium</GameName>
@@ -685,75 +684,75 @@
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
     <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
   </GameInfo>
-	<GameInfo Name="核爆RPG：特鲁多格勒">
+  <GameInfo Name="核爆RPG：特鲁多格勒">
     <GameName>ATOM RPG Trudograd</GameName>
-		<Folder>ATOM RPG Trudograd</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Trudograd_Win64.exe</GameExe>
-		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
-		<StartingPoint>[AtomGame.dll]MainMenu.Start:After</StartingPoint>
-		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
-		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="瓦格鲁斯:万壑之地">
+    <Folder>ATOM RPG Trudograd</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Trudograd_Win64.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+    <StartingPoint>[AtomGame.dll]MainMenu.Start:After</StartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="瓦格鲁斯:万壑之地">
     <GameName>Vagrus - The Riven Realms</GameName>
-		<Folder>Vagrus - The Riven Realms</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Vagrus.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]Game.Start:After</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]MainMenuUI.Awake:After</UIStartingPoint>
-		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="梅卡妮可">
+    <Folder>Vagrus - The Riven Realms</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Vagrus.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Game.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenuUI.Awake:After</UIStartingPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="梅卡妮可">
     <GameName>Mechanica</GameName>
-		<Folder>Mechanica</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Mechanica.exe</GameExe>
-		<EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]Game.UI.MainMenuFadeIn.Start:After</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]Game.UI.MainMenuFadeIn.Start:After</UIStartingPoint>
-		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
-		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="史前王国">
+    <Folder>Mechanica</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Mechanica.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.EventSystems.EventSystem.cctor:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Game.UI.MainMenuFadeIn.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]Game.UI.MainMenuFadeIn.Start:After</UIStartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="史前王国">
     <GameName>Prehistoric Kingdom</GameName>
-		<Folder>Prehistoric Kingdom</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Prehistoric Kingdom.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</UIStartingPoint>
-		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
-		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="星际勇士">
+    <Folder>Prehistoric Kingdom</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Prehistoric Kingdom.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</UIStartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="星际勇士">
     <GameName>Star Valor</GameName>
-		<Folder>Star Valor</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Star Valor.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</UIStartingPoint>
-		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
-	</GameInfo>
-	<GameInfo Name="咒术师学院">
+    <Folder>Star Valor</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Star Valor.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</UIStartingPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="咒术师学院">
     <GameName>Spellcaster University</GameName>
-		<Folder>Spellcaster University</Folder>
-		<ModsDirectory>Mods</ModsDirectory>
-		<ModInfo>Info.json</ModInfo>
-		<GameExe>Spellcaster University.exe</GameExe>
-		<EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
-		<StartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</StartingPoint>
-		<UIStartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</UIStartingPoint>
-		<GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
-		<MinimalManagerVersion>0.24.2</MinimalManagerVersion>
-	</GameInfo>
+    <Folder>Spellcaster University</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Spellcaster University.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</UIStartingPoint>
+    <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
+    <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
+  </GameInfo>
   <GameInfo Name="我是小鱼儿">
     <GameName>I Am Fish</GameName>
     <Folder>IAmFish</Folder>
@@ -816,5 +815,34 @@
     <EntryPoint>[Assembly-CSharp.dll]Boot.Awake:Before</EntryPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]SaveLoadManager.m_Version</GameVersionPoint>
     <MinimalManagerVersion>0.25.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="">
+    <GameName>战锤40K：机械神教</GameName>
+    <Folder>Mechanicus</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Mechanicus.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenu.Start:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.25.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="褪黑素">
+    <GameName>Melatonin</GameName>
+    <Folder>Melatonin</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Melatonin.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]TitleScreen.Awake:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]DreamOcean.Show:Before</StartingPoint>
+    <MinimalManagerVersion>0.25.4</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="">
+    <GameName>Skater XL Beta</GameName>
+    <Folder>Skater XL</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <EntryPoint>[Assembly-CSharp.dll]MasterPrefabManager.Awake:After</EntryPoint>
+    <MinimalManagerVersion>0.25.5</MinimalManagerVersion>
   </GameInfo>
 </Config>

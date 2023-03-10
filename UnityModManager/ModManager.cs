@@ -80,7 +80,7 @@ namespace UnityModManagerNet
             unityVersion = ParseVersion(Application.unityVersion);
             Logger.Log($"Unity引擎版本：{unityVersion}。");
             if (!Assembly.GetExecutingAssembly().Location.Contains($"Managed{Path.DirectorySeparatorChar}UnityModManager"))
-                Logger.Error(@"UnityModeManager文件夹只能位于\Game\*Data\Managed\目录中！此文件夹在安装后通过DearUnityModManager.exe自动创建。");
+                Logger.Error(@$"在目录{Assembly.GetExecutingAssembly().Location}中发现重复文件！UnityModeManager文件夹只能位于\Game\*Data\Managed\目录中！此文件夹在安装后通过DearUnityModManager.exe自动创建。");
             Config = GameInfo.Load();
             if (Config == null) return false;
             Logger.Log($"游戏名称：{Config.Name}。");

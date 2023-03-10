@@ -668,16 +668,26 @@ namespace UnityModManagerNet.ConsoleInstaller
 
         private static bool TestCompatibility()
         {
-            foreach (var f in new DirectoryInfo(gamePath).GetFiles("0Harmony.dll", SearchOption.AllDirectories))
+            try
             {
-                if (f.FullName.EndsWith(Path.Combine("UnityModManager", "0Harmony.dll"))) continue;
-                var asm = ModuleDefMD.Load(File.ReadAllBytes(f.FullName));
-                if (asm.Assembly.Version < HARMONY_VER)
+                foreach (var f in new DirectoryInfo(gamePath).GetFiles("0Harmony.dll", SearchOption.AllDirectories))
                 {
-                    Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
-                    return false;
+                    if (f.FullName.EndsWith(Path.Combine("UnityModManager", "0Harmony.dll"))) continue;
+                    var domain = AppDomain.CreateDomain("0Harmony", null, null, null, false);
+                    var asm = domain.Load(File.ReadAllBytes(f.FullName));
+                    AppDomain.Unload(domain);
+                    if (asm.GetName().Version < HARMONY_VER)
+                    {
+                        Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中，这可能与DUMM不兼容，建议删除。");
+                        return false;
+                    }
+                    Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
                 }
-                Log.Print($"游戏有额外的0Harmony.dll类库文件在路径“{f.FullName}”中。");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
 
             return true;

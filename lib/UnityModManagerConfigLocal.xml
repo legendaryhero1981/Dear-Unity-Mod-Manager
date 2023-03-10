@@ -40,4 +40,15 @@
     <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
     <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="索拉斯塔">
+    <GameName>Solasta</GameName>
+    <GameScriptName>SolastaCrownOfTheMagister</GameScriptName>
+    <Folder>Solasta Crown of the Magister</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Solasta.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]RuntimeManager.LoadRuntime:After</StartingPoint>
+    <MinimalManagerVersion>0.22.13</MinimalManagerVersion>
+  </GameInfo>
 </Config>
