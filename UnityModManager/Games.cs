@@ -104,7 +104,7 @@ namespace UnityModManagerNet
                         _escMode = screenExploration == null || screenExploration.TimeAndNavigationPanel.GameTime.Paused;
                         if (_escMode) return;
                         screenExploration?.TimeAndNavigationPanel.OnPauseCb();
-                        Logger.Log($"已冻结游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
+                        Logger.Log($"已冻结游戏UI，游戏已暂停！");
                     };
                     UnFreezeUI = () =>
                     {
@@ -114,7 +114,7 @@ namespace UnityModManagerNet
                         if (_escMode) return;
                         var screenExploration = screen as SolastaCrown.GameLocationScreenExploration;
                         screenExploration?.TimeAndNavigationPanel.OnPlayCb();
-                        Logger.Log($"已解冻游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
+                        Logger.Log($"已解冻游戏UI，游戏已恢复运行！");
                     };
                 }
             }

@@ -115,6 +115,6 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup>
     <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
-    <PostBuildEvent>D:\games\exe4j\file "-cd!^~::-m!~" "(?i)(?:(assembly-csharp|UnityEngine).*?`.dll`|unity)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\file "-cd!^~::-m!~" "(?i)(?:(assembly-csharp|UnityEngine).*?`.dll`|unity.*|assembly.*)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
   </PropertyGroup>
 </Project>

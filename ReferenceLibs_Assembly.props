@@ -1,0 +1,19 @@
+<Project>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp, Version=2.1.7.0, Culture=neutral, PublicKeyToken=79ffc088afed5582">
+      <HintPath>..\lib\Assembly\Assembly-CSharp-PathfinderKingmaker.dll</HintPath>
+      <Private>False</Private>
+      <Aliases>PathfinderKingmaker</Aliases>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=7a700ef1ddab0cf9">
+      <HintPath>..\lib\Assembly\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll</HintPath>
+      <Private>False</Private>
+      <Aliases>PathfinderWrathOfTheRighteous</Aliases>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=1.4.33.0, Culture=neutral, PublicKeyToken=9c13bfc01d8d73a8">
+      <HintPath>..\lib\Assembly\Assembly-CSharp-SolastaCrownOfTheMagister.dll</HintPath>
+      <Private>False</Private>
+      <Aliases>SolastaCrown</Aliases>
+    </Reference>
+  </ItemGroup>
+</Project>

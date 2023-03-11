@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{0172
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		ReferenceLibs.props = ReferenceLibs.props
+		ReferenceLibs_Assembly.props = ReferenceLibs_Assembly.props
+		ReferenceLibs_Unity2018.props = ReferenceLibs_Unity2018.props
+		ReferenceLibs_Unity2019.props = ReferenceLibs_Unity2019.props
+		ReferenceLibs_Unity2021.props = ReferenceLibs_Unity2021.props
 		Repository.json = Repository.json
 	EndProjectSection
 	ProjectSection(FolderGlobals) = preProject
@@ -30,9 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2
 		lib\0Harmony-1.2.dll = lib\0Harmony-1.2.dll
 		lib\0Harmony.dll = lib\0Harmony.dll
 		lib\0Harmony12.dll = lib\0Harmony12.dll
-		lib\Assembly-CSharp-PathfinderKingmaker.dll = lib\Assembly-CSharp-PathfinderKingmaker.dll
-		lib\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll = lib\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll
-		lib\Assembly-CSharp-SolastaCrownOfTheMagister.dll = lib\Assembly-CSharp-SolastaCrownOfTheMagister.dll
 		lib\background.jpg = lib\background.jpg
 		lib\dnlib.dll = lib\dnlib.dll
 		lib\Ionic.Zip.dll = lib\Ionic.Zip.dll
@@ -47,6 +48,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{26ABE49E-2A2
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "Console\Console.csproj", "{7151CE06-904E-485D-8BC3-A7174A9D5D29}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assembly", "Assembly", "{7F920459-28E6-444D-8135-CE18911A38B9}"
+	ProjectSection(SolutionItems) = preProject
+		lib\Assembly\Assembly-CSharp-PathfinderKingmaker.dll = lib\Assembly\Assembly-CSharp-PathfinderKingmaker.dll
+		lib\Assembly\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll = lib\Assembly\Assembly-CSharp-PathfinderWrathOfTheRighteous.dll
+		lib\Assembly\Assembly-CSharp-SolastaCrownOfTheMagister.dll = lib\Assembly\Assembly-CSharp-SolastaCrownOfTheMagister.dll
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +83,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7F920459-28E6-444D-8135-CE18911A38B9} = {26ABE49E-2A2F-4115-8425-9BAEE6E153A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96EBF082-C7A9-4780-B27A-EC4A0AEB90D7}
