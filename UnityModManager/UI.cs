@@ -765,7 +765,6 @@ namespace UnityModManagerNet
                                 Mathf.Min(Screen.height, WindowHeightMin), Screen.height, GL.MaxWidth(Scale(200)));
                             GL.Label(" " + _mExpectedWindowSize.y.ToString("f0") + " px ",
                                 GL.ExpandWidth(false));
-                            GL.FlexibleSpace();
                             if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)))
                             {
                                 _mWindowSize.x = Mathf.Floor(_mExpectedWindowSize.x) % 2 > 0
@@ -783,12 +782,13 @@ namespace UnityModManagerNet
                             GL.BeginVertical(BoxStyle);
                             GL.Label("UI", BoldFontStyle, GL.ExpandWidth(false));
                             GL.BeginHorizontal();
+                            GL.Label("字体", GL.ExpandWidth(false), GL.ExpandWidth(false));
+                            PopupToggleGroup(ref mSelectedFont, mOSfonts, null, ButtonStyle, GL.ExpandWidth(false));
                             GL.Label("缩放", GL.ExpandWidth(false));
                             _mExpectedUiScale = GL.HorizontalSlider(_mExpectedUiScale, UiScaleMin, UiScaleMax,
                                 GL.MaxWidth(Scale(600)));
                             GL.Label(" " + _mExpectedUiScale.ToString("f2"), GL.ExpandWidth(false));
-                            GL.FlexibleSpace();
-                            if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)) && !_mUiScale.Equals(_mExpectedUiScale))
+                            if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)) && (!_mUiScale.Equals(_mExpectedUiScale) || mOSfonts[mSelectedFont] != Params.UIFont))
                             {
                                 _mUiScaleChanged = true;
                                 _mUiScale = _mExpectedUiScale;
@@ -797,6 +797,7 @@ namespace UnityModManagerNet
                                 _mWindowSize.x = Mathf.Floor(_mExpectedWindowSize.x) % 2 > 0 ? Mathf.Ceil(_mExpectedWindowSize.x) : Mathf.Floor(_mExpectedWindowSize.x);
                                 CalculateWindowPos();
                                 Params.WindowWidth = _mWindowSize.x;
+                                Params.UIFont = mOSfonts[mSelectedFont];
                             }
                             GL.EndHorizontal();
                             GL.EndVertical();

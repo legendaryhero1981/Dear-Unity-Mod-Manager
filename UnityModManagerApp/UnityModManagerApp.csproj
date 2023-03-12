@@ -113,8 +113,12 @@
     <ProjectReference Include="..\Updater\Updater.csproj" />
   </ItemGroup>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
-    <PostBuildEvent>D:\games\exe4j\file "-cd!^~::-m!~" "(?i)(?:(assembly-csharp|UnityEngine).*?`.dll`|unity.*|assembly.*)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\file "-cd!^~" "(?i)(?:(assembly-csharp|UnityEngine)\d*`.dll`|unity\d+|assembly.*)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
+    <PostBuildEvent>D:\games\exe4j\file "-cd!^~::-m!~" "(?i)(?:(assembly-csharp|UnityEngine)\d*`.dll`|unity\d+|assembly.*)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
   </PropertyGroup>
 </Project>

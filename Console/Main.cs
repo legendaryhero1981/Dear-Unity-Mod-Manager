@@ -9,16 +9,23 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace UnityModManagerNet.ConsoleInstaller
 {
     internal class UnityModManagerConsole
     {
         private const string REG_PATH = @"HKEY_CURRENT_USER\Software\UnityModManager";
-
         public static readonly Version VER_0_22 = new(0, 22);
-
         internal static readonly Version HARMONY_VER = new(2, 0);
+
+        private const string DLL_UMM = "UnityModManager.dll";
+        private static readonly Dictionary<int, string> UmmDlls = new()
+        {
+            {2018,"UnityModManager2018.dll"},
+            {2019,"UnityModManager2019.dll"},
+            {2021,"UnityModManager2021.dll"}
+        };
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool SetForegroundWindow(IntPtr hwnd);
@@ -64,37 +71,36 @@ namespace UnityModManagerNet.ConsoleInstaller
             { "0Harmony-1.2.dll", LibIncParam.Minimal_lt_0_22 },
             { "dnlib.dll", LibIncParam.Normal },
             { "System.Xml.dll", LibIncParam.Normal },
-            { nameof(UnityModManager) + ".dll", LibIncParam.Normal }
+            { DLL_UMM, LibIncParam.Normal }
         };
 
         private static List<string> libraryPaths;
 
-        private static Config config = null;
-        private static Param param = null;
-        private static Version version = null;
+        private static Config config;
+        private static Param param;
+        private static Version version;
 
-        private static string gamePath = null;
-        private static string managedPath = null;
-        private static string managerPath = null;
-        private static string entryAssemblyPath = null;
-        private static string injectedEntryAssemblyPath = null;
-        private static string managerAssemblyPath = null;
-        private static string entryPoint = null;
-        private static string injectedEntryPoint = null;
-
-        private static string gameExePath = null;
-
+        private static string gamePath;
+        private static string managedPath;
+        private static string managerPath;
+        private static string entryAssemblyPath;
+        private static string injectedEntryAssemblyPath;
+        private static string managerAssemblyPath;
+        private static string entryPoint;
+        private static string injectedEntryPoint;
+        private static string gameExePath;
+        private static string unityPlayerPath;
         private static string doorstopFilename = "winhttp.dll";
         private static string doorstopConfigFilename = "doorstop_config.ini";
-        private static string doorstopPath = null;
-        private static string doorstopConfigPath = null;
+        private static string doorstopPath;
+        private static string doorstopConfigPath;
 
-        private static ModuleDefMD assemblyDef = null;
-        private static ModuleDefMD injectedAssemblyDef = null;
-        private static ModuleDefMD managerDef = null;
+        private static ModuleDefMD assemblyDef;
+        private static ModuleDefMD injectedAssemblyDef;
+        private static ModuleDefMD managerDef;
 
         private static GameInfo selectedGame;
-        private static Param.GameParam selectedGameParams = null;
+        private static Param.GameParam selectedGameParams;
 
         private static void Init()
         {
@@ -136,6 +142,9 @@ namespace UnityModManagerNet.ConsoleInstaller
                 {
                     selectedGame = config.GameInfo.FirstOrDefault(x => x.Name == param.LastSelectedGame);
                     selectedGameParams = param.GetGameParam(selectedGame);
+                    gamePath = selectedGameParams.Path;
+                    if (File.Exists(Path.Combine(gamePath, "UnityPlayer.dll")))
+                        unityPlayerPath = Path.Combine(gamePath, "UnityPlayer.dll");
                 }
 
                 if (selectedGame != null)
@@ -300,6 +309,8 @@ namespace UnityModManagerNet.ConsoleInstaller
             param.Save();
             Utils.TryParseEntryPoint(selectedGame.EntryPoint, out var assemblyName);
             gamePath = selectedGameParams.Path;
+            if (File.Exists(Path.Combine(gamePath, "UnityPlayer.dll")))
+                unityPlayerPath = Path.Combine(gamePath, "UnityPlayer.dll");
 
             if (File.Exists(Path.Combine(gamePath, "GameAssembly.dll")))
             {
@@ -320,9 +331,13 @@ namespace UnityModManagerNet.ConsoleInstaller
             managerAssemblyPath = Path.Combine(managerPath, typeof(UnityModManager).Module.Name);
             entryPoint = selectedGame.EntryPoint;
             injectedEntryPoint = selectedGame.EntryPoint;
-            libraryPaths = new List<string>();
+
+            if (File.Exists(Path.Combine(managedPath, "System.Xml.dll")))
+                libraryFiles["System.Xml.dll"] = LibIncParam.Skip;
+
             var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
-            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22 || (item.Value & LibIncParam.Skip) <= 0))
+            libraryPaths = new List<string>();
+            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Skip) <= 0 && ((item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22)))
                 libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
@@ -334,11 +349,6 @@ namespace UnityModManagerNet.ConsoleInstaller
             }
             else
                 gameExePath = string.Empty;
-
-            if (File.Exists(Path.Combine(managedPath, "System.Xml.dll")))
-            {
-                libraryFiles["System.Xml.dll"] = LibIncParam.Skip;
-            }
 
             var path = new DirectoryInfo(Application.StartupPath).FullName;
             if (path.StartsWith(gamePath))
@@ -943,11 +953,26 @@ namespace UnityModManagerNet.ConsoleInstaller
         {
             Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
 
+            var regex = new Regex(@"(\d+).*");
+            var fileVersion = FileVersionInfo.GetVersionInfo(unityPlayerPath).FileVersion;
+            var match = regex.Match(fileVersion);
+
             foreach (var destpath in libraryPaths)
             {
                 var filename = Path.GetFileName(destpath);
                 if (action == Actions.Install)
                 {
+                    if (filename.Equals(DLL_UMM) && match.Success)
+                    {
+                        var key = int.Parse(match.Groups[1].Value);
+                        if (UmmDlls.ContainsKey(key)) filename = UmmDlls[key];
+                        else
+                        {
+                            var min = UmmDlls.Keys.Min();
+                            var max = UmmDlls.Keys.Max();
+                            filename = key < min ? UmmDlls[min] : key > max ? UmmDlls[max] : filename;
+                        }
+                    }
                     var sourcepath = Path.Combine(Application.StartupPath, filename);
                     if (File.Exists(destpath))
                     {

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using UnityModManagerNet.ConsoleInstaller;
 using UnityModManagerNet.Injection;
@@ -20,12 +21,22 @@ namespace UnityModManagerNet.Installer
     [Serializable]
     public partial class UnityModManagerForm : Form
     {
+        public static UnityModManagerForm instance;
+
         private const string DLL_IL2CPP = "GameAssembly.dll";
         private const string REG_PATH = @"HKEY_CURRENT_USER\Software\DearUnityModManager";
         private readonly string SKINS_PATH = $@"{Application.StartupPath}\Skins";
         private AutoSizeFormControlUtil _autoSizeFormControlUtil;
         private static readonly Version VER_0_22 = new(0, 22);
         private static readonly Version HARMONY_VER = new(2, 0);
+
+        private const string DLL_UMM = "UnityModManager.dll";
+        private static readonly Dictionary<int, string> UmmDlls = new()
+        {
+            {2018,"UnityModManager2018.dll"},
+            {2019,"UnityModManager2019.dll"},
+            {2021,"UnityModManager2021.dll"}
+        };
 
         [Flags]
         enum LibIncParam { Normal = 0, Skip = 1, Minimal_lt_0_22 = 2 }
@@ -38,10 +49,8 @@ namespace UnityModManagerNet.Installer
             { "0Harmony-1.2.dll", LibIncParam.Minimal_lt_0_22 },
             { "dnlib.dll", LibIncParam.Normal },
             { "System.Xml.dll", LibIncParam.Normal },
-            { nameof(UnityModManager) + ".dll", LibIncParam.Normal }
+            { DLL_UMM, LibIncParam.Normal }
         };
-
-        public static UnityModManagerForm instance;
 
         static List<string> libraryPaths;
         static Config config;
@@ -175,6 +184,9 @@ namespace UnityModManagerNet.Installer
                 selected ??= config.GameInfo.First();
                 gameList.SelectedItem = selected;
                 selectedGameParams = param.GetGameParam(selected);
+                gamePath = selectedGameParams.Path;
+                if (File.Exists(Path.Combine(gamePath, "UnityPlayer.dll")))
+                    unityPlayerPath = Path.Combine(gamePath, "UnityPlayer.dll");
             }
             else
             {
@@ -343,9 +355,9 @@ namespace UnityModManagerNet.Installer
             if (File.Exists(Path.Combine(managedPath, "System.Xml.dll")))
                 libraryFiles["System.Xml.dll"] = LibIncParam.Skip;
 
-            libraryPaths = new List<string>();
             var gameSupportVersion = !string.IsNullOrEmpty(selectedGame.MinimalManagerVersion) ? ConsoleInstaller.Utils.ParseVersion(selectedGame.MinimalManagerVersion) : VER_0_22;
-            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22 || (item.Value & LibIncParam.Skip) <= 0))
+            libraryPaths = new List<string>();
+            foreach (var item in libraryFiles.Where(item => (item.Value & LibIncParam.Skip) <= 0 && ((item.Value & LibIncParam.Minimal_lt_0_22) <= 0 || gameSupportVersion < VER_0_22)))
                 libraryPaths.Add(Path.Combine(managerPath, item.Key));
 
             if (!string.IsNullOrEmpty(selectedGame.GameExe))
@@ -1003,11 +1015,26 @@ namespace UnityModManagerNet.Installer
         {
             ConsoleInstaller.Log.Print(action == Actions.Install ? "正在安装管理器模块到游戏……" : "正在从游戏卸载管理器模块……");
 
+            var regex = new Regex(@"(\d+).*");
+            var fileVersion = FileVersionInfo.GetVersionInfo(unityPlayerPath).FileVersion;
+            var match = regex.Match(fileVersion);
+
             foreach (var destpath in libraryPaths)
             {
                 var filename = Path.GetFileName(destpath);
                 if (action == Actions.Install)
                 {
+                    if (filename.Equals(DLL_UMM) && match.Success)
+                    {
+                        var key = int.Parse(match.Groups[1].Value);
+                        if (UmmDlls.ContainsKey(key)) filename = UmmDlls[key];
+                        else
+                        {
+                            var min = UmmDlls.Keys.Min();
+                            var max = UmmDlls.Keys.Max();
+                            filename = key < min ? UmmDlls[min] : key > max ? UmmDlls[max] : filename;
+                        }
+                    }
                     var sourcepath = Path.Combine(Application.StartupPath, filename);
                     if (File.Exists(destpath))
                     {
@@ -1029,7 +1056,7 @@ namespace UnityModManagerNet.Installer
 
             if (action == Actions.Remove)
             {
-                foreach(var file in Directory.GetFiles(managerPath, "*.dll"))
+                foreach (var file in Directory.GetFiles(managerPath, "*.dll"))
                 {
                     var filename = Path.GetFileName(file);
                     ConsoleInstaller.Log.Print($"  {filename}");

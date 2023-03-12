@@ -176,7 +176,6 @@ namespace UnityModManagerNet.ConsoleInstaller
             if (foundMethod != null) return true;
             if (createConstructor && methodName == ".cctor")
             {
-                //var m = new MethodDefUser(".cctor", assemblyDef.CorLibTypes.Void, MethodAttributes.Private | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.Static);
                 var typeDef = ModuleDefMD.Load(typeof(Utils).Module).Types.FirstOrDefault(x => x.FullName == typeof(Utils).FullName);
                 var method = typeDef.Methods.FirstOrDefault(x => x.Name == ".cctor");
                 if (method != null)
