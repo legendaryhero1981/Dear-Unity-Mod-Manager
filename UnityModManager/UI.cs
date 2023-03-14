@@ -21,7 +21,7 @@ namespace UnityModManagerNet
     {
         public partial class UI : MonoBehaviour
         {
-            public const float UiScaleMin = 1f;
+            public const float UiScaleMin = .5f;
             public const float UiScaleMax = 2f;
             public const int WindowWidthMin = 1000;
             public const int WindowHeightMin = 800;

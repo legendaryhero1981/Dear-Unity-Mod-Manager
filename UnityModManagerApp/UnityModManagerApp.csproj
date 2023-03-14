@@ -28,12 +28,6 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="UnityEngine">
-      <HintPath>..\lib\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="0Harmony">
       <HintPath>..\lib\0Harmony.dll</HintPath>
     </Reference>
@@ -114,11 +108,11 @@
   </ItemGroup>
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
-    <PostBuildEvent>D:\games\exe4j\file "-cd!^~" "(?i)(?:(assembly-csharp|UnityEngine)\d*`.dll`|unity\d+|assembly.*)$" "$(SolutionDir)\lib" "$(TargetDir)"</PostBuildEvent>
+    <PreBuildEvent>D:\games\native\release\game\file -dd!~ . $(TargetDir)</PreBuildEvent>
+    <PostBuildEvent>D:\games\native\release\game\file "-cd!^~" "(?i)(unity\d+|assembly)$" $(SolutionDir)\lib $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <PreBuildEvent>D:\games\exe4j\file -dd!~ . "$(TargetDir)"</PreBuildEvent>
-    <PostBuildEvent>D:\games\exe4j\file "-cd!^~::-m!~" "(?i)(?:(assembly-csharp|UnityEngine)\d*`.dll`|unity\d+|assembly.*)$::." "$(SolutionDir)\lib::$(TargetDir)" "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
+    <PreBuildEvent>D:\games\native\release\game\file -dd!~ . $(TargetDir)</PreBuildEvent>
+    <PostBuildEvent>D:\games\native\release\game\file "-cd!^~::-m!~" "(?i)(unity\d+|assembly)$::." $(SolutionDir)\lib::$(TargetDir) "$(TargetDir)\$(TargetName)::*" "?::1"</PostBuildEvent>
   </PropertyGroup>
 </Project>
