@@ -25,7 +25,7 @@ namespace UnityModManagerNet
             public const float UiScaleMax = 2f;
             public const int WindowWidthMin = 1000;
             public const int WindowHeightMin = 800;
-            public const string GlobalFontName = "微软雅黑";
+            public const string GlobalFontName = "Microsoft YaHei";
             public const int GlobalFontSize = 20;
             public const int H1FontSize = GlobalFontSize + 4;
             public const int H2FontSize = GlobalFontSize + 2;
@@ -33,7 +33,7 @@ namespace UnityModManagerNet
             private int mSelectedFont;
 
             /// <summary>
-            /// [0.20.0.17] 新增多种自定义GUIStyle样式
+            /// [0.25.5.60] 新增多种自定义GUIStyle样式
             /// </summary>
             public static GS WindowStyle;
             public static GS BoxStyle;
@@ -47,6 +47,8 @@ namespace UnityModManagerNet
             public static GS HSliderThumbStyle;
             public static GS CenterFontStyle;
             public static GS NormalFontStyle;
+            public static GS TextAreaStyle;
+            public static GS TextFieldStyle;
             /// <summary>
             /// [0.23.5.48] 新增UMM的GUIStyle样式，以便支持UMM相关Mod调用。
             /// </summary>
@@ -77,8 +79,8 @@ namespace UnityModManagerNet
             {
                 new Column {Name = "名称", Width = 400, Expand = true},
                 new Column {Name = "版本", Width = 200},
-                new Column {Name = "依赖MOD", Width = 160, Expand = true},
-                new Column {Name = "开/关", Width = 120},
+                new Column {Name = "依赖MOD", Width = 200, Expand = true},
+                new Column {Name = "开/关", Width = 100},
                 new Column {Name = "状态", Width = 100}
             };
             /// <summary>
@@ -362,118 +364,140 @@ namespace UnityModManagerNet
             {
                 WindowStyle = window = new GS()
                 {
-                    name = "umm window",
+                    name = "dumm window",
                     normal = { textColor = Color.white, background = _mBackground },
                     fontSize = H1FontSize,
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.UpperCenter,
-                    padding = RectOffset(0),
-                    margin = RectOffset(0),
-                    clipping = TextClipping.Overflow,
-                    wordWrap = true
+                    padding = RectOffset(H1FontSize / 4, H1FontSize),
+                    margin = RectOffset(H1FontSize / 4, H1FontSize),
+                    richText = true,
+                    wordWrap = false
                 };
                 WindowStyle.normal.background.wrapMode = TextureWrapMode.Repeat;
                 BoxStyle = new GS(GUI.skin.box)
                 {
-                    name = "umm box",
+                    name = "dumm box",
                     alignment = TextAnchor.MiddleCenter,
+                    padding = RectOffset(H2FontSize / 4, 0),
+                    margin = RectOffset(H2FontSize / 4, H2FontSize * 4 / 3),
                     clipping = TextClipping.Overflow,
-                    wordWrap = true
+                    richText = true,
+                    wordWrap = false
                 };
-                H1FontStyle = h1 = new GS(GUI.skin.label)
+                IconStyle = new GS(BoxStyle)
                 {
-                    name = "umm h1",
+                    name = "dumm icon",
+                    stretchHeight = true,
+                    stretchWidth = true
+                };
+                NormalFontStyle = new GS(GUI.skin.label)
+                {
+                    name = "dumm normal",
                     normal = { textColor = Color.white },
+                    fontSize = GlobalFontSize,
+                    fontStyle = FontStyle.Normal,
+                    alignment = TextAnchor.MiddleLeft,
+                    padding = RectOffset(0),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize * 3 / 2),
+                    clipping = TextClipping.Overflow,
+                    richText = true,
+                    wordWrap = false
+                };
+                BoldFontStyle = bold = new GS(NormalFontStyle)
+                {
+                    name = "dumm bold",
+                    fontStyle = FontStyle.Bold
+                };
+                CenterFontStyle = new GS(NormalFontStyle)
+                {
+                    name = "dumm center",
+                    alignment = TextAnchor.MiddleCenter
+                };
+                H1FontStyle = h1 = new GS(CenterFontStyle)
+                {
+                    name = "dumm center",
                     fontSize = H1FontSize,
                     fontStyle = FontStyle.Bold,
-                    alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(GlobalFontSize / 4),
-                    margin = RectOffset(GlobalFontSize / 4),
-                    clipping = TextClipping.Overflow,
-                    wordWrap = true
+                    padding = RectOffset(H1FontSize / 4),
+                    margin = RectOffset(H1FontSize / 4, H1FontSize)
                 };
                 H2FontStyle = h2 = new GS(H1FontStyle)
                 {
-                    name = "umm h2",
-                    clipping = TextClipping.Overflow,
-                    fontSize = H2FontSize
-                };
-                CenterFontStyle = new GS(H2FontStyle)
-                {
-                    name = "umm center",
-                    clipping = TextClipping.Overflow,
-                    fontSize = GlobalFontSize
-                };
-                BoldFontStyle = bold = new GS(CenterFontStyle)
-                {
-                    name = "umm bold",
-                    clipping = TextClipping.Overflow,
-                    alignment = TextAnchor.MiddleLeft
-                };
-                NormalFontStyle = new GS(BoldFontStyle)
-                {
-                    name = "umm normal",
-                    clipping = TextClipping.Overflow,
-                    fontStyle = FontStyle.Normal
+                    name = "dumm h2",
+                    fontSize = H2FontSize,
+                    padding = RectOffset(H2FontSize / 4),
+                    margin = RectOffset(H2FontSize / 4, H2FontSize)
                 };
                 ButtonStyle = button = new GS(GUI.skin.button)
                 {
-                    name = "umm button",
+                    name = "dumm button",
                     normal = { textColor = Color.white },
                     fontSize = GlobalFontSize,
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.UpperCenter,
-                    padding = new RectOffset(GlobalFontSize / 4, GlobalFontSize / 2, GlobalFontSize / 4, GlobalFontSize / 2),
-                    margin = RectOffset(GlobalFontSize / 4),
+                    padding = RectOffset(GlobalFontSize / 4, GlobalFontSize / 3),
+                    margin = RectOffset(GlobalFontSize, GlobalFontSize * 4 / 3),
                     clipping = TextClipping.Overflow,
+                    richText = true,
                     wordWrap = false
-                };
-                IconStyle = new GS(GUI.skin.box)
-                {
-                    name = "umm icon",
-                    alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(0),
-                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2),
-                    stretchHeight = true,
-                    stretchWidth = true,
-                };
-                HSliderStyle = new GS(GUI.skin.horizontalSlider)
-                {
-                    name = "umm slider",
-                    fixedHeight = GlobalFontSize,
-                    padding = RectOffset(0),
-                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize / 2)
-                };
-                HSliderThumbStyle = new GS(GUI.skin.horizontalSliderThumb)
-                {
-                    name = "umm slider thumb",
-                    fixedHeight = GlobalFontSize,
-                    padding = RectOffset(GlobalFontSize / 2, 0),
-                    margin = RectOffset(0)
                 };
                 ToggleStyle = new GS(GUI.skin.toggle)
                 {
-                    name = "umm toggle",
+                    name = "dumm toggle",
                     normal = { textColor = Color.white },
                     fontSize = GlobalFontSize,
                     alignment = TextAnchor.MiddleCenter,
-                    padding = RectOffset(GlobalFontSize / 2, GlobalFontSize / 4),
-                    margin = RectOffset(GlobalFontSize / 4),
+                    padding = RectOffset(GlobalFontSize, -GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize, GlobalFontSize * 9 / 5),
                     clipping = TextClipping.Overflow,
+                    wordWrap = false
+                };
+                HSliderStyle = new GS(GUI.skin.horizontalSlider)
+                {
+                    name = "dumm slider",
+                    fixedHeight = GlobalFontSize,
+                    padding = RectOffset(GlobalFontSize / 4, -GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize),
+                };
+                HSliderThumbStyle = new GS(GUI.skin.horizontalSliderThumb)
+                {
+                    name = "dumm slider thumb",
+                    fixedHeight = GlobalFontSize,
+                    fixedWidth = GlobalFontSize,
+                    padding = RectOffset(GlobalFontSize / 4, 0),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize),
+                };
+                TextAreaStyle = new GS(GUI.skin.textArea)
+                {
+                    name = "dumm textArea",
+                    normal = { textColor = Color.white },
+                    fontSize = GlobalFontSize,
+                    alignment = TextAnchor.MiddleLeft,
+                    padding = RectOffset(GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize),
+                    richText = true,
                     wordWrap = true
                 };
-                question = new GS()
+                TextFieldStyle = new GS(GUI.skin.textField)
                 {
-                    name = "umm question",
-                    margin = RectOffset(0, GlobalFontSize / 2)
+                    name = "dumm textField",
+                    normal = { textColor = Color.white },
+                    fontSize = GlobalFontSize,
+                    alignment = TextAnchor.MiddleLeft,
+                    padding = RectOffset(GlobalFontSize / 4),
+                    margin = RectOffset(GlobalFontSize / 4, GlobalFontSize),
                 };
-                tooltipBox = new GS()
+                question = new GS(IconStyle)
                 {
-                    name = "umm tooltip",
-                    alignment = TextAnchor.MiddleCenter,
+                    name = "dumm question"
+                };
+                tooltipBox = new GS(BoxStyle)
+                {
+                    name = "dumm tooltip",
                     normal =
                     {
-                        textColor = Color.white ,
+                    textColor = Color.white ,
                         background = new Texture2D(2, 2, TextureFormat.RGBA32, false)
                     },
                     hover = { textColor = Color.white },
@@ -489,12 +513,14 @@ namespace UnityModManagerNet
                 GUI.skin.font = Font.CreateDynamicFontFromOSFont(Params.UIFont, Scale(GlobalFontSize));
                 GUI.skin.horizontalSlider = HSliderStyle;
                 GUI.skin.horizontalSliderThumb = HSliderThumbStyle;
-                GUI.skin.toggle = ToggleStyle;
                 GUI.skin.button = ButtonStyle;
+                GUI.skin.toggle = ToggleStyle;
                 GUI.skin.label = NormalFontStyle;
+                GUI.skin.textArea = TextAreaStyle;
+                GUI.skin.textField = TextFieldStyle;
                 question.fixedWidth = question.fixedHeight = Scale(GlobalFontSize);
                 HSliderStyle.fixedHeight = HSliderThumbStyle.fixedHeight = Scale(GlobalFontSize);
-                ToggleStyle.fontSize = ButtonStyle.fontSize = NormalFontStyle.fontSize = CenterFontStyle.fontSize = BoldFontStyle.fontSize = Scale(GlobalFontSize);
+                TextAreaStyle.fontSize = TextFieldStyle.fontSize = ToggleStyle.fontSize = BoxStyle.fontSize = ButtonStyle.fontSize = BoldFontStyle.fontSize = CenterFontStyle.fontSize = NormalFontStyle.fontSize = Scale(GlobalFontSize);
                 WindowStyle.fontSize = H1FontStyle.fontSize = Scale(H1FontSize);
                 IconStyle.fixedWidth = IconStyle.fixedHeight = H2FontStyle.fontSize = Scale(H2FontSize);
                 _mColumns.Clear();
@@ -521,13 +547,13 @@ namespace UnityModManagerNet
                         toRemove.Add(item);
                         continue;
                     }
-
                     if (!item.Opened || anyRendered) continue;
                     item.Render();
                     anyRendered = true;
                 }
 
                 foreach (var item in toRemove) PopupToggleGroup_GUI.mList.Remove(item);
+
                 if (Opened)
                 {
                     if (_mCurrentResolution.width != Screen.currentResolution.width || _mCurrentResolution.height != Screen.currentResolution.height)
@@ -535,18 +561,17 @@ namespace UnityModManagerNet
                         _mCurrentResolution = Screen.currentResolution;
                         CalculateWindowPos();
                     }
-
                     if (_mUiScaleChanged)
                     {
                         _mUiScaleChanged = false;
                         ScaleGui();
                     }
+
                     mWindowRect = GL.Window(0, mWindowRect, WindowFunction, $"亲爱的Unity游戏Mod管理器v{Version}（允哥修正&汉化&美化特别版）", WindowStyle, GL.Width(_mWindowSize.x), GL.Height(_mWindowSize.y));
                 }
 
-                foreach (var mod in ModEntries)
+                foreach (var mod in ModEntries.Where(mod => mod.Active && mod.OnFixedGUI != null))
                 {
-                    if (!mod.Active || mod.OnFixedGUI == null) continue;
                     try
                     {
                         mod.OnFixedGUI.Invoke(mod);
@@ -716,7 +741,7 @@ namespace UnityModManagerNet
                             GL.Label("需重启", BoldFontStyle);
                             GL.EndHorizontal();
                             GL.BeginHorizontal();
-                            GL.Label("按热键 [CTRL + LClick] 拖动窗口", CenterFontStyle);
+                            GL.Label("按住热键 [CTRL + 鼠标左键] 拖动窗口", CenterFontStyle);
                             GL.EndHorizontal();
                             GL.EndVertical();
                             break;
@@ -746,11 +771,11 @@ namespace UnityModManagerNet
                             GL.EndHorizontal();
                             GL.BeginHorizontal();
                             GL.Label("检查更新", GL.ExpandWidth(false));
-                            ToggleGroup(Params.CheckUpdates, MCheckUpdateStrings, i => { Params.CheckUpdates = i; }, null, GL.ExpandWidth(false));
+                            ToggleGroup(Params.CheckUpdates, MCheckUpdateStrings, i => { Params.CheckUpdates = i; }, ToggleStyle, GL.ExpandWidth(false));
                             GL.EndHorizontal();
                             GL.BeginHorizontal();
                             GL.Label("游戏启动时自动显示MOD管理器窗口", GL.ExpandWidth(false));
-                            ToggleGroup(Params.ShowOnStart, MShowOnStartStrings, i => { Params.ShowOnStart = i; }, null, GL.ExpandWidth(false));
+                            ToggleGroup(Params.ShowOnStart, MShowOnStartStrings, i => { Params.ShowOnStart = i; }, ToggleStyle, GL.ExpandWidth(false));
                             GL.EndHorizontal();
                             GL.BeginVertical(BoxStyle);
                             GL.Label("窗口大小", BoldFontStyle, GL.ExpandWidth(false));
@@ -791,12 +816,11 @@ namespace UnityModManagerNet
                             if (GL.Button("确定", ButtonStyle, GL.ExpandWidth(false)) && (!_mUiScale.Equals(_mExpectedUiScale) || mOSfonts[mSelectedFont] != Params.UIFont))
                             {
                                 _mUiScaleChanged = true;
-                                _mUiScale = _mExpectedUiScale;
-                                Params.UIScale = _mUiScale;
-                                _mExpectedWindowSize.x = Mathf.Min(Screen.width, WindowWidthMin * Mathf.Pow(_mUiScale, 1.5f));
-                                _mWindowSize.x = Mathf.Floor(_mExpectedWindowSize.x) % 2 > 0 ? Mathf.Ceil(_mExpectedWindowSize.x) : Mathf.Floor(_mExpectedWindowSize.x);
+                                var scale = _mExpectedUiScale / _mUiScale;
+                                Params.UIScale = _mUiScale = _mExpectedUiScale;
+                                Params.WindowWidth = _mWindowSize.x = _mExpectedWindowSize.x = Mathf.Min(Screen.width, _mWindowSize.x * Mathf.Pow(scale, .5f));
+                                Params.WindowHeight = _mWindowSize.y = _mExpectedWindowSize.y = Mathf.Min(Screen.width, _mWindowSize.y * Mathf.Pow(scale, .5f));
                                 CalculateWindowPos();
-                                Params.WindowWidth = _mWindowSize.x;
                                 Params.UIFont = mOSfonts[mSelectedFont];
                             }
                             GL.EndHorizontal();
@@ -884,7 +908,7 @@ namespace UnityModManagerNet
             {
                 if (value)
                 {
-                    _mCanvas = new GameObject("UMM blocking UI", typeof(Canvas), typeof(GraphicRaycaster));
+                    _mCanvas = new GameObject("dumm blocking UI", typeof(Canvas), typeof(GraphicRaycaster));
                     var canvas = _mCanvas.GetComponent<Canvas>();
                     canvas.renderMode = RenderMode.ScreenSpaceOverlay;
                     canvas.sortingOrder = short.MaxValue;

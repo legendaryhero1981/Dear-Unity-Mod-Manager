@@ -7,7 +7,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Kingmaker.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
     <OldPatchTarget>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</OldPatchTarget>
@@ -21,7 +21,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Wrath.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
@@ -34,11 +34,22 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Wrath.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Kingmaker.GameStarter.Awake:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]Kingmaker.MainMenu.Start:After</UIStartingPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]Kingmaker.GameVersion.GetVersion</GameVersionPoint>
     <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="永恒之柱2：死火">
+    <GameName>Pillars of Eternity II: Deadfire</GameName>
+    <Folder>Pillars of Eternity II Deadfire</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>PillarsOfEternityII.exe</GameExe>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Game.GameState.Awake:After</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]Game.UI.UIMainMenuManager.OnyxStart:After</UIStartingPoint>
+    <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
   </GameInfo>
   <GameInfo Name="索拉斯塔">
     <GameName>Solasta</GameName>
@@ -47,8 +58,8 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Solasta.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp.dll]RuntimeManager.LoadRuntime:After</StartingPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]TacticalAdventuresApplication.Start:After</StartingPoint>
     <MinimalManagerVersion>0.22.13</MinimalManagerVersion>
   </GameInfo>
 </Config>

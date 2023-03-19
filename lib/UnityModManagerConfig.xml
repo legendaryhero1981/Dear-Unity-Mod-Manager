@@ -2,25 +2,13 @@
 <Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Repository>https://raw.githubusercontent.com/legendaryhero1981/Dear-Unity-Mod-Manager/master/Repository.json</Repository>
   <HomePage>https://github.com/legendaryhero1981/Dear-Unity-Mod-Manager</HomePage>
-  <GameInfo Name="缺氧">
-    <GameName>Oxygen Not Included</GameName>
-    <Folder>OxygenNotIncluded</Folder>
-    <ModsDirectory>Mods</ModsDirectory>
-    <ModInfo>Info.json</ModInfo>
-    <GameExe>OxygenNotIncluded.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp-firstpass.dll]App.Awake:After</StartingPoint>
-    <OldPatchTarget>[Assembly-CSharp-firstpass.dll]App.Awake:After</OldPatchTarget>
-    <GameVersionPoint>[Assembly-CSharp.dll]KleiVersion.ChangeList</GameVersionPoint>
-    <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
-  </GameInfo>
   <GameInfo Name="双点医院">
     <GameName>Two Point Hospital</GameName>
     <Folder>TPH</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>TPH.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</StartingPoint>
     <OldPatchTarget>[Assembly-CSharp.dll]TH20.MainScript.Start:Before</OldPatchTarget>
     <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
@@ -44,14 +32,6 @@
     <EntryPoint>[Assembly-CSharp.dll]BikeLoadOut.Awake:After</EntryPoint>
     <MinimalManagerVersion>0.12.0</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="花园瓜子">
-    <GameName>Garden Paws</GameName>
-    <Folder>Garden Paws</Folder>
-    <ModsDirectory>Mods</ModsDirectory>
-    <ModInfo>Info.json</ModInfo>
-    <EntryPoint>[Assembly-CSharp.dll]GPLauncher.Awake:After</EntryPoint>
-    <MinimalManagerVersion>0.12.4</MinimalManagerVersion>
-  </GameInfo>
   <GameInfo Name="一起玩农场">
     <GameName>Farm Together</GameName>
     <Folder>Farm Together</Folder>
@@ -74,7 +54,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Portia.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</StartingPoint>
     <OldPatchTarget>[Assembly-CSharp.dll]Ccc.CccModuleLoader.Start:After</OldPatchTarget>
     <GameVersionPoint>[Assembly-CSharp.dll]Pathea.Version.GetString</GameVersionPoint>
@@ -86,7 +66,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>DawnOfMan.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]DawnOfMan.TitleStateMain.init:After</StartingPoint>
     <MinimalManagerVersion>0.13.1</MinimalManagerVersion>
   </GameInfo>
@@ -96,7 +76,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>DerailValley.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Bootstrap.StartGame:After</StartingPoint>
     <MinimalManagerVersion>0.14.1</MinimalManagerVersion>
   </GameInfo>
@@ -106,20 +86,9 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Eastshade.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]GameManager.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.15.0</MinimalManagerVersion>
-  </GameInfo>
-  <GameInfo Name="雨中冒险2">
-    <GameName>Risk of Rain 2</GameName>
-    <GameScriptName>RiskofRain2</GameScriptName>
-    <Folder>Risk of Rain 2</Folder>
-    <ModsDirectory>Mods</ModsDirectory>
-    <ModInfo>Info.json</ModInfo>
-    <GameExe>Risk of Rain 2.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp.dll]RoR2.RoR2Application.Awake:After</StartingPoint>
-    <Comment>您需要下载mscorlib.dll文件并将其复制到“Risk of Rain 2\*_Data\Managed”文件夹。</Comment>
   </GameInfo>
   <GameInfo Name="赛车经理">
     <GameName>Motorsport Manager</GameName>
@@ -138,7 +107,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Factory Town.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Platform.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.18.0</MinimalManagerVersion>
   </GameInfo>
@@ -148,7 +117,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>UltimateFishing*.exe</GameExe>
-    <EntryPoint>[UnityEngine.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MenuManager.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.18.0</MinimalManagerVersion>
   </GameInfo>
@@ -168,7 +137,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Deep Sky Derelicts.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Derelicts.MainMenu.Awake:After</StartingPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]Derelicts.MainMenu.buildVersion</GameVersionPoint>
     <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
@@ -179,7 +148,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>pine.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:Before</StartingPoint>
     <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
   </GameInfo>
@@ -189,7 +158,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>StartFGW.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]RM.Awake:Before</StartingPoint>
     <MinimalManagerVersion>0.21.0</MinimalManagerVersion>
   </GameInfo>
@@ -199,7 +168,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>StarcomNexus.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainScreen.Start:Before</StartingPoint>
     <MinimalManagerVersion>0.21.3</MinimalManagerVersion>
   </GameInfo>
@@ -209,7 +178,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>MetalUnit.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]TitleMenuController.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.21.4</MinimalManagerVersion>
   </GameInfo>
@@ -232,6 +201,7 @@
     <EntryPoint>[UnityEngine.dll]UnityEngine.Graphics.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]CMainMenuScreen.Initialise:After</StartingPoint>
     <MinimalManagerVersion>0.21.5</MinimalManagerVersion>
+    <Comment>要求游戏版本不低于1.18.4.0</Comment>
   </GameInfo>
   <GameInfo Name="终极提督：航海时代">
     <GameName>Ultimate Admiral Age of Sea</GameName>
@@ -283,24 +253,13 @@
     <StartingPoint>[Assembly-CSharp.dll]MainFrontendMenu.Show:After</StartingPoint>
     <MinimalManagerVersion>0.21.8</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="永恒之柱2：死火">
-    <GameName>Pillars of Eternity II: Deadfire</GameName>
-    <Folder>Pillars of Eternity II Deadfire</Folder>
-    <ModsDirectory>Mods</ModsDirectory>
-    <ModInfo>Info.json</ModInfo>
-    <GameExe>PillarsOfEternityII.exe</GameExe>
-    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
-    <StartingPoint>[Assembly-CSharp.dll]Game.GameState.Awake:After</StartingPoint>
-    <UIStartingPoint>[Assembly-CSharp.dll]Game.UI.UIMainMenuManager.OnyxStart:After</UIStartingPoint>
-    <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
-  </GameInfo>
   <GameInfo Name="暴君">
     <GameName>Tyranny</GameName>
     <Folder>Tyranny</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Tyranny.exe</GameExe>
-    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Game.GameState.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.22.4</MinimalManagerVersion>
   </GameInfo>
@@ -310,7 +269,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>People Playground.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MenuController.Awake:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MenuController.Awake:After</UIStartingPoint>
     <MinimalManagerVersion>0.22.5</MinimalManagerVersion>
@@ -321,7 +280,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>ExecutiveAssault2.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenu_MenuControls.Start:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenu_MenuControls.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.22.6</MinimalManagerVersion>
@@ -332,7 +291,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Raft.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]StartMenuScreen.Start:After</StartingPoint>
     <MinimalManagerVersion>0.22.6</MinimalManagerVersion>
   </GameInfo>
@@ -342,7 +301,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Autonauts.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]BaseMenu.Awake:Before</StartingPoint>
     <MinimalManagerVersion>0.22.6</MinimalManagerVersion>
   </GameInfo>
@@ -372,7 +331,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Stranded_Deep.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Beam.UI.MainMenuPresenter.Awake:Before</StartingPoint>
     <MinimalManagerVersion>0.22.8</MinimalManagerVersion>
   </GameInfo>
@@ -412,7 +371,7 @@
     <ModsDirectory>$mods</ModsDirectory>
     <ModInfo>info.json</ModInfo>
     <GameExe>Swag and Sorcery.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[MainAssembly.dll]MainMenuBehaviour.Start:After</StartingPoint>
     <MinimalManagerVersion>0.22.9</MinimalManagerVersion>
   </GameInfo>
@@ -422,7 +381,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Desperados III.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]UIMainMenuGUI.UIStart:After</StartingPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]MiVersion.Version.ToFullString()</GameVersionPoint>
     <MinimalManagerVersion>0.22.10</MinimalManagerVersion>
@@ -433,7 +392,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Phasmophobia.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainManager.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.22.12</MinimalManagerVersion>
   </GameInfo>
@@ -452,11 +411,11 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>A Dance of Fire and Ice.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]ADOStartup.Startup:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]ADOStartup.Startup:After</UIStartingPoint>
     <MinimalManagerVersion>0.22.14</MinimalManagerVersion>
-    <Comment>需要游戏版本不低于1.11.3</Comment>
+    <Comment>要求游戏版本不低于1.11.3</Comment>
   </GameInfo>
   <GameInfo Name="奇幻大陆的勇士">
     <GameName>Phoenotopia Awakening</GameName>
@@ -493,7 +452,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>valheim.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[assembly_valheim.dll]FejdStartup.Awake:After</StartingPoint>
     <GameVersionPoint>[assembly_valheim.dll]Version.GetVersionString</GameVersionPoint>
     <MinimalManagerVersion>0.22.15</MinimalManagerVersion>
@@ -517,7 +476,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Broforce.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.23.0</MinimalManagerVersion>
@@ -528,7 +487,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>artofrally.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]GameEntryPoint.Start:After</StartingPoint>
     <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
   </GameInfo>
@@ -548,7 +507,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Human.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Multiplayer.NetGame.Awake:After</StartingPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]VersionDisplay.fullVersion</GameVersionPoint>
     <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
@@ -559,7 +518,7 @@
     <ModInfo>Info.json</ModInfo>
     <ModsDirectory>Mods</ModsDirectory>
     <GameExe>OsirisNewDawn.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
     <GameVersionPoint>[Assembly-CSharp.dll]Version.GetString</GameVersionPoint>
@@ -571,7 +530,7 @@
     <ModInfo>Info.json</ModInfo>
     <ModsDirectory>Mods</ModsDirectory>
     <GameExe>Here Comes Niko!.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]scrBoot.Start:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]scrPauseMenu.Awake:After</UIStartingPoint>
     <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
@@ -582,7 +541,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>ReLegend.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
     <MinimalManagerVersion>0.23.4</MinimalManagerVersion>
   </GameInfo>
@@ -614,7 +573,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>The Civil War (1861-1865).exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:After</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:After</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenuControls.Start:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenuControls.Start:After</UIStartingPoint>
     <Comment>Definition by makotech222</Comment>
@@ -626,7 +585,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Toree2.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]StartScript.Start:After</StartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
@@ -636,7 +595,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Sailwind.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]StartMenu.Start:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]StartMenu.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
@@ -647,7 +606,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Inscryption.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]DiskCardGame.StartScreenController.Start:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]DiskCardGame.StartScreenController.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
@@ -658,7 +617,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Planetbase.exe</GameExe>
-    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UI.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Planetbase.ErrorManager.init:Before</StartingPoint>
     <MinimalManagerVersion>0.22.3</MinimalManagerVersion>
   </GameInfo>
@@ -668,7 +627,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>GH.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[GH.Runtime.dll]GLOOM.MainMenu.MainMenuUIManager.Start:After</StartingPoint>
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
     <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
@@ -679,7 +638,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>BlackGeyser.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]BG.Loading.GrapeOceanSplashController.DoSlpash:Before</StartingPoint>
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
     <MinimalManagerVersion>0.24.1</MinimalManagerVersion>
@@ -695,13 +654,13 @@
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
     <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="瓦格鲁斯:万壑之地">
+  <GameInfo Name="瓦格鲁斯：万壑之地">
     <GameName>Vagrus - The Riven Realms</GameName>
     <Folder>Vagrus - The Riven Realms</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Vagrus.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Game.Start:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenuUI.Awake:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
@@ -724,7 +683,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Prehistoric Kingdom.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenuManager.Start:After</UIStartingPoint>
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
@@ -736,7 +695,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Star Valor.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MenuLauncher.Awake:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.2</MinimalManagerVersion>
@@ -747,7 +706,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Spellcaster University.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]SC_MenuPrincipal.Start:After</UIStartingPoint>
     <GameVersionPoint>[UnityEngine.CoreModule.dll]UnityEngine.Application.version</GameVersionPoint>
@@ -770,7 +729,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Cult Of The Lamb.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]Lamb.UI.MainMenu.MainMenu.Start:Before</StartingPoint>
     <MinimalManagerVersion>0.24.5</MinimalManagerVersion>
   </GameInfo>
@@ -780,18 +739,18 @@
     <ModsDirectory>Mods/Enabled</ModsDirectory>
     <ModInfo>ModInfo.json</ModInfo>
     <GameExe>TerraInvicta.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]StartMenuController.Start:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]StartMenuController.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.24.0</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="杀手皇后:黑">
+  <GameInfo Name="杀手皇后：黑">
     <GameName>Killer Queen Black</GameName>
     <Folder>Killer Queen Black</Folder>
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Killer Queen Black.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]LoadingBarScript.Awake:Before</StartingPoint>
     <GameVersionPoint>[GameLogic.dll]GameLogic.AnalyticsUtility.Version()</GameVersionPoint>
     <MinimalManagerVersion>0.25.0</MinimalManagerVersion>
@@ -802,7 +761,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>GHPC.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]GHPC.SceneController.Awake:After</StartingPoint>
     <MinimalManagerVersion>0.25.0</MinimalManagerVersion>
   </GameInfo>
@@ -822,7 +781,7 @@
     <ModsDirectory>Mods</ModsDirectory>
     <ModInfo>Info.json</ModInfo>
     <GameExe>Mechanicus.exe</GameExe>
-    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.ctor:Before</EntryPoint>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
     <StartingPoint>[Assembly-CSharp.dll]MainMenu.Start:Before</StartingPoint>
     <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
     <MinimalManagerVersion>0.25.4</MinimalManagerVersion>
@@ -837,7 +796,7 @@
     <StartingPoint>[Assembly-CSharp.dll]DreamOcean.Show:Before</StartingPoint>
     <MinimalManagerVersion>0.25.4</MinimalManagerVersion>
   </GameInfo>
-  <GameInfo Name="">
+  <GameInfo Name="滑板XL（新测试版）">
     <GameName>Skater XL Beta</GameName>
     <Folder>Skater XL</Folder>
     <ModsDirectory>Mods</ModsDirectory>

@@ -16,6 +16,11 @@ namespace UnityModManagerNet.ConsoleInstaller
         public const string FileSuffixBak = ".bak";
         public const string FileSuffixCache = ".cache";
 
+        /// <summary>
+        /// [0.25.5.60] 此静态实例化方法用于通过反射方式给UnityEngine.Canvas类添加一个静态实例化方法.cctor()，作用于通过Assembly方式安装DUMM管理器模块。
+        /// </summary>
+        static Utils(){}
+
         public static Version ParseVersion(string str)
         {
             var array = str.Split('.');
@@ -127,7 +132,6 @@ namespace UnityModManagerNet.ConsoleInstaller
                         }
                     }
                 }
-                //Log.Print($"{assembly},{@class},{method},{insertionPlace}");
             }
 
             var hasError = false;
@@ -183,7 +187,6 @@ namespace UnityModManagerNet.ConsoleInstaller
                     typeDef.Methods.Remove(method);
                     targetClass.Methods.Add(method);
                     foundMethod = method;
-
                     return true;
                 }
             }
@@ -234,7 +237,7 @@ namespace UnityModManagerNet.ConsoleInstaller
         public static bool IsLinuxPlatform()
         {
             var p = (int)Environment.OSVersion.Platform;
-            return (p == 4) || (p == 128);
+            return p is 4 or 128;
         }
 
         public static bool MakeBackup(string path)

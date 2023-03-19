@@ -4,7 +4,6 @@ extern alias SolastaCrown;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 using KM = PathfinderKingmaker::Kingmaker;
@@ -162,54 +161,6 @@ namespace UnityModManagerNet
                         WOTR.Game.Instance.StopMode(WOTR.GameModes.GameModeType.EscMode);
                         Logger.Log($"已解冻游戏UI，当前游戏模式为{WOTR.Game.Instance.CurrentMode}！");
                     };
-                }
-            }
-
-            private class RiskofRain2 : GameScript
-            {
-                public override void OnModToggle(ModEntry modEntry, bool value)
-                {
-                    if (!modEntry.Info.IsCheat) return;
-                    if (value)
-                    {
-                        SetModded(true);
-                    }
-                    else if (ModEntries.All(x => x == modEntry || !x.Info.IsCheat))
-                    {
-                        SetModded(false);
-                    }
-                }
-
-                public override void OnBeforeLoadMods()
-                {
-                    forbidDisableMods = true;
-                }
-
-                private static FieldInfo _mFieldModded;
-
-                private static FieldInfo FieldModded
-                {
-                    get
-                    {
-                        if (_mFieldModded != null) return _mFieldModded;
-                        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            if (assembly.ManifestModule.Name != "Assembly-CSharp.dll") continue;
-                            _mFieldModded = assembly.GetType("RoR2.RoR2Application").GetField("isModded", BindingFlags.Public | BindingFlags.Static);
-                            break;
-                        }
-                        return _mFieldModded;
-                    }
-                }
-
-                public static bool GetModded()
-                {
-                    return (bool)FieldModded.GetValue(null);
-                }
-
-                private static void SetModded(bool value)
-                {
-                    FieldModded.SetValue(null, value);
                 }
             }
         }
