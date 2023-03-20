@@ -1,5 +1,5 @@
 <Project>
-  <Import Project=".\ReferenceLibs_Unity2019.props" />
+  <Import Project=".\ReferenceLibs_Unity2021.props" />
   <Import Project=".\ReferenceLibs_Assembly.props" />
   <ItemGroup>
     <Reference Include="0Harmony">
