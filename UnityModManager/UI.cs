@@ -825,7 +825,7 @@ namespace UnityModManagerNet
                                 var scale = _mExpectedUiScale / _mUiScale;
                                 Params.UIScale = _mUiScale = _mExpectedUiScale;
                                 Params.WindowWidth = _mWindowSize.x = _mExpectedWindowSize.x = Mathf.Max(WindowWidthMin, Mathf.Min(Screen.width, _mWindowSize.x * Mathf.Pow(scale, .5f)));
-                                Params.WindowHeight = _mWindowSize.y = _mExpectedWindowSize.y = Mathf.Max(WindowHeightMin, Mathf.Min(Screen.width, _mWindowSize.y * Mathf.Pow(scale, .5f)));
+                                Params.WindowHeight = _mWindowSize.y = _mExpectedWindowSize.y = Mathf.Max(WindowHeightMin, Mathf.Min(Screen.height, _mWindowSize.y * Mathf.Pow(scale, .5f)));
                                 Params.UIFont = mOSfonts[mSelectedFont];
                                 CalculateWindowPos();
                             }
