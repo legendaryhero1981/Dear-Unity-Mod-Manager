@@ -80,11 +80,30 @@ namespace UnityModManagerNet
                 }
             }
 
+            public static void OnToggleWindow(bool value)
+            {
+                foreach (var o in Scripts)
+                {
+                    try
+                    {
+                        o.OnToggleWindow(value);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogException("OnToggleWindow", e);
+                    }
+                }
+            }
+
             private class GameScript
             {
                 public virtual void OnModToggle(ModEntry modEntry, bool value) { }
                 public virtual void OnBeforeLoadMods() { }
                 public virtual void OnAfterLoadMods() { }
+                /// <summary>
+                /// [0.21.3]
+                /// </summary>
+                public virtual void OnToggleWindow(bool value) { }
             }
 
             private class SolastaCrownOfTheMagister : GameScript
