@@ -39,6 +39,8 @@ namespace UnityModManagerNet.Installer
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.gameDir = new System.Windows.Forms.Label();
+            this.gameName = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.additionallyGroupBox = new System.Windows.Forms.GroupBox();
             this.notesTextBox = new System.Windows.Forms.RichTextBox();
@@ -69,8 +71,6 @@ namespace UnityModManagerNet.Installer
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.modInstallFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.skinEngine = new Sunisoft.IrisSkin.SkinEngine();
-            this.gameName = new System.Windows.Forms.Label();
-            this.gameDir = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMods)).BeginInit();
             this.splitContainerMods.Panel1.SuspendLayout();
             this.splitContainerMods.Panel2.SuspendLayout();
@@ -160,6 +160,7 @@ namespace UnityModManagerNet.Installer
             // ModcontextMenuStrip1
             // 
             resources.ApplyResources(this.ModcontextMenuStrip1, "ModcontextMenuStrip1");
+            this.ModcontextMenuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.ModcontextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.installToolStripMenuItem,
             this.updateToolStripMenuItem,
@@ -268,6 +269,24 @@ namespace UnityModManagerNet.Installer
             this.tabPage1.Controls.Add(this.btnInstall);
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
+            // 
+            // gameDir
+            // 
+            this.gameDir.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.gameDir.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.gameDir.ForeColor = System.Drawing.SystemColors.Highlight;
+            resources.ApplyResources(this.gameDir, "gameDir");
+            this.gameDir.Name = "gameDir";
+            this.gameDir.Tag = "9999";
+            // 
+            // gameName
+            // 
+            this.gameName.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.gameName.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
+            this.gameName.ForeColor = System.Drawing.SystemColors.Highlight;
+            resources.ApplyResources(this.gameName, "gameName");
+            this.gameName.Name = "gameName";
+            this.gameName.Tag = "9999";
             // 
             // panel1
             // 
@@ -519,6 +538,7 @@ namespace UnityModManagerNet.Installer
             // 
             resources.ApplyResources(this.statusStrip1, "statusStrip1");
             this.statusStrip1.GripMargin = new System.Windows.Forms.Padding(0);
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
@@ -563,24 +583,6 @@ namespace UnityModManagerNet.Installer
             this.skinEngine.SkinDialogs = false;
             this.skinEngine.SkinFile = null;
             this.skinEngine.TitleFont = global::UnityModManagerNet.Installer.Properties.Settings.Default.TitleFont;
-            // 
-            // gameName
-            // 
-            this.gameName.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.gameName.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
-            this.gameName.ForeColor = System.Drawing.SystemColors.Highlight;
-            resources.ApplyResources(this.gameName, "gameName");
-            this.gameName.Name = "gameName";
-            this.gameName.Tag = "9999";
-            // 
-            // gameDir
-            // 
-            this.gameDir.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::UnityModManagerNet.Installer.Properties.Settings.Default, "SelectFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.gameDir.Font = global::UnityModManagerNet.Installer.Properties.Settings.Default.SelectFont;
-            this.gameDir.ForeColor = System.Drawing.SystemColors.Highlight;
-            resources.ApplyResources(this.gameDir, "gameDir");
-            this.gameDir.Name = "gameDir";
-            this.gameDir.Tag = "9999";
             // 
             // UnityModManagerForm
             // 

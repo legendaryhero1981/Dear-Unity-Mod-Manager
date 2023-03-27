@@ -541,7 +541,7 @@ namespace UnityModManagerNet
             {
                 if (!string.IsNullOrEmpty(tooltip))
                 {
-                    GUILayout.Box(Textures.Question, style ?? question, options);
+                    GUILayout.Box(Textures.Question, style ?? IconStyle, options);
                     if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
                     {
                         ShowTooltip(tooltip);
@@ -562,7 +562,7 @@ namespace UnityModManagerNet
             {
                 if (!string.IsNullOrEmpty(a.Tooltip))
                 {
-                    GUILayout.Box(Textures.Question, question);
+                    GUILayout.Box(Textures.Question, IconStyle);
                     if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
                     {
                         ShowTooltip(a.Tooltip);
