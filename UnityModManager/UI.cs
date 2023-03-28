@@ -97,7 +97,7 @@ namespace UnityModManagerNet
             /// <summary>
             /// [0.20.0.17] 当前选项卡的ScrollView控件位置
             /// </summary>
-            public static Vector2 ScrollViewPosition => MScrollPosition[tabId];
+            public static Vector2 ScrollViewPosition => mScrollPosition[tabId];
 
             /// <summary>
             /// [0.20.0.17] 窗口位置
@@ -124,7 +124,7 @@ namespace UnityModManagerNet
             private bool _mUiScaleChanged;
 
             public static readonly string[] Tabs = { "Mods", "日志", "设置" };
-            private static readonly Vector2[] MScrollPosition = new Vector2[Tabs.Length];
+            private static readonly Vector2[] mScrollPosition = new Vector2[Tabs.Length];
             private static Texture2D _mBackground;
 
             private static readonly string FilePathBackground = Path.Combine(Path.GetDirectoryName(typeof(UI).Assembly.Location) ?? string.Empty, "background.jpg");
@@ -646,8 +646,8 @@ namespace UnityModManagerNet
                 {
                     case "Mods":
                         {
-                            using var scrollViewScope = new GL.ScrollViewScope(MScrollPosition[tabId], ScrollViewStyle, minWidth);
-                            MScrollPosition[tabId] = scrollViewScope.scrollPosition;
+                            using var scrollViewScope = new GL.ScrollViewScope(mScrollPosition[tabId], ScrollViewStyle, minWidth);
+                            mScrollPosition[tabId] = scrollViewScope.scrollPosition;
                             var amountWidth = _mColumns.Where(x => !x.Skip).Sum(x => x.Width);
                             var expandWidth = _mColumns.Where(x => x.Expand && !x.Skip).Sum(x => x.Width);
                             var mods = ModEntries;
@@ -779,8 +779,8 @@ namespace UnityModManagerNet
                         }
                     case "日志":
                         {
-                            using var scrollViewScope = new GL.ScrollViewScope(MScrollPosition[tabId], ScrollViewStyle, minWidth);
-                            MScrollPosition[tabId] = scrollViewScope.scrollPosition;
+                            using var scrollViewScope = new GL.ScrollViewScope(mScrollPosition[tabId], ScrollViewStyle, minWidth);
+                            mScrollPosition[tabId] = scrollViewScope.scrollPosition;
                             using (new GL.VerticalScope())
                             {
                                 for (int c = Logger.history.Count, i = Mathf.Max(0, c - Logger.historyCapacity); i < c; i++)
@@ -795,8 +795,8 @@ namespace UnityModManagerNet
                         }
                     case "设置":
                         {
-                            using var scrollViewScope = new GL.ScrollViewScope(MScrollPosition[tabId], ScrollViewStyle, minWidth);
-                            MScrollPosition[tabId] = scrollViewScope.scrollPosition;
+                            using var scrollViewScope = new GL.ScrollViewScope(mScrollPosition[tabId], ScrollViewStyle, minWidth);
+                            mScrollPosition[tabId] = scrollViewScope.scrollPosition;
                             using (new GL.VerticalScope(BoxStyle))
                             {
                                 using (new GL.HorizontalScope())
