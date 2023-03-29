@@ -1,13 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using JetBrains.Annotations;
 
-namespace Doorstop
+namespace Doorstop;
+
+[UsedImplicitly]
+public class Entrypoint
 {
-    public class Entrypoint
+    [UsedImplicitly]
+    public static void Start()
     {
-        public static void Start()
-        {
-            UnityModManagerNet.UnityModManager.Main();
-        }
+        UnityModManagerNet.UnityModManager.Main();
     }
 }
