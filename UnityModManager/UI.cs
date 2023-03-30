@@ -505,7 +505,8 @@ public partial class UnityModManager
         {
             GUI.skin.font = Font.CreateDynamicFontFromOSFont(Params.UIFont, Scale(GlobalFontSize));
             GUI.skin.box.clipping = GUI.skin.textField.clipping = GUI.skin.button.clipping = GUI.skin.label.clipping = TextClipping.Overflow;
-            GUI.skin.button.wordWrap = GUI.skin.label.wordWrap = false;
+            GUI.skin.box.richText = GUI.skin.button.richText = GUI.skin.label.richText = true;
+            GUI.skin.box.wordWrap = GUI.skin.button.wordWrap = GUI.skin.label.wordWrap = false;
             GUI.skin.horizontalSlider.fixedHeight = GUI.skin.horizontalSliderThumb.fixedHeight = HSliderStyle.fixedHeight = HSliderThumbStyle.fixedHeight = Scale(GlobalFontSize);
             GUI.skin.horizontalSliderThumb.fixedWidth = HSliderThumbStyle.fixedWidth = Scale(GlobalFontSize);
             GUI.skin.textField.fixedHeight = TextFieldStyle.fixedHeight = Scale(GlobalFontSize * 7 / 6);
@@ -630,10 +631,10 @@ public partial class UnityModManager
                         var amountWidth = _mColumns.Where(x => !x.Skip).Sum(x => x.Width);
                         var expandWidth = _mColumns.Where(x => x.Expand && !x.Skip).Sum(x => x.Width);
                         var mods = ModEntries;
-                        var options = _mColumns.Select(x =>
-                            x.Expand ? GL.MaxWidth(Mathf.Floor(x.Width / expandWidth * (_mWindowSize.x + expandWidth - amountWidth - GlobalFontSize))) : GL.MaxWidth(x.Width)).ToArray();
+                        var options = _mColumns.Select(x => x.Expand ? GL.MaxWidth(Mathf.Floor(x.Width / expandWidth * (_mWindowSize.x + expandWidth - amountWidth - GlobalFontSize))) : GL.MaxWidth(x.Width)).ToArray();
                         using (new GL.VerticalScope(BoxStyle))
                         {
+                            #region MOD表格表头
                             using (new GL.HorizontalScope())
                             {
                                 for (var i = 0; i < _mColumns.Count; i++)
@@ -642,6 +643,8 @@ public partial class UnityModManager
                                     GL.Label(_mColumns[i].Name, BoldFontStyle, options[i]);
                                 }
                             }
+                            #endregion
+                            #region MOD表格内容
                             using (new GL.VerticalScope())
                             {
                                 for (int i = 0, j = 0, c = mods.Count; i < c; i++, j = 0)
@@ -734,6 +737,8 @@ public partial class UnityModManager
                                     }
                                 }
                             }
+                            #endregion
+                            #region MOD表格表尾
                             using (new GL.HorizontalScope())
                             {
                                 GL.Box(Textures.SettingsNormal, IconStyle);
@@ -753,6 +758,7 @@ public partial class UnityModManager
                             }
                             GL.Space(Scale(H1FontSize));
                             GL.Label("提示：按住热键 [CTRL + 鼠标左键] 可拖动窗口", NoteFontStyle);
+                            #endregion
                         }
                         break;
                     }
