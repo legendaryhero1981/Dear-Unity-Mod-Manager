@@ -39,6 +39,7 @@ public partial class UnityModManager
         public static GS H2FontStyle;
         public static GS BoldFontStyle;
         public static GS NoteFontStyle;
+        public static GS LogFontStyle;
         public static GS ButtonStyle;
         public static GS IconStyle;
         public static GS ToggleStyle;
@@ -435,6 +436,11 @@ public partial class UnityModManager
                 alignment = TextAnchor.MiddleCenter,
                 wordWrap = true
             };
+            LogFontStyle = new GS(BoldFontStyle)
+            {
+                name = "DUMM logFont",
+                wordWrap = true
+            };
             CenterFontStyle = new GS(NormalFontStyle)
             {
                 name = "DUMM centerFont",
@@ -510,13 +516,13 @@ public partial class UnityModManager
             GUI.skin.horizontalSlider.fixedHeight = GUI.skin.horizontalSliderThumb.fixedHeight = HSliderStyle.fixedHeight = HSliderThumbStyle.fixedHeight = Scale(GlobalFontSize);
             GUI.skin.horizontalSliderThumb.fixedWidth = HSliderThumbStyle.fixedWidth = Scale(GlobalFontSize);
             GUI.skin.textField.fixedHeight = TextFieldStyle.fixedHeight = Scale(GlobalFontSize * 7 / 6);
-            GUI.skin.textField.margin = GUI.skin.textArea.margin = GUI.skin.label.margin = GUI.skin.toggle.margin = GUI.skin.button.margin = TextAreaStyle.margin = TextFieldStyle.margin = ToggleStyle.margin = ButtonStyle.margin = BoldFontStyle.margin = CenterFontStyle.margin = NoteFontStyle.margin = NormalFontStyle.margin = RectOffset(Scale(GlobalFontSize / 4), Scale(GlobalFontSize));
+            GUI.skin.textField.margin = GUI.skin.textArea.margin = GUI.skin.label.margin = GUI.skin.toggle.margin = GUI.skin.button.margin = TextAreaStyle.margin = TextFieldStyle.margin = ToggleStyle.margin = ButtonStyle.margin = BoldFontStyle.margin = CenterFontStyle.margin = LogFontStyle.margin = NoteFontStyle.margin = NormalFontStyle.margin = RectOffset(Scale(GlobalFontSize / 4), Scale(GlobalFontSize));
             GUI.skin.box.margin = TooltipStyle.margin = BoxStyle.margin = RectOffset(Scale(GlobalFontSize / 4), Scale(GlobalFontSize / 2));
             GUI.skin.horizontalSlider.margin = HSliderStyle.margin = RectOffset(Scale(GlobalFontSize / 2), Scale(GlobalFontSize * 7 / 6));
             GUI.skin.horizontalSliderThumb.margin = HSliderThumbStyle.margin = RectOffset(0);
             GUI.skin.textField.padding = TextFieldStyle.padding = new RectOffset(Scale(GlobalFontSize / 4), Scale(GlobalFontSize / 4), 0, Scale(GlobalFontSize / 6));
             GUI.skin.button.padding = ButtonStyle.padding = new RectOffset(Scale(GlobalFontSize / 4), Scale(GlobalFontSize / 4), 0, Scale(GlobalFontSize / 3));
-            TooltipStyle.fontSize = BoxStyle.fontSize = ScrollViewStyle.fontSize = TextAreaStyle.fontSize = TextFieldStyle.fontSize = ToggleStyle.fontSize = BoldFontStyle.fontSize = CenterFontStyle.fontSize = NoteFontStyle.fontSize = NormalFontStyle.fontSize = ButtonStyle.fontSize = Scale(GlobalFontSize);
+            TooltipStyle.fontSize = BoxStyle.fontSize = ScrollViewStyle.fontSize = TextAreaStyle.fontSize = TextFieldStyle.fontSize = ToggleStyle.fontSize = BoldFontStyle.fontSize = CenterFontStyle.fontSize = LogFontStyle.fontSize = NoteFontStyle.fontSize = NormalFontStyle.fontSize = ButtonStyle.fontSize = Scale(GlobalFontSize);
             TooltipStyle.padding = BoxStyle.padding = new RectOffset(Scale(GlobalFontSize / 4), Scale(GlobalFontSize / 4), 0, Scale(GlobalFontSize / 2));
             WindowStyle.fontSize = H1FontStyle.fontSize = Scale(H1FontSize);
             WindowStyle.margin = H1FontStyle.margin = RectOffset(Scale(H1FontSize / 4), Scale(H1FontSize));
@@ -769,7 +775,7 @@ public partial class UnityModManager
                         using (new GL.VerticalScope())
                         {
                             for (int c = Logger.history.Count, i = Mathf.Max(0, c - Logger.historyCapacity); i < c; i++)
-                                GL.Label(Logger.history[i], NormalFontStyle);
+                                GL.Label(Logger.history[i], LogFontStyle);
                         }
                         buttons += delegate
                         {
