@@ -772,7 +772,7 @@ public partial class UnityModManager
                     {
                         using var scrollViewScope = new GL.ScrollViewScope(mScrollPosition[tabId], ScrollViewStyle, minWidth);
                         mScrollPosition[tabId] = scrollViewScope.scrollPosition;
-                        using (new GL.VerticalScope())
+                        using (new GL.VerticalScope(BoxStyle))
                         {
                             for (int c = Logger.history.Count, i = Mathf.Max(0, c - Logger.historyCapacity); i < c; i++)
                                 GL.Label(Logger.history[i], LogFontStyle);
