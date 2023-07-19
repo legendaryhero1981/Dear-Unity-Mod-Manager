@@ -96,6 +96,9 @@ public partial class UnityModManager
         public string EntryPoint;
         public string StartingPoint;
         public string UIStartingPoint;
+        public string TextureReplacingPoint;
+        public string SessionStartPoint;
+        public string SessionStopPoint;
         public string GameExe;
         public string GameName;
         public string GameVersionPoint;

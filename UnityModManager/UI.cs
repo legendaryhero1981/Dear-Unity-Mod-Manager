@@ -199,6 +199,8 @@ public partial class UnityModManager
 
         internal static bool Load()
         {
+            if (Instance) return true;
+
             try
             {
                 var gameObject = new GameObject(typeof(UI).FullName, typeof(UI));

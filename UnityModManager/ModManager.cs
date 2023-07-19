@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using UnityEngine;
-
 using Debug = UnityEngine.Debug;
 
 namespace UnityModManagerNet;
@@ -20,9 +19,17 @@ public partial class UnityModManager
 {
     private static readonly Version VER_0 = new();
     private static readonly Version VER_0_13 = new(0, 13);
+    private static readonly Version VER_2018_2 = new(2018, 2);
     private static readonly ModuleDefMD thisModuleDef = ModuleDefMD.Load(typeof(UnityModManager).Module);
     private static bool forbidDisableMods;
+    /// <summary>
+    /// List of all mods
+    /// </summary>
     public static readonly List<ModEntry> ModEntries = new();
+    /// <summary>
+    /// Path to Mods folder
+    /// </summary>
+    public static string modsPath { get; private set; }
     internal static bool started;
     internal static bool initialized;
     /// <summary>
@@ -34,10 +41,29 @@ public partial class UnityModManager
     /// </summary>
     public static Version gameVersion { get; private set; } = new();
     /// <summary>
+    /// [0.27.0]
+    /// </summary>
+    internal static readonly List<TextureReplacer.Skin> allSkins = new();
+    /// <summary>
+    /// Does the OnSessionStart support [0.27.0]
+    /// </summary>
+    public static bool IsSupportOnSessionStart => !string.IsNullOrEmpty(Config.SessionStartPoint);
+    /// <summary>
+    /// Does the OnSessionStop support [0.27.0]
+    /// </summary>
+    public static bool IsSupportOnSessionStop => !string.IsNullOrEmpty(Config.SessionStopPoint);
+    /// <summary>
+    /// [0.26.0]
+    /// </summary>
+    public delegate void ToggleModsListen(ModEntry modEntry, bool result);
+    /// <summary>
+    /// [0.26.0]
+    /// </summary>
+    public static event ToggleModsListen toggleModsListen;
+    /// <summary>
     ///     Contains version of UMM
     /// </summary>
     public static Version Version { get; } = typeof(UnityModManager).Assembly.GetName().Version;
-    public static string modsPath { get; private set; }
     [Obsolete("请使用modsPath！OldModsPath与0.13之前版本的mod兼容。")]
     public static string OldModsPath = "";
     internal static Param Params { get; set; }
@@ -55,7 +81,7 @@ public partial class UnityModManager
     private static void OnLoad(object sender, AssemblyLoadEventArgs args)
     {
         var name = args.LoadedAssembly.GetName().Name;
-        if (name != "Assembly-CSharp" && name != "GH.Runtime" && name != "AtomGame") return;
+        if (name != "Assembly-CSharp" && name != "GH.Runtime" && name != "AtomGame" && name != "Game") return;
         AppDomain.CurrentDomain.AssemblyLoad -= OnLoad;
         Injector.Run(true);
     }
@@ -84,6 +110,8 @@ public partial class UnityModManager
         Config = GameInfo.Load();
         if (Config == null) return false;
         Logger.Log($"游戏名称：{Config.Name}。");
+        Logger.NativeLog($"IsSupportOnSessionStart: {IsSupportOnSessionStart}.");
+        Logger.NativeLog($"IsSupportOnSessionStop: {IsSupportOnSessionStop}.");
         Params = Param.Load();
         modsPath = Path.Combine(Environment.CurrentDirectory, Config.ModsDirectory);
         if (!Directory.Exists(modsPath))
@@ -173,15 +201,15 @@ public partial class UnityModManager
             foreach (var dir in Directory.GetDirectories(modsPath))
             {
                 var jsonPath = Path.Combine(dir, Config.ModInfo);
-                if (!File.Exists(Path.Combine(dir, Config.ModInfo)))
+                if (!File.Exists(jsonPath))
                     jsonPath = Path.Combine(dir, Config.ModInfo.ToLower());
-
                 if (!File.Exists(jsonPath)) continue;
                 countMods++;
                 Logger.Log($"正在解析文件“{jsonPath}”……");
+                ModEntry modEntry = null;
                 try
                 {
-                    var modInfo = File.ReadAllText(jsonPath).FromJson<ModInfo>();
+                    var modInfo = TinyJson.JSONParser.FromJson<ModInfo>(File.ReadAllText(jsonPath));
                     if (string.IsNullOrEmpty(modInfo.Id))
                     {
                         Logger.Error("Id为空！");
@@ -192,15 +220,58 @@ public partial class UnityModManager
                         Logger.Error($"Id“{modInfo.Id}”已经被另一个MOD占用！");
                         continue;
                     }
-                    if (string.IsNullOrEmpty(modInfo.AssemblyName))
+                    if (string.IsNullOrEmpty(modInfo.AssemblyName) && File.Exists(Path.Combine(dir, modInfo.Id + ".dll")))
                         modInfo.AssemblyName = modInfo.Id + ".dll";
-                    var modEntry = new ModEntry(modInfo, dir + Path.DirectorySeparatorChar);
+                    modEntry = new ModEntry(modInfo, dir + Path.DirectorySeparatorChar);
                     mods.Add(modInfo.Id, modEntry);
                 }
                 catch (Exception exception)
                 {
                     Logger.Error($"解析文件“{jsonPath}”失败！");
                     Debug.LogException(exception);
+                }
+                var trFolder = Path.Combine(dir, "TextureReplacer");
+                if (Directory.Exists(trFolder))
+                {
+                    foreach (string skinDir in Directory.GetDirectories(trFolder))
+                    {
+                        try
+                        {
+                            string trJsonPath = Path.Combine(skinDir, "skin.json");
+                            TextureReplacer.Skin skin;
+                            if (File.Exists(trJsonPath))
+                            {
+                                skin = TinyJson.JSONParser.FromJson<TextureReplacer.Skin>(File.ReadAllText(trJsonPath));
+                            }
+                            else
+                            {
+                                skin = new TextureReplacer.Skin() { Name = new DirectoryInfo(skinDir).Name };
+                            }
+                            skin.modEntry = modEntry;
+                            skin.textures = new Dictionary<string, TextureReplacer.Skin.texture>();
+                            modEntry?.Skins.Add(skin);
+
+                            foreach (string file in Directory.GetFiles(skinDir))
+                            {
+                                if (file.EndsWith("skin.json"))
+                                {
+                                }
+                                else if (file.EndsWith(".png") || file.EndsWith(".jpg"))
+                                {
+                                    skin.textures[Path.GetFileNameWithoutExtension(file)] = new TextureReplacer.Skin.texture { Path = file };
+                                }
+                                else
+                                {
+                                    Logger.Log($"Unsupported file format for '{file}'.");
+                                }
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            Logger.Error($"Error");
+                            Debug.LogException(exception);
+                        }
+                    }
                 }
             }
             if (mods.Count > 0)
@@ -215,8 +286,8 @@ public partial class UnityModManager
                     else
                         mod.Active = true;
             }
-            Logger.Log(
-                $"Mods解析完成！成功加载了{ModEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
+            //ApplySkins();
+            Logger.Log($"Mods解析完成！成功加载了{ModEntries.Count(x => !x.ErrorOnLoading)}/{countMods}的MOD！{Environment.NewLine}");
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.ManifestModule.Name == "UnityModManager.dll");
             if (assemblies.Count() > 1)
             {
@@ -234,7 +305,51 @@ public partial class UnityModManager
         }
 
         GameScripts.OnAfterLoadMods();
-        if (!UI.Load()) Logger.Error("不能加载UI！");
+        //if (!UI.Load()) Logger.Error("不能加载UI！");
+    }
+
+    static MethodInfo GetTexturePropertyNames = typeof(Material).GetMethod("GetTexturePropertyNames", new Type[] { typeof(List<string>) });
+    static List<string> texturePropertyNames = new List<string>();
+
+    internal static void ApplySkins()
+    {
+        if (unityVersion < VER_2018_2)
+            return;
+
+        Logger.Log($"Replacing textures.");
+
+        var materials = Resources.FindObjectsOfTypeAll<Material>();
+
+        foreach (var skin in allSkins)
+        {
+            if (skin.Conditions.IsEmpty)
+            {
+                foreach (var mat in materials)
+                {
+                    texturePropertyNames.Clear();
+                    GetTexturePropertyNames.Invoke(mat, new object[] { texturePropertyNames });
+
+                    foreach (var p in texturePropertyNames)
+                    {
+                        var tex = mat.GetTexture(p);
+                        if (tex && !string.IsNullOrEmpty(tex.name) && tex is Texture2D tex2d)
+                        {
+                            foreach (var kv in skin.textures)
+                            {
+                                if (tex.name == kv.Key)
+                                {
+                                    mat.SetTexture(p, kv.Value.Texture);
+                                    Logger.Log($"Replaced texture '{tex.name}' in material '{mat.name}'.");
+                                    if (!kv.Value.Previous)
+                                        kv.Value.Previous = tex2d;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static void ParseGameVersion()
@@ -524,6 +639,7 @@ public partial class UnityModManager
         [NonSerialized] public bool IsCheat = true;
         public string ManagerVersion;
         public string Repository;
+        public string ContentType;
         public string[] Requirements;
         public string Version;
         /// <summary>
@@ -641,19 +757,49 @@ public partial class UnityModManager
         public Action<ModEntry, float> OnUpdate;
         public Assembly Assembly { get; private set; }
         /// <summary>
+        /// Does the mod use a dll [0.26.0]
+        /// </summary>
+        public bool HasAssembly => !string.IsNullOrEmpty(Info.AssemblyName) || !string.IsNullOrEmpty(Info.EntryMethod);
+        /// <summary>
+        /// [0.27.0]
+        /// </summary>
+        internal readonly List<TextureReplacer.Skin> Skins = new();
+        /// <summary>
+        /// [0.26.0]
+        /// </summary>
+        public delegate void ToggleModsListen(ModEntry modEntry, bool result);
+        /// <summary>
+        /// [0.26.0]
+        /// </summary>
+        public static event ToggleModsListen toggleModsListen;
+        /// <summary>
+        /// Called by SessionStartPoint usually after all loaded data
+        /// Must be preconfigured
+        /// Check UnityModManager.IsSupportOnSessionStart before 
+        /// [0.27.0]
+        /// </summary>
+        public Action<ModEntry> OnSessionStart = null;
+        /// <summary>
+        /// Called by SessionStopPoint
+        /// Must be preconfigured
+        /// Check UnityModManager.IsSupportOnSessionStop before 
+        /// [0.27.0]
+        /// </summary>
+        public Action<ModEntry> OnSessionStop = null;
+        /// <summary>
         ///     Show button to reload the mod [0.14.0]
         /// </summary>
         public bool CanReload { get; private set; }
         public bool Started { get; private set; }
         public bool ErrorOnLoading { get; private set; }
         /// <summary>
-        ///     If OnToggle exists
+        /// Return TRUE if OnToggle exists
         /// </summary>
-        public bool Toggleable => OnToggle != null;
+        public bool Toggleable => OnToggle != null || !HasAssembly;
         /// <summary>
-        ///     If Assembly is loaded [0.13.1]
+        /// Return TRUE if Assembly is loaded [0.13.1]
         /// </summary>
-        public bool Loaded => Assembly != null;
+        public bool Loaded => Assembly != null || !HasAssembly && Started;
         /// <summary>
         /// List of mods after which this mod should be loaded [0.22.5.31]
         /// </summary>
@@ -692,6 +838,9 @@ public partial class UnityModManager
         }
 
         private bool _mActive;
+        /// <summary>
+        /// Activates or deactivates the mod by calling OnToggle if present
+        /// </summary>
         public bool Active
         {
             get => _mActive;
@@ -719,19 +868,29 @@ public partial class UnityModManager
                             _mActive = true;
                             Logger.Log("已激活MOD！");
                             GameScripts.OnModToggle(this, true);
+                            toggleModsListen?.Invoke(this, true);
                         }
                         else
                         {
                             Logger.Log("激活MOD失败！");
+                            Logger.NativeLog($"执行方法OnToggle(true)失败！");
                         }
                     }
                     else if (!forbidDisableMods)
                     {
-                        if (!_mActive || OnToggle == null || !OnToggle(this, false))
+                        if (!_mActive)
                             return;
-                        _mActive = false;
-                        Logger.Log("已禁用MOD！");
-                        GameScripts.OnModToggle(this, false);
+                        if (OnToggle != null && OnToggle(this, false) || !HasAssembly)
+                        {
+                            _mActive = false;
+                            Logger.Log($"已禁用MOD！");
+                            GameScripts.OnModToggle(this, false);
+                            toggleModsListen?.Invoke(this, false);
+                        }
+                        else if (OnToggle != null)
+                        {
+                            Logger.NativeLog($"执行方法OnToggle(true)失败！");
+                        }
                     }
                 }
                 catch (Exception e)
@@ -748,7 +907,7 @@ public partial class UnityModManager
             ErrorOnLoading = false;
             Logger.Log($"MOD版本“{Info.Version}”已加载！");
 
-            if (string.IsNullOrEmpty(Info.AssemblyName))
+            if (!string.IsNullOrEmpty(Info.AssemblyName) && string.IsNullOrEmpty(Info.EntryMethod))
             {
                 ErrorOnLoading = true;
                 Logger.Error($"“{nameof(Info.AssemblyName)}”为空！");
@@ -816,6 +975,13 @@ public partial class UnityModManager
                 }
 
             if (ErrorOnLoading) return false;
+
+            if (!HasAssembly)
+            {
+                Started = true;
+                Active = true;
+                return true;
+            }
 
             var assemblyPath = System.IO.Path.Combine(Path, Info.AssemblyName);
             var pdbPath = assemblyPath.Replace(".dll", ".pdb");
@@ -1000,6 +1166,21 @@ public partial class UnityModManager
             return false;
         }
 
+        internal void LoadSkins()
+        {
+            foreach (var skin in Skins)
+            {
+                if (!allSkins.Contains(skin))
+                    allSkins.Add(skin);
+
+                foreach (var kv in skin.textures)
+                {
+                    var tex = Utils.LoadTexture(kv.Value.Path);
+                    kv.Value.Texture = tex;
+                }
+            }
+        }
+
         internal void Reload()
         {
             if (!Started || !CanReload) return;
@@ -1162,9 +1343,16 @@ public partial class UnityModManager
                 UnityModManager.Logger.Error($"不能找到方法“{namespaceClassnameMethodname}”，MOD“{Info.Id}”未加载！");
             }
 
-            Exit:
+        Exit:
             _mCache[key] = methodInfo;
             return methodInfo;
+        }
+        /// <summary>
+        /// Looks for a word match within boundaries and ignores case [0.26.0]
+        /// </summary>
+        public bool HasContentType(string str)
+        {
+            return !string.IsNullOrEmpty(Info.ContentType) && new Regex($@"\b{str}\b", RegexOptions.IgnoreCase).IsMatch(Info.ContentType);
         }
     }
 }

@@ -43,7 +43,7 @@ public partial class UnityModManager
 
         try
         {
-            var repository = json.FromJson<Repository>();
+            var repository = TinyJson.JSONParser.FromJson<Repository>(json);
             if (repository?.Releases == null || repository.Releases.Length <= 0) return;
             foreach (var release in repository.Releases)
                 if (!string.IsNullOrEmpty(release.Id) && !string.IsNullOrEmpty(release.Version))

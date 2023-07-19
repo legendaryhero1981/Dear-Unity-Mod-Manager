@@ -228,6 +228,9 @@ namespace UnityModManagerNet.ConsoleInstaller
                 nameof(GameInfo.GameScriptName),
                 nameof(GameInfo.StartingPoint),
                 nameof(GameInfo.UIStartingPoint),
+                nameof(GameInfo.TextureReplacingPoint),
+                nameof(GameInfo.SessionStartPoint),
+                nameof(GameInfo.SessionStopPoint),
                 nameof(GameInfo.OldPatchTarget),
                 nameof(GameInfo.Comment),
                 nameof(GameInfo.MinimalManagerVersion),
@@ -246,25 +249,7 @@ namespace UnityModManagerNet.ConsoleInstaller
                 Log.Print($"配置节点“{prefix}”的子节点“{field.Name}”为空！");
             }
 
-            if (hasError) return false;
-
-            if (!string.IsNullOrEmpty(gameInfo.EntryPoint))
-                if (!Utils.TryParseEntryPoint(gameInfo.EntryPoint, out _))
-                    return false;
-
-            if (!string.IsNullOrEmpty(gameInfo.StartingPoint))
-                if (!Utils.TryParseEntryPoint(gameInfo.StartingPoint, out _))
-                    return false;
-
-            if (!string.IsNullOrEmpty(gameInfo.UIStartingPoint))
-                if (!Utils.TryParseEntryPoint(gameInfo.UIStartingPoint, out _))
-                    return false;
-
-            if (!string.IsNullOrEmpty(gameInfo.OldPatchTarget))
-                if (!Utils.TryParseEntryPoint(gameInfo.OldPatchTarget, out _))
-                    return false;
-
-            return true;
+            return !hasError && (string.IsNullOrEmpty(gameInfo.EntryPoint) || Utils.TryParseEntryPoint(gameInfo.EntryPoint, out _)) && (string.IsNullOrEmpty(gameInfo.StartingPoint) || Utils.TryParseEntryPoint(gameInfo.StartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.UIStartingPoint) || Utils.TryParseEntryPoint(gameInfo.UIStartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.TextureReplacingPoint) || Utils.TryParseEntryPoint(gameInfo.TextureReplacingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.SessionStartPoint) || Utils.TryParseEntryPoint(gameInfo.SessionStartPoint, out _)) && (string.IsNullOrEmpty(gameInfo.SessionStopPoint) || Utils.TryParseEntryPoint(gameInfo.SessionStopPoint, out _)) && (string.IsNullOrEmpty(gameInfo.OldPatchTarget) || Utils.TryParseEntryPoint(gameInfo.OldPatchTarget, out _));
         }
 
         private static void ReadGameAssets()

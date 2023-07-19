@@ -804,4 +804,56 @@
     <EntryPoint>[Assembly-CSharp.dll]MasterPrefabManager.Awake:After</EntryPoint>
     <MinimalManagerVersion>0.25.5</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="黑魔法：破咒者">
+    <GameName>The Black Grimoire: Cursebreaker</GameName>
+    <Folder>Cursebreaker</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Cursebreaker.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Scr_UI_MainMenu.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.25.5</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="妙药工坊">
+    <GameName>The Magical Mixture Mill</GameName>
+    <Folder>The Magical Mixture Mill</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>The Magical Mixture Mill.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]MainMenu.Awake:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]MainMenu.Start:After</UIStartingPoint>
+    <MinimalManagerVersion>0.25.5</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="奥日与黑暗森林">
+    <GameName>Ori and the Blind Forest: Definitive Edition</GameName>
+    <Folder>Ori DE</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>oriDE.exe</GameExe>
+    <EntryPoint>[Assembly-CSharp.dll]GameController.Awake:After</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]GameController.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.25.5</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="云端牧场">
+    <GameName>Cloud Meadow</GameName>
+    <Folder>Cloud Meadow</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Cloud Meadow.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Game.dll]TeamNimbus.CloudMeadow.UI.MainMenuManager.Awake:After</StartingPoint>
+    <MinimalManagerVersion>0.26.0</MinimalManagerVersion>
+  </GameInfo>
+  <GameInfo Name="前线任务1：重制版">
+    <GameName>FRONT MISSION 1st Remake</GameName>
+    <Folder>FRONT MISSION 1st Remake</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>FRONT MISSION 1st Remake.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Walker.MainMenu.Awake:Before</StartingPoint>
+    <UIStartingPoint>[Assembly-CSharp.dll]Walker.MainMenu.Awake:Before</UIStartingPoint>
+    <MinimalManagerVersion>0.27.0</MinimalManagerVersion>
+  </GameInfo>
 </Config>

@@ -263,6 +263,9 @@ namespace UnityModManagerNet.Installer
                 nameof(GameInfo.GameScriptName),
                 nameof(GameInfo.StartingPoint),
                 nameof(GameInfo.UIStartingPoint),
+                nameof(GameInfo.TextureReplacingPoint),
+                nameof(GameInfo.SessionStartPoint),
+                nameof(GameInfo.SessionStopPoint),
                 nameof(GameInfo.OldPatchTarget),
                 nameof(GameInfo.Comment),
                 nameof(GameInfo.MinimalManagerVersion),
@@ -281,7 +284,7 @@ namespace UnityModManagerNet.Installer
                 ConsoleInstaller.Log.Print($"节点“{prefix}”的子节点“{field.Name}”值为空！");
             }
 
-            return !hasError && (string.IsNullOrEmpty(gameInfo.EntryPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.EntryPoint, out _)) && (string.IsNullOrEmpty(gameInfo.StartingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.StartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.UIStartingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.UIStartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.OldPatchTarget) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.OldPatchTarget, out _));
+            return !hasError && (string.IsNullOrEmpty(gameInfo.EntryPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.EntryPoint, out _)) && (string.IsNullOrEmpty(gameInfo.StartingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.StartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.UIStartingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.UIStartingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.TextureReplacingPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.TextureReplacingPoint, out _)) && (string.IsNullOrEmpty(gameInfo.SessionStartPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.SessionStartPoint, out _)) && (string.IsNullOrEmpty(gameInfo.SessionStopPoint) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.SessionStopPoint, out _)) && (string.IsNullOrEmpty(gameInfo.OldPatchTarget) || ConsoleInstaller.Utils.TryParseEntryPoint(gameInfo.OldPatchTarget, out _));
         }
 
         private void RefreshForm()
