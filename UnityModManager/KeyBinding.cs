@@ -95,6 +95,19 @@ public class KeyBinding
 
     private static bool hasErrors = true;
 
+    public override string ToString()
+    {
+        EnabledKeys.TryGetValue(keyCode.ToString(), out var name);
+
+        var mod = "";
+        if (modifiers != 0)
+        {
+            mod = $"{((modifiers & 1) == 1 ? "Ctrl + " : "") + ((modifiers & 2) == 2 ? "Shift + " : "") + ((modifiers & 4) == 4 ? "Alt + " : "")}";
+        }
+
+        return $"{mod}{name ?? keyCode.ToString()}";
+    }
+
     internal static void Initialize()
     {
         try
@@ -369,7 +382,7 @@ public class KeyBinding
         { "KeypadMinus", "Numpad -" },
         { "KeypadPlus", "Numpad +" },
         { "KeypadEnter", "Numpad Enter" },
-        { "KeypadPeriod", "Numpad Del" },
+        { "KeypadPeriod", "Numpad ." },
         { "Keypad0", "Numpad 0" },
         { "Keypad1", "Numpad 1" },
         { "Keypad2", "Numpad 2" },
@@ -389,11 +402,13 @@ public class KeyBinding
         { "LeftAlt", "Left Alt" },
 
         { "Pause", "Pause" },
+        { "Break", "Pause" },
         { "Escape", "Escape" },
         { "Numlock", "Num Lock" },
         { "CapsLock", "Caps Lock" },
         { "ScrollLock", "Scroll Lock" },
         { "Print", "Print Screen" },
+        { "SysReq", "Print Screen" },
     };
 
     private readonly static Dictionary<string, string> LegacyToInputSystemMap = new()
@@ -499,5 +514,7 @@ public class KeyBinding
         { "RightAlt", "rightAlt" },
         { "LeftAlt", "leftAlt" },
         { "Print", "printScreen" },
+        { "SysReq", "printScreen" },
+        { "Break", "pause" },
     };
 }

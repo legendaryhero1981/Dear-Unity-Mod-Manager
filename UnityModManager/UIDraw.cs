@@ -179,30 +179,90 @@ public partial class UnityModManager
         {
             var changed = false;
             key ??= new KeyBinding();
-            GUILayout.BeginHorizontal();
-            var modifiersValue = new byte[] { 1, 2, 4 };
-            var modifiersStr = new[] { " Ctrl", " Shift", " Alt" };
-            var modifiers = key.modifiers;
-            for (var i = 0; i < modifiersValue.Length; i++)
-                if (GUILayout.Toggle((modifiers & modifiersValue[i]) != 0, modifiersStr[i],
-                        GUILayout.ExpandWidth(false)))
-                    modifiers |= modifiersValue[i];
-                else if ((modifiers & modifiersValue[i]) != 0) modifiers ^= modifiersValue[i];
-            GUILayout.Label(" + ", GUILayout.ExpandWidth(false));
-            var val = key.Index;
-            if (PopupToggleGroup(ref val, KeyBinding.KeysName, title, unique, style, option))
-            {
-                key.Change((KeyCode)Enum.Parse(typeof(KeyCode), KeyBinding.KeysName[val]), modifiers);
-                changed = true;
-            }
+            var refKey = key;
 
-            if (key.modifiers != modifiers)
+            if (GUILayout.Button(refKey.ToString(), style ?? GUI.skin.button, option))
             {
-                key.modifiers = modifiers;
-                changed = true;
-            }
+                var newKey = new KeyBinding();
+                newKey.Change(refKey.keyCode, refKey.modifiers);
+                var changing = false;
 
-            GUILayout.EndHorizontal();
+                ShowWindow(window =>
+                {
+                    if (changing && Event.current.isKey)
+                    {
+                        if (Event.current.keyCode == KeyCode.LeftControl || Event.current.keyCode == KeyCode.RightControl)
+                        {
+                            if (newKey.keyCode == KeyCode.None && Event.current.type == EventType.KeyUp)
+                            {
+                                newKey.modifiers ^= 1;
+                                newKey.keyCode = Event.current.keyCode;
+                                changing = false;
+                            }
+                            if (Event.current.type == EventType.KeyDown)
+                            {
+                                newKey.modifiers |= 1;
+                            }
+                        }
+                        else if (Event.current.keyCode == KeyCode.LeftShift || Event.current.keyCode == KeyCode.RightShift)
+                        {
+                            if (newKey.keyCode == KeyCode.None && Event.current.type == EventType.KeyUp)
+                            {
+                                newKey.modifiers ^= 2;
+                                newKey.keyCode = Event.current.keyCode;
+                                changing = false;
+                            }
+                            if (Event.current.type == EventType.KeyDown)
+                            {
+                                newKey.modifiers |= 2;
+                            }
+                        }
+                        else if (Event.current.keyCode == KeyCode.LeftAlt || Event.current.keyCode == KeyCode.RightAlt)
+                        {
+                            if (newKey.keyCode == KeyCode.None && Event.current.type == EventType.KeyUp)
+                            {
+                                newKey.modifiers ^= 4;
+                                newKey.keyCode = Event.current.keyCode;
+                                changing = false;
+                            }
+                            if (Event.current.type == EventType.KeyDown)
+                            {
+                                newKey.modifiers |= 4;
+                            }
+                        }
+                        else if (Event.current.keyCode != KeyCode.None)
+                        {
+                            if (Event.current.type == EventType.KeyUp)
+                            {
+                                newKey.keyCode = Event.current.keyCode;
+                                changing = false;
+                            }
+                        }
+                    }
+                    GUILayout.Label($"{(changing ? "Enter key..." : newKey)}", GUI.skin.box, GUILayout.ExpandWidth(true));
+                    GUILayout.BeginHorizontal();
+                    if (GUILayout.Button("Set", button))
+                    {
+                        newKey.Change(KeyCode.None, 0);
+                        changing = true;
+                    }
+                    if (GUILayout.Button("Save", button))
+                    {
+                        if (refKey.keyCode != newKey.keyCode || refKey.modifiers != newKey.modifiers)
+                        {
+                            changed = true;
+                            refKey.Change(newKey.keyCode, newKey.modifiers);
+                        }
+                        window.Close();
+                    }
+                    if (GUILayout.Button("Close", button))
+                    {
+                        window.Close();
+                    }
+
+                    GUILayout.EndHorizontal();
+                }, title, unique);
+            }
 
             return changed;
         }

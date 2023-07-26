@@ -545,23 +545,30 @@ public partial class UnityModManager
                 ScaleGui();
             }
 
-            var toRemove = new List<PopupToggleGroup_GUI>(0);
-            var anyRendered = false;
-            foreach (var item in PopupToggleGroup_GUI.mList)
+            if (PopupToggleGroup_GUI.mList.Count > 0)
             {
-                item.mDestroyCounter.Add(Time.frameCount);
-                if (item.mDestroyCounter.Count > 1)
+                var toRemove = new List<PopupToggleGroup_GUI>(0);
+                var anyRendered = false;
+                foreach (var item in PopupToggleGroup_GUI.mList)
                 {
-                    toRemove.Add(item);
-                    continue;
+                    item.mDestroyCounter.Add(Time.frameCount);
+                    if (item.mDestroyCounter.Count > 1)
+                    {
+                        toRemove.Add(item);
+                        continue;
+                    }
+                    if (!item.Opened || anyRendered) continue;
+                    item.Render();
+                    anyRendered = true;
                 }
-
-                if (!item.Opened || anyRendered) continue;
-                item.Render();
-                anyRendered = true;
+                foreach (var item in toRemove) PopupToggleGroup_GUI.mList.Remove(item);
             }
 
-            foreach (var item in toRemove) PopupToggleGroup_GUI.mList.Remove(item);
+            if (Window_GUI.mList.Count > 0)
+            {
+                foreach (var item in Window_GUI.mList.Where(item => item.Opened))
+                    item.Render();
+            }
 
             if (Opened)
             {
