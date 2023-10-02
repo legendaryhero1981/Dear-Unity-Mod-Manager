@@ -99,7 +99,7 @@ public static partial class Extensions
 public static partial class Utils
 {
     /// <summary>
-    /// [0.27.0]
+    /// [0.27.8]
     /// </summary>
     public static bool LoadImage(Texture2D tex, byte[] data)
     {
@@ -126,7 +126,7 @@ public static partial class Utils
     }
 
     /// <summary>
-    /// [0.27.0]
+    /// [0.27.8]
     /// </summary>
     public static Texture2D LoadTexture(string filepath)
     {

@@ -12,7 +12,9 @@ public class Injector
 
     public static void Run(bool doorstop = false)
     {
-        try
+        if (UnityModManager.initialized) return;
+
+            try
         {
             _Run(doorstop);
         }

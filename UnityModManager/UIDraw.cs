@@ -19,9 +19,13 @@ public enum DrawType
     Field,
     Slider,
     Toggle,
-    ToggleGroup, /*MultiToggle, */
+    ToggleGroup, 
     PopupList,
-    KeyBinding
+    KeyBinding,
+    /// <summary>
+    /// Disabled modifiers. [0.27.5]
+    /// </summary>
+    KeyBindingNoMod
 }
 
 /// <summary>
@@ -164,6 +168,7 @@ public partial class UnityModManager
         /// <returns>
         ///     Returns true if the value has changed.
         /// </returns>
+        [Obsolete("Use DrawKeybindingSmart.")]
         public static bool DrawKeybinding(ref KeyBinding key, string title, GUIStyle style = null, params GUILayoutOption[] option)
         {
             return DrawKeybinding(ref key, title, 0, style, option);
@@ -175,19 +180,84 @@ public partial class UnityModManager
         /// <returns>
         /// Returns true if the value has changed.
         /// </returns>
+        [Obsolete("Use DrawKeybindingSmart.")]
         public static bool DrawKeybinding(ref KeyBinding key, string title, int unique, GUIStyle style = null, params GUILayoutOption[] option)
         {
             var changed = false;
             key ??= new KeyBinding();
-            var refKey = key;
+            GUILayout.BeginHorizontal();
+            var modifiersValue = new byte[] { 1, 2, 4 };
+            var modifiersStr = new string[] { "Ctrl", "Shift", "Alt" };
+            var modifiers = key.modifiers;
+            for (int i = 0; i < modifiersValue.Length; i++)
+            {
+                if (GUILayout.Toggle((modifiers & modifiersValue[i]) != 0, modifiersStr[i], GUILayout.ExpandWidth(false)))
+                {
+                    modifiers |= modifiersValue[i];
+                }
+                else if ((modifiers & modifiersValue[i]) != 0)
+                {
+                    modifiers ^= modifiersValue[i];
+                }
+            }
+            GUILayout.Label(" + ", GUILayout.ExpandWidth(false));
+            var val = key.Index;
+            if (PopupToggleGroup(ref val, KeyBinding.KeysName, title, unique, style, option))
+            {
+                key.Change((KeyCode)Enum.Parse(typeof(KeyCode), KeyBinding.KeysCode[val]), modifiers);
+                changed = true;
+            }
 
-            if (GUILayout.Button(refKey.ToString(), style ?? GUI.skin.button, option))
+            if (key.modifiers != modifiers)
+            {
+                key.modifiers = modifiers;
+                changed = true;
+            }
+            GUILayout.EndHorizontal();
+
+            return changed;
+        }
+
+        /// <summary>
+        /// (deferred) [0.27.5]
+        /// </summary>
+        public static void DrawKeybindingSmart(KeyBinding key, string title, GUIStyle style = null, params GUILayoutOption[] option)
+        {
+            DrawKeybindingSmart(key, title, null, false, style, option);
+        }
+
+        /// <summary>
+        /// (deferred) [0.27.5]
+        /// </summary>
+        public static void DrawKeybindingSmart(KeyBinding key, string title, Action<KeyBinding> onChange, GUIStyle style = null, params GUILayoutOption[] option)
+        {
+            DrawKeybindingSmart(key, title, onChange, false, style, option);
+        }
+
+        /// <summary>
+        /// (deferred) [0.27.5]
+        /// </summary>
+        public static void DrawKeybindingSmart(KeyBinding key, string title, Action<KeyBinding> onChange, bool disableModifiers, GUIStyle style = null, params GUILayoutOption[] option)
+        {
+            if (key == null)
+            {
+                if (onChange == null)
+                {
+                    throw new ArgumentNullException("key");
+                }
+                else
+                {
+                    key = new KeyBinding();
+                }
+            }
+
+            if (GUILayout.Button(key.ToString(), style ?? GUI.skin.button, option))
             {
                 var newKey = new KeyBinding();
-                newKey.Change(refKey.keyCode, refKey.modifiers);
+                newKey.Change(key.keyCode, key.modifiers);
                 var changing = false;
 
-                ShowWindow(window =>
+                ShowWindow((window) =>
                 {
                     if (changing && Event.current.isKey)
                     {
@@ -238,40 +308,42 @@ public partial class UnityModManager
                                 changing = false;
                             }
                         }
+                        if (!changing && disableModifiers)
+                        {
+                            newKey.modifiers = 0;
+                        }
                     }
-                    GUILayout.Label($"{(changing ? "Enter key..." : newKey)}", GUI.skin.box, GUILayout.ExpandWidth(true));
+                    GUILayout.Label($"{(changing ? "按任意键……" : newKey)}", GUI.skin.box, GUILayout.ExpandWidth(true));
                     GUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Set", button))
+                    if (GUILayout.Button("分配", button))
                     {
                         newKey.Change(KeyCode.None, 0);
                         changing = true;
                     }
-                    if (GUILayout.Button("Save", button))
+                    if (GUILayout.Button("保存", button))
                     {
-                        if (refKey.keyCode != newKey.keyCode || refKey.modifiers != newKey.modifiers)
+                        if (key.keyCode != newKey.keyCode || key.modifiers != newKey.modifiers)
                         {
-                            changed = true;
-                            refKey.Change(newKey.keyCode, newKey.modifiers);
+                            key.Change(newKey.keyCode, newKey.modifiers);
+                            onChange?.Invoke(key);
                         }
                         window.Close();
                     }
-                    if (GUILayout.Button("Close", button))
+                    if (GUILayout.Button("关闭", button))
                     {
                         window.Close();
                     }
 
                     GUILayout.EndHorizontal();
-                }, title, unique);
+                }, title, 6334331);
             }
-
-            return changed;
         }
 
         /// <summary>
-        ///     [0.18.0]
+        /// [0.18.0]
         /// </summary>
         /// <returns>
-        ///     Returns true if the value has changed.
+        /// Returns true if the value has changed.
         /// </returns>
         public static bool DrawVector(ref Vector2 vec, GUIStyle style = null, params GUILayoutOption[] option)
         {
@@ -285,8 +357,10 @@ public partial class UnityModManager
         /// <summary>
         ///     [0.18.0]
         /// </summary>
-        public static void DrawVector(Vector2 vec, Action<Vector2> onChange, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        /// <returns>
+        /// Returns result via onChange.
+        /// </returns>
+        public static void DrawVector(Vector2 vec, Action<Vector2> onChange, GUIStyle style = null, params GUILayoutOption[] option)
         {
             if (onChange == null) throw new ArgumentNullException(nameof(onChange));
             if (DrawVector(ref vec, style, option)) onChange(vec);
@@ -296,7 +370,7 @@ public partial class UnityModManager
         ///     [0.18.0]
         /// </summary>
         /// <returns>
-        ///     Returns true if the value has changed.
+        /// Returns true if the value has changed.
         /// </returns>
         public static bool DrawVector(ref Vector3 vec, GUIStyle style = null, params GUILayoutOption[] option)
         {
@@ -310,8 +384,10 @@ public partial class UnityModManager
         /// <summary>
         ///     [0.18.0]
         /// </summary>
-        public static void DrawVector(Vector3 vec, Action<Vector3> onChange, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        /// <returns>
+        /// Returns result via onChange.
+        /// </returns>
+        public static void DrawVector(Vector3 vec, Action<Vector3> onChange, GUIStyle style = null, params GUILayoutOption[] option)
         {
             if (onChange == null) throw new ArgumentNullException(nameof(onChange));
             if (DrawVector(ref vec, style, option)) onChange(vec);
@@ -339,8 +415,10 @@ public partial class UnityModManager
         /// <summary>
         ///     [0.18.0]
         /// </summary>
-        public static void DrawVector(Vector4 vec, Action<Vector4> onChange, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        /// <returns>
+        /// Returns result via onChange.
+        /// </returns>
+        public static void DrawVector(Vector4 vec, Action<Vector4> onChange, GUIStyle style = null, params GUILayoutOption[] option)
         {
             if (onChange == null) throw new ArgumentNullException(nameof(onChange));
             if (DrawVector(ref vec, style, option)) onChange(vec);
@@ -364,6 +442,9 @@ public partial class UnityModManager
         /// <summary>
         ///     [0.18.0]
         /// </summary>
+        /// <returns>
+        /// Returns result via onChange.
+        /// </returns>
         public static void DrawColor(Color vec, Action<Color> onChange, GUIStyle style = null,
             params GUILayoutOption[] option)
         {
@@ -377,8 +458,7 @@ public partial class UnityModManager
         /// <returns>
         ///     Returns true if the value has changed.
         /// </returns>
-        public static bool DrawFloatMultiField(ref float[] values, string[] labels, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        public static bool DrawFloatMultiField(ref float[] values, string[] labels, GUIStyle style = null, params GUILayoutOption[] option)
         {
             if (values == null || values.Length == 0)
                 throw new ArgumentNullException(nameof(values));
@@ -421,8 +501,7 @@ public partial class UnityModManager
         /// <returns>
         ///     Returns true if the value has changed.
         /// </returns>
-        public static bool DrawFloatField(ref float value, string label, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        public static bool DrawFloatField(ref float value, string label, GUIStyle style = null, params GUILayoutOption[] option)
         {
             var old = value;
             GUILayout.Label(label, GUILayout.ExpandWidth(false));
@@ -445,8 +524,10 @@ public partial class UnityModManager
         /// <summary>
         ///     [0.19.0]
         /// </summary>
-        public static void DrawFloatField(float value, string label, Action<float> onChange, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        /// <returns>
+        /// Returns result via onChange.
+        /// </returns>
+        public static void DrawFloatField(float value, string label, Action<float> onChange, GUIStyle style = null, params GUILayoutOption[] option)
         {
             if (onChange == null) throw new ArgumentNullException(nameof(onChange));
             if (DrawFloatField(ref value, label, style, option)) onChange(value);
@@ -458,8 +539,7 @@ public partial class UnityModManager
         /// <returns>
         ///     Returns true if the value has changed.
         /// </returns>
-        public static bool DrawIntField(ref int value, string label, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        public static bool DrawIntField(ref int value, string label, GUIStyle style = null, params GUILayoutOption[] option)
         {
             var old = value;
             GUILayout.Label(label, GUILayout.ExpandWidth(false));
@@ -477,8 +557,10 @@ public partial class UnityModManager
         /// <summary>
         ///     [0.19.0]
         /// </summary>
-        public static void DrawIntField(int value, string label, Action<int> onChange, GUIStyle style = null,
-            params GUILayoutOption[] option)
+        /// <returns>
+        /// Returns result via onChange.
+        /// </returns>
+        public static void DrawIntField(int value, string label, Action<int> onChange, GUIStyle style = null, params GUILayoutOption[] option)
         {
             if (onChange == null) throw new ArgumentNullException(nameof(onChange));
             if (DrawIntField(ref value, label, style, option)) onChange(value);
@@ -1128,8 +1210,6 @@ public partial class UnityModManager
                         }
                     case DrawType.ToggleGroup when !f.FieldType.IsEnum:
                         throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.ToggleGroup}！");
-                    case DrawType.ToggleGroup when f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0:
-                        throw new Exception($"类型 {f.FieldType}/{DrawType.ToggleGroup} 与Flag属性不兼容！");
                     case DrawType.ToggleGroup:
                         {
                             options.Add(GUILayout.ExpandWidth(false));
@@ -1145,12 +1225,13 @@ public partial class UnityModManager
                             EndHorizontalTooltip(a);
                             if (!a.Vertical)
                                 GUILayout.Space(Scale(5));
-                            var values = Enum.GetNames(f.FieldType);
-                            var val = (int)f.GetValue(container);
-
-                            if (ToggleGroup(ref val, values, null, options.ToArray()))
+                            var names = Enum.GetNames(f.FieldType);
+                            var values = Enum.GetValues(f.FieldType);
+                            var val = f.GetValue(container);
+                            var index = Array.IndexOf(values, val);
+                            if (ToggleGroup(ref index, names, null, options.ToArray()))
                             {
-                                var v = Enum.Parse(f.FieldType, values[val]);
+                                var v = Enum.Parse(f.FieldType, names[index]);
                                 f.SetValue(container, v);
                                 changed = true;
                             }
@@ -1163,8 +1244,6 @@ public partial class UnityModManager
                         }
                     case DrawType.PopupList when !f.FieldType.IsEnum:
                         throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.PopupList}！");
-                    case DrawType.PopupList when f.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0:
-                        throw new Exception($"类型 {f.FieldType}/{DrawType.ToggleGroup} 与Flag属性不兼容！");
                     case DrawType.PopupList:
                         {
                             options.Add(GUILayout.ExpandWidth(false));
@@ -1180,11 +1259,13 @@ public partial class UnityModManager
                             EndHorizontalTooltip(a);
                             if (!a.Vertical)
                                 GUILayout.Space(Scale(5));
-                            var values = Enum.GetNames(f.FieldType);
-                            var val = (int)f.GetValue(container);
-                            if (PopupToggleGroup(ref val, values, fieldName, unique, null, options.ToArray()))
+                            var names = Enum.GetNames(f.FieldType);
+                            var values = Enum.GetValues(f.FieldType);
+                            var val = f.GetValue(container);
+                            var index = Array.IndexOf(values, val);
+                            if (PopupToggleGroup(ref index, names, fieldName, unique, null, options.ToArray()))
                             {
-                                var v = Enum.Parse(f.FieldType, values[val]);
+                                var v = Enum.Parse(f.FieldType, names[index]);
                                 f.SetValue(container, v);
                                 changed = true;
                             }
@@ -1195,9 +1276,9 @@ public partial class UnityModManager
                                 GUILayout.EndHorizontal();
                             break;
                         }
-                    case DrawType.KeyBinding when f.FieldType != typeof(KeyBinding):
+                    case DrawType.KeyBinding | DrawType.KeyBindingNoMod when f.FieldType != typeof(KeyBinding):
                         throw new Exception($"类型 {f.FieldType} 不能被描绘为 {DrawType.KeyBinding}！");
-                    case DrawType.KeyBinding:
+                    case DrawType.KeyBinding | DrawType.KeyBindingNoMod:
                         {
                             if (a.Vertical)
                                 GUILayout.BeginVertical();
@@ -1209,11 +1290,13 @@ public partial class UnityModManager
                             if (!a.Vertical)
                                 GUILayout.Space(Scale(5));
                             var key = (KeyBinding)f.GetValue(container);
-                            if (DrawKeybinding(ref key, fieldName, unique, null, options.ToArray()))
+                            key ??= new KeyBinding();
+
+                            DrawKeybindingSmart(key, fieldName, (k) =>
                             {
-                                f.SetValue(container, key);
+                                f.SetValue(container, k);
                                 changed = true;
-                            }
+                            }, a.Type == DrawType.KeyBindingNoMod, null, options.ToArray());
 
                             if (a.Vertical)
                             {

@@ -802,7 +802,7 @@ public partial class UnityModManager
                             using (new GL.HorizontalScope())
                             {
                                 GL.Label("热键（默认Ctrl+F10）", BoldFontStyle, GL.ExpandWidth(false));
-                                DrawKeybinding(ref Params.Hotkey, "DUMM热键设置", ButtonStyle, GL.ExpandWidth(false));
+                                DrawKeybindingSmart(Params.Hotkey, "DUMM热键设置", ButtonStyle, GL.ExpandWidth(false));
                             }
                             using (new GL.HorizontalScope())
                             {
