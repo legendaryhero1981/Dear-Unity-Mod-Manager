@@ -856,4 +856,14 @@
     <UIStartingPoint>[Assembly-CSharp.dll]Walker.MainMenu.Awake:Before</UIStartingPoint>
     <MinimalManagerVersion>0.27.0</MinimalManagerVersion>
   </GameInfo>
+  <GameInfo Name="沉没之地">
+    <GameName>Sunkenland</GameName>
+    <Folder>Sunkenland</Folder>
+    <ModsDirectory>Mods</ModsDirectory>
+    <ModInfo>Info.json</ModInfo>
+    <GameExe>Sunkenland.exe</GameExe>
+    <EntryPoint>[UnityEngine.UIModule.dll]UnityEngine.Canvas.cctor:Before</EntryPoint>
+    <StartingPoint>[Assembly-CSharp.dll]Mainframe.Awake:Before</StartingPoint>
+    <MinimalManagerVersion>0.27.5</MinimalManagerVersion>
+  </GameInfo>
 </Config>
