@@ -134,17 +134,17 @@ namespace UnityModManagerNet.Installer
                 {
                     var registry = asm.GetType("Microsoft.Win32.Registry");
                     if (registry == null) continue;
-                    var getValue = registry.GetMethod("GetValue", new[] { typeof(string), typeof(string), typeof(object) });
+                    var getValue = registry.GetMethod("GetValue", [typeof(string), typeof(string), typeof(object)]);
                     if (getValue != null)
                     {
-                        var exePath = getValue.Invoke(null, new object[] { REG_PATH, "ExePath", string.Empty }) as string;
+                        var exePath = getValue.Invoke(null, [REG_PATH, "ExePath", string.Empty]) as string;
                         if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
                         {
-                            var setValue = registry.GetMethod("SetValue", new[] { typeof(string), typeof(string), typeof(object) });
+                            var setValue = registry.GetMethod("SetValue", [typeof(string), typeof(string), typeof(object)]);
                             if (setValue != null)
                             {
-                                setValue.Invoke(null, new object[] { REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "DearUnityModManager.exe") });
-                                setValue.Invoke(null, new object[] { REG_PATH, "Path", Application.StartupPath });
+                                setValue.Invoke(null, [REG_PATH, "ExePath", Path.Combine(Application.StartupPath, "DearUnityModManager.exe")]);
+                                setValue.Invoke(null, [REG_PATH, "Path", Application.StartupPath]);
                             }
                         }
                     }
@@ -185,7 +185,7 @@ namespace UnityModManagerNet.Installer
                 gameList.SelectedItem = selected;
                 selectedGameParams = param.GetGameParam(selected);
                 gamePath = selectedGameParams.Path;
-                if (File.Exists(Path.Combine(gamePath, "UnityPlayer.dll")))
+                if (!string.IsNullOrEmpty(gamePath) && File.Exists(Path.Combine(gamePath, "UnityPlayer.dll")))
                     unityPlayerPath = Path.Combine(gamePath, "UnityPlayer.dll");
             }
             else
