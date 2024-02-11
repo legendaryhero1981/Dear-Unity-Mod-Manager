@@ -273,6 +273,11 @@ namespace UnityModManagerNet.ConsoleInstaller
                 }
             }
 
+            if (!Utils.IsDirectoryWritable(selectedGameParams.Path))
+            {
+                SelectGameFolder();
+            }
+
             if (!Utils.IsUnixPlatform() && !Directory.GetFiles(selectedGameParams.Path, "*.exe", SearchOption.TopDirectoryOnly).Any())
             {
                 Log.Print("请选择exe文件所在的游戏目录。");
